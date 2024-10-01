@@ -1,0 +1,7 @@
+.e_services{}
+
+.e_services li{ padding-top:10px;}
+.e_services li a{ font-size:16px;text-decoration:underline; font-weight:700;text-transform:uppercase;}
+.e_services li ul li{ height:22px;}
+.e_services li ul li a{ font-size:14px;text-decoration:none;font-weight:400; text-transform:none;}
+.e_services li ul li a:hover{text-decoration:underline;font-weight:700;}

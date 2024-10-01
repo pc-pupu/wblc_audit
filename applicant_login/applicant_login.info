@@ -1,0 +1,6 @@
+name = Applicant Login
+description = Applicant Login Form
+version=7.x
+core = 7.x
+package = COMMON Module
+

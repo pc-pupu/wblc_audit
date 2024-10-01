@@ -1,0 +1,15 @@
+.ctools-modal-content {
+	width:600px !important;
+	height:350px !important;
+	
+}
+
+.remarks-form .form-textarea-wrapper textarea {
+    width: auto;
+}
+
+.messages {
+	width:40% !important;
+	margin-left: 0 !important;
+	
+}

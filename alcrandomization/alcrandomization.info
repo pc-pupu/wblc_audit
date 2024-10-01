@@ -1,0 +1,10 @@
+;$Id$
+
+name =alcrandomization
+description =  ALC randomization.
+package = Drupal 7 Development
+core = 7.x
+files[] = alcrandomization.module
+
+;dependencies[] = autoload
+;php = 5.1

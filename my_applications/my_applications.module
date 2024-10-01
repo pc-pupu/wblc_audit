@@ -1,0 +1,19 @@
+<?php
+	
+	function my_applications_init() {
+		
+	}
+	
+	function my_applications_menu() {
+		$items=array();
+		$items['applications']=array(
+									'title'=>'My Applications',
+									'page callback'=>'drupal_get_form',
+									'page arguments'=>array('my_application_applicant_form'),
+									'file' => 'include/my_application_applicant_form.inc',
+									'access arguments' => array('access content'),
+									'access callback'=>TRUE
+								);
+						
+		return $items;
+	}

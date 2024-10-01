@@ -1,0 +1,89 @@
+<?php
+
+function clra_backlog_permission() {
+  return array(
+			'clra_backlog_per' 							=> array(
+				'title' 								=> t('clra_backlog permission'),
+    	),
+			'clra_backlog_applicant_per' 				=> array(
+				'title' 								=> t('clra_backlog applicant permission'),
+    	),
+	);
+}
+
+function clra_backlog_menu(){
+	$items 				   = array();
+	$items['clra_backlog/clra-registration-type']= array(
+						'title' 			=> 	'REGISTRATION OF PRINCIPAL EMPLOYERS UNDER CONTRACT LABOUR (REGULATION & ABOLITION) ACT 1970.',
+						'page callback'		=>	'drupal_get_form',
+						'page arguments'	=>	array('clra_registration_type'),
+						'file' 				=> 	'include/clra_backlog_check_part.inc',
+						'access arguments' 	=> 	array('clra_backlog_applicant_per'),						
+	);
+	
+	$items['clra_backlog']= array(
+						'title' 			=> 	'Enter your previous registration number',
+						'page callback'		=>	'drupal_get_form',
+						'page arguments'	=>	array('clra_backlog_check_part'),
+						'file' 				=> 	'include/clra_backlog_check_part.inc',
+						'access arguments' 	=> 	array('clra_backlog_applicant_per'),						
+	);
+	
+	$items['clra-backlog/%']= array(
+						'title' 			=> 	'Previous registration number(Manual/Offline)',
+						'page callback'		=>	'drupal_get_form',
+						'page arguments'	=>	array('clra_backlog_check_part_amnd', 1),
+						'file' 				=> 	'include/clra_backlog_check_part.inc',
+						'access arguments' 	=> 	array('clra_backlog_applicant_per'),						
+	);
+	
+	$items['clra-backlog-details']= array(
+						'title' 			=> 	'Registrar principal employer(manual/offline) under CLRA',
+						'page callback'		=>	'drupal_get_form',
+						'page arguments'	=>	array('clra_backlog_details'),
+						'file' 				=> 	'include/clra_backlog_details.inc',
+						'access arguments' 	=> 	array('clra_backlog_per'),						
+	);
+	$items['edit-data/%']= array(
+						'title' 			=> 	'Edit Principal Employer',
+						'page callback'		=>	'drupal_get_form',
+						'page arguments'	=>	array('edit_clra_backlog_details', 1),
+						'file' 				=> 	'include/edit_clra_backlog_details.inc',
+						'access arguments' 	=> 	array('clra_backlog_per'),						
+	);
+	$items['apply-clra-registration-backlog'] = array(
+						'title' 			=> 'Upload previous registration certificate',
+						'page callback' 	=> 'drupal_get_form',
+						'page arguments' 	=>	array('upload_clra_backlog_details'),
+						'file' 				=>  'include/add_clra_backlog_applicant.inc',
+						'access arguments' 	=> 	array('clra_backlog_applicant_per'),
+						);
+	return $items;
+}
+
+function smart_wordwrap($string, $width = 75, $break = "\n") {
+    // split on problem words over the line length
+    $pattern = sprintf('/([^ ]{%d,})/', $width);
+    $output = '';
+    $words = preg_split($pattern, $string, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+
+    foreach ($words as $word) {
+        if (false !== strpos($word, ' ')) {
+            // normal behaviour, rebuild the string
+            $output .= $word;
+        } else {
+            // work out how many characters would be on the current line
+            $wrapped = explode($break, wordwrap($output, $width, $break));
+            $count = $width - (strlen(end($wrapped)) % $width);
+
+            // fill the current line and add a break
+            $output .= substr($word, 0, $count) . $break;
+
+            // wrap any remaining characters from the problem word
+            $output .= wordwrap(substr($word, $count), $width, $break, true);
+        }
+    }
+
+    // wrap the final output
+    return wordwrap($output, $width, $break);
+}

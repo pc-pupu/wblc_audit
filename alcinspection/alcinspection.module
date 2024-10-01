@@ -1,0 +1,168 @@
+<?php
+function alcinspection_permission() {
+  return array(
+    'alcinspection_per' => array(
+      'title' => t(' alc inspection permission'),
+    )
+  );
+}
+
+
+function alcinspection_menu(){
+    
+	 $items = array();
+	
+	 $items['alcinspection'] = array(
+     				'title' => 'Inspection List',            
+					//'page callback' => 'inspectionapply_list', 
+					
+					
+					 'page callback' => 'drupal_get_form', 
+    
+                     'page arguments' => array('alcinspection_list'), 
+					
+					 'file' 				=> 'inc/alc.inspection.inc',
+	 				 'access callback' => 'user_access',
+	 				 'access arguments' => array('alcinspection_per'),
+	 				 'type' => MENU_NORMAL_ITEM, 
+    				 );
+					 
+					 
+	$items['alcinspection/inspectionnoteview/%'] = array(   
+					'title' => 'Inspection Details',
+					'page callback' => 'alc_inspection_note_view', 
+					'page arguments' => array(2),
+					'file' => 'inc/alc.inspection.inc',
+					'access callback' => 'user_access',
+	 				'access arguments' => array('alcinspection_per'),
+    				'type' => MENU_CALLBACK,
+ 					);	
+					
+	    $items['alcinspection/showcausenoticeview/%'] = array(   
+					'title' => 'Show-cause Notice Details',
+					'page callback' => 'alc_showcause_notice_view', 
+					'page arguments' => array(2),
+					'file' => 'inc/alc.inspection.inc',
+					'access callback' => 'user_access',
+	 				'access arguments' => array('alcinspection_per'),
+    				'type' => MENU_CALLBACK,
+ 					);	
+					
+			$items['alcinspection/courtcasepermision/%'] = array(   
+					'title' 			=> 'Show-cause Notice Details',
+					'page callback' 	=> 'court_case_permission', 
+					'page arguments' 	=> array(2),
+					'file' 				=> 'inc/alc.inspection.inc',
+					'access callback' 	=> 'user_access',
+	 				'access arguments' 	=> array('alcinspection_per'),
+    				'type' 				=> MENU_CALLBACK,
+ 				);			
+					
+				$items['alcinspection/bfccletoffpermision/%'] = array(   
+					'page callback' => 'bfcc_let_off_permission', 
+					'page arguments' => array(2),
+					'file' => 'inc/alc.inspection.inc',
+					'access callback' => 'user_access',
+	 				'access arguments' => array('alcinspection_per'),
+    				'type' => MENU_CALLBACK,
+ 					);	
+					
+					
+			$items['alcinspection/forward'] = array(
+
+                      'page callback' => 'alc_letoff_approved', 
+                      'file' => 'inc/alc.inspection.inc',
+                       'access callback' => 'user_access',
+                       'access arguments' => array('alcinspection_per'),
+
+                      'type' => MENU_CALLBACK,
+              );				
+					
+			$items['alcinspection/ccpermision'] = array(
+
+                      'page callback' => 'alc_courtcase_permission', 
+                      'file' => 'inc/courtletoff.inspection.inc',
+                       'access callback' => 'user_access',
+                       'access arguments' => array('alcinspection_per'),
+
+                      'type' => MENU_CALLBACK,
+              );
+			  $items['alcinspection/alcbfcclfpermision'] = array(
+
+                      'page callback' => 'alc_bfcourtcase_letoff_permission', 
+                      'file' => 'inc/courtletoff.inspection.inc',
+                       'access callback' => 'user_access',
+                       'access arguments' => array('alcinspection_per'),
+
+                      'type' => MENU_CALLBACK,
+              );			
+			
+			$items['alcinspection/rmsinsnote'] = array(
+
+                      'page callback' => 'alc_insnote_rmks', 
+                      'file' => 'inc/alc.inspection.inc',
+                       'access callback' => 'user_access',
+                       'access arguments' => array('alcinspection_per'),
+
+                      'type' => MENU_CALLBACK,
+              );
+			
+									
+					
+			    /*
+			         $items['alcinspection/showcausenoticeview/%'] = array(   
+					'page callback' => 'alc_inspection_note_view', 
+					'page arguments' => array(2),
+					'file' => 'inc/alc.inspection.inc',
+					'access callback' => 'user_access',
+	 				'access arguments' => array('alcinspection_per'),
+    				'type' => MENU_CALLBACK,
+ 					);	
+					
+					*/				 
+					 
+					 
+					return $items; 			 
+					 
+}
+					 
+function alcinspection_theme($existing, $type, $theme, $path){
+  return array(
+    'alcinsnoteview' => array(
+        'variables' => array('content' =>NULL,'content2'=>NULL,'content3'=>NULL,'content4'=>NULL,'content5'=>NULL,'content7'=>NULL,'content8'=>NULL,'content9'=>NULL),
+        'template'  => 'alcinsnoteview', 
+      ),
+	   
+	   'alcshowcausenoticeview' => array(
+        'variables' => array('content' =>NULL,'content2'=>NULL,'content3'=>NULL,'content4'=>NULL,'content5'=>NULL,'content7'=>NULL,'content8'=>NULL,'content9'=>NULL),
+        'template'  => 'alcshowcausenoticeview', 
+      ),
+	 'alcletoffnoteview' => array(
+         'variables' => array('content' =>NULL,'content2'=>NULL,'content3'=>NULL,'content4'=>NULL,'content5'=>NULL,'content7'=>NULL,'content8'=>NULL,'content9'=>NULL),
+        'template'  => 'alcletoffnoteview', 
+      ),
+	   'alcccletoffview' => array(
+         'variables' => array('content' =>NULL,'content2'=>NULL,'content3'=>NULL,'content4'=>NULL,'content5'=>NULL,'content7'=>NULL,'content8'=>NULL,'content9'=>NULL),
+        'template'  => 'alcccletoffview', 
+      ),
+	  'alcccperview' => array(
+         'variables' => array('content' =>NULL,'content2'=>NULL,'content3'=>NULL,'content4'=>NULL,'content5'=>NULL,'content7'=>NULL,'content8'=>NULL,'content9'=>NULL),
+        'template'  => 'alcccperview', 
+      ),
+ /*	 'insshowcause' => array(
+        'variables' => array('content' =>NULL,'content2'=>NULL,'content3'=>NULL,'content4'=>NULL,'content5'=>NULL,'content7'=>NULL,'content8'=>NULL,'content9'=>NULL),
+        'template'  => 'insshowcause', 
+      ),
+	   'showcauseview' => array(
+        'variables' => array('content' =>NULL,'content2'=>NULL,'content3'=>NULL,'content4'=>NULL,'content5'=>NULL,'content7'=>NULL,'content8'=>NULL,'content9'=>NULL),
+        'template'  => 'showcauseview', 
+      )
+	  ,
+	   'fwd_alc_letoff' => array(
+        'variables' => array('content' =>NULL,'content2'=>NULL,'content3'=>NULL,'content4'=>NULL,'content5'=>NULL,'content7'=>NULL,'content8'=>NULL,'content9'=>NULL),
+        'template'  => 'fwd_alc_letoff', 
+      ) */
+	  
+	  
+     );
+  }					

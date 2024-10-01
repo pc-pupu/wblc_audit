@@ -1,0 +1,1022 @@
+<?php
+function backlog_renewal_init(){
+	
+}
+
+function backlog_renewal_menu(){
+		
+	$items 	= array();
+	
+	$items['apply-renewal-amendment']	= array(
+			'title' 			=> 	'Application for Renewal or Amendment of License',
+			'page callback'		=>	'drupal_get_form',
+			'page arguments'	=>	array('check_reference_no'),
+			'file' 				=> 	'includes/check_reference_no.inc',
+			'access arguments' 	=> 	array('apply_license'),
+		
+			);
+											   
+	$items['renewal/old_renewal']	= array(
+			'title' 			=> 	'Application for Renewal or Amendment of License',
+			'page callback'		=>	'drupal_get_form',
+			'page arguments'	=>	array('check_reference_no'),
+			'file' 				=> 	'includes/check_reference_no.inc',
+			'access arguments' 	=> 	array('apply_license'),
+		
+			);
+			
+	$items['renewal/backlog-renewal']	= array(
+			'page callback'				=>	'drupal_get_form',
+			'page arguments'			=>	array('renewal_profile_details'),
+			'file' 						=> 	'includes/renewal_profile_details.inc',
+			'access arguments' 			=>	array('apply_license'),
+		);
+				
+	$items['renewal/backlog-renewal/%']	= array(
+			'title' 					=> 	'Application for Renewal of License',
+			'page callback'				=>	'drupal_get_form',
+			'page arguments'			=>	array('renewal_profile_details',2),
+			'file' 						=> 	'includes/renewal_profile_details.inc',
+			'access arguments' 			=>	array('apply_license'),
+		);
+	///backlog renewal ***/				
+										
+	$items['renewal/backlog-renewal/default'] 	= array(
+			'title' 					=> 'Profile details',
+			'type' 						=> MENU_DEFAULT_LOCAL_TASK,
+			'weight' 					=> -10
+		);
+		
+	$items['renewal/backlog-renewal/default/%']	= array(
+			'title' 					=> 	'Application for Renewal of License',
+			'page callback'				=>	'drupal_get_form',
+			'page arguments'			=>	array('renewal_profile_details',3),
+			'file' 						=> 	'includes/renewal_profile_details.inc',
+			'access arguments' 			=>	array('apply_license'),
+		);
+										
+																		
+	$items['renewal/backlog-renewal/work_details/%']	= array(
+			 'title' 					=> 'Work information',
+			  'page callback' 			=> 'drupal_get_form', 
+			  'page arguments' 			=> array('renewal_particular_data',3),
+			  'file' 					=> 'includes/renewal_particular_data.inc',
+			  'access arguments' 		=> array('apply_license'),
+			  'weight' 					=> 2,
+			  'type' 					=> MENU_LOCAL_TASK
+		);
+		
+	$items['renewal/backlog-renewal/upload_documents/%']	= array(
+			 'title' 					=> 'Upload Documents',
+			  'page callback' 			=> 'drupal_get_form', 
+			  'page arguments' 			=> array('renewal_doc_upload',3),
+			  'file' 					=> 'includes/renewal_doc_upload.inc',
+			  'access arguments' 		=> array('apply_license'),
+			  'weight' 					=> 4,
+			  'type' 					=> MENU_LOCAL_TASK
+		);
+	$items['renewal/preview-renewal/%/%']	= array(
+			'title' 					=> 'Application Preview',
+			'page callback'				=>	'preview_renewal',
+			//'page arguments'			=>	array('preview_renewal',3),
+			'page arguments' 			=> array(2,3),
+			'file' 						=> 	'includes/preview_renewal.inc',
+			'access arguments' 			=>	array('apply_license'),
+		);
+		
+	/*$items['miscellaneous/%/%/%']						= array(
+															'title' 				=> 'Lincense Application',
+															'page callback' 		=>'miscellaneous',
+															'file' 					=>'includes/miscellaneous.inc',
+															'access arguments' 		=> array('apply_license'),
+															);*/
+	return $items;
+}
+function update_activity_tag($license_id,$status){
+	
+	$contractor_activity_tag 	= 	array('application_status'=>$status);
+	$query_contract_labour 		= 	db_update('l_contractor_activity_tag');
+ 	$query_contract_labour		->	fields($contractor_activity_tag);
+ 	$query_contract_labour		->	condition('renewal_license_ammendment_id',$license_id);
+	$query_contract_labour		->	execute();
+}
+function contractor_personal_address_rejected($serial='',$particular_id=''){
+		$contractor_personal_address='';
+		$query_contrcator_address = db_query("SELECT contractor_areatype, contractor_pin, sub_div_name, block_mun_name, 
+       name_of_police_station, serial_no_from_v, id, act_id,village_name,district_name
+  FROM contractor_personal_address_rejected where  id ='".$particular_id."' and serial_no_from_v ='".$serial."'");	
+		
+	    $contrcator_address_personal = $query_contrcator_address->fetchAssoc();
+	
+		if(!empty($contrcator_address_personal)){
+			if($contrcator_address_personal['district_code']!='17'){ 
+			
+			
+					if($contrcator_address_personal['contractor_areatype']=='B'){
+						
+							$contractor_personal_address		=	ucwords($contrcator_address_personal['village_name']).',&nbsp;';
+							$contractor_personal_address		.=	'Block- '.$contrcator_address_personal['block_mun_name'].',&nbsp;';
+					
+					}
+					if($contrcator_address_personal['contractor_areatype']=='C'){
+						  $contractor_personal_address	.=	$contrcator_address_personal['village_name'].',&nbsp;';
+						  $contractor_personal_address	.=	$contrcator_address_personal['block_mun_name'].',&nbsp;';
+					
+					}
+					if($contrcator_address_personal['contractor_areatype']=='M'){
+						  $contractor_personal_address		.=	$contrcator_address_personal['block_mun_name'].',&nbsp;';
+						  $contractor_personal_address		.=	'Ward- '.$contrcator_address_personal['village_name'].',&nbsp;';
+					}if($contrcator_address_personal['contractor_areatype']=='N'){
+						
+						  $contractor_personal_address		.=	'Notified Area- '.$contrcator_address_personal['village_name'].',&nbsp;';
+					}
+					
+						$contractor_personal_address				.=	$contrcator_address_personal['sub_div_name'].',&nbsp;';
+						$contractor_personal_address				.=	'PS - '.$contrcator_address_personal['name_of_police_station'].',&nbsp;';
+						$contractor_personal_address				.=	'District - '.$contrcator_address_personal['district_name'].',&nbsp;Pin Code - '.$contrcator_address_personal['contractor_pin'];
+				  
+			}else{
+				$contractor_personal_address .= $contrcator_address_personal['village_name'].',&nbsp;PS - '.$contrcator_address_personal['name_of_police_station'].',&nbsp;'. $contrcator_address_personal['district_name'].',&nbsp; Pin Code - '.$contrcator_address_personal['contractor_pin'];
+			}
+		}
+		//echo $contractor_personal_address;	
+			
+	 //  print_r($contrcator_address_personal);die();    
+	return $contractor_personal_address;
+		
+	
+}
+function contractor_manager_address_rejected($serial='',$particular_id=''){
+	$contractor_manager_address='';
+		$query_manager_address = db_query("SELECT  district_name, sub_div_name, block_mun_name, name_of_police_station, 
+       village_name, contractor_manager_areatype, id, manager_pin, act_id
+  FROM contractor_manager_address_rejected  where id ='".$particular_id."' and serial_no_from_v ='".$serial."'");	
+		
+	  $manager_address_personal = $query_manager_address->fetchAssoc();
+	
+		if(!empty($manager_address_personal)){
+			if($manager_address_personal['district_code']!='17'){ 
+			
+			
+					if($manager_address_personal['contractor_manager_areatype']=='B'){
+						
+							$contractor_manager_address		=	ucwords($manager_address_personal['village_name']).',&nbsp;';
+							$contractor_manager_address		.=	'Block- '.$manager_address_personal['block_mun_name'].',&nbsp;';
+					
+					}
+					if($manager_address_personal['contractor_manager_areatype']=='C'){
+						  $contractor_manager_address	.=	$manager_address_personal['village_name'].',&nbsp;';
+						  $contractor_manager_address	.=	$manager_address_personal['block_mun_name'].',&nbsp;';
+					
+					}
+					if($manager_address_personal['contractor_manager_areatype']=='M'){
+						  $contractor_manager_address		.=	$manager_address_personal['block_mun_name'].',&nbsp;';
+						  $contractor_manager_address		.=	'Ward- '.$manager_address_personal['village_name'].',&nbsp;';
+					}if($manager_address_personal['contractor_manager_areatype']=='N'){
+						
+						  $contractor_manager_address		.=	'Notified Area- '.$manager_address_personal['village_name'].',&nbsp;';
+					}
+					
+						$contractor_manager_address				.=	$manager_address_personal['sub_div_name'].',&nbsp;';
+						$contractor_manager_address				.=	'PS - '.$manager_address_personal['name_of_police_station'].',&nbsp;';
+						$contractor_manager_address				.=	'District - '.$manager_address_personal['district_name'].',&nbsp;Pin Code - '.$manager_address_personal['manager_pin'];
+				  
+			}else{
+				$contractor_manager_address .= $manager_address_personal['village_name'].',&nbsp;PS - '.$manager_address_personal['name_of_police_station'].',&nbsp;'. $manager_address_personal['district_name'].',&nbsp; Pin Code - '.$manager_address_personal['manager_pin'];
+			}
+		}
+		//echo $contractor_personal_address;	
+			
+	 //  print_r($contrcator_address_personal);die();    
+	return $contractor_manager_address;
+}
+
+function worksite_address_rejected($serial='',$particular_id=''){
+	$worksite_address_reject_details='';
+	$query_worksite_address = db_query("SELECT  district_name, sub_div_name, block_mun_name, name_of_police_station, 
+       village_name, work_site_areatype, id, worksite_pin, act_id
+  FROM worksite_address_rejected  where id ='".$particular_id."' and serial_no_from_v ='".$serial."'");	
+		
+	  $worksite_address_reject = $query_worksite_address->fetchAssoc();
+			
+			//print_r($worksite_address_reject);
+		if(!empty($worksite_address_reject)){
+			if($worksite_address_reject['district_code']!='17'){ 
+			
+			
+					if($worksite_address_reject['work_site_areatype']=='B'){
+						
+							$worksite_address_reject_details		=	ucwords($worksite_address_reject['village_name']).',&nbsp;';
+							$worksite_address_reject_details		.=	'Block- '.$worksite_address_reject['block_mun_name'].',&nbsp;';
+					
+					}
+					if($worksite_address_reject['work_site_areatype']=='C'){
+						  $worksite_address_reject_details	.=	$worksite_address_reject['village_name'].',&nbsp;';
+						  $worksite_address_reject_details	.=	$worksite_address_reject['block_mun_name'].',&nbsp;';
+					
+					}
+					if($worksite_address_reject['work_site_areatype']=='M'){
+						  $worksite_address_reject_details		.=	$worksite_address_reject['block_mun_name'].',&nbsp;';
+						  $worksite_address_reject_details		.=	'Ward- '.$worksite_address_reject['village_name'].',&nbsp;';
+					}if($worksite_address_reject['work_site_areatype']=='N'){
+						
+						  $worksite_address_reject_details		.=	'Notified Area- '.$worksite_address_reject['village_name'].',&nbsp;';
+					}
+					
+						$worksite_address_reject_details				.=	$worksite_address_reject['sub_div_name'].',&nbsp;';
+						$worksite_address_reject_details				.=	'PS - '.$worksite_address_reject['name_of_police_station'].',&nbsp;';
+						$worksite_address_reject_details				.=	'District - '.$worksite_address_reject['district_name'].',&nbsp;Pin Code - '.$worksite_address_reject['worksite_pin'];
+				  
+			}else{
+				$worksite_address_reject_details .= $worksite_address_reject['village_name'].',&nbsp;PS - '.$worksite_address_reject['name_of_police_station'].',&nbsp;'. $worksite_address_reject['district_name'].',&nbsp; Pin Code - '.$worksite_address_reject['worksite_pin'];
+			}
+		}
+		//echo $contractor_personal_address;	
+			
+	// print_r($worksite_address_reject);die();    
+	return $worksite_address_reject_details;
+}
+//------------------renewal-----------------------------
+function application_type($fromv_serialno,$createdby){
+	global $base_root, $base_path, $user;
+	$apply_status =	0;
+ 	
+	$userid			= $user->uid;	
+	$options 			= array();
+	$record = db_query( "select * from fun_contrcator_activity('".$fromv_serialno."','".$createdby."')")->fetchAssoc();
+	
+	if($fromv_serialno == 9082){
+		// print_r($record); die;
+	}
+	
+	
+	if(trim($record['statusapplication']) != 'I' && $record['flagapplication'] == 'L'){
+		
+		$options['N']				= t('Not applicable');
+		
+	}
+	if(trim($record['statusapplication']) != 'I' && $record['flagapplication'] == 'R'){
+		
+		 if(!empty($record['isbacklog']) && $record['isbacklog'] == 1){
+			$options['BR']				= t('Renewal of License1');
+		 }else{
+			 $options['R']				= t('Renewal of License2');
+		 }
+		
+	}
+	if(trim($record['statusapplication']) != 'I' && $record['flagapplication'] == 'A'){
+		
+		$options['A'] = t('Amendment of License');
+	}
+	if(trim($record['statusapplication']) == 'I'){
+		$options['R'] = t('Renewal of License');		
+		$options['A'] = t('Amendment of License');
+	}if(empty($record['statusapplication'])  && empty($record['flagapplication'])){
+		
+		$options['BR'] = t('Renewal of License');
+		
+	}
+	
+	return $options;
+}
+
+function fetch_license_no($fromv_serialno,$createdby){
+}
+
+function contractor_activity_tag_insert($serial_no, $flag,$renewal_license_ammendment_id, $application_status , $contractor_id =''){
+	global $base_root, $base_path, $user;
+	$isbacklog = 0;	
+		
+	if(in_array('ALC', $user->roles)|| in_array('Inspector', $user->roles)){
+		$remark_userid = $user->uid;
+		$record = db_query( "select * from contractor_activity_tag('".$serial_no."','".$flag."','".$renewal_license_ammendment_id."','".$contractor_id."','".$application_status."','".$remark_userid."','".$isbacklog."')");
+	}else{
+		// $contractor_id = 0;
+		if($contractor_id == '' && in_array('Applicant', $user->roles)){
+			$contractor_id = $user->uid;
+		}
+		
+		$record = db_query( "select * from contractor_activity_tag('".$serial_no."','".$flag."','".$renewal_license_ammendment_id."','".$contractor_id."','".$application_status."','0','".$isbacklog."')");
+	}		
+}
+function contractor_activity_tag($serial_no='' ,$contractorid ='') {
+	global $base_root, $base_path, $user;
+	if(empty($contractorid) && $contractorid ==''){
+		$contractor_id 		= 	$user->uid;
+	}else{
+		$contractor_id 		= 	$contractorid;
+	}
+	
+		$record = db_query( "select * from fun_contrcator_latest_activity('".$serial_no."','".$contractor_id."')")->fetchAssoc();
+		return  $record;
+		
+}
+function basic_information_for_ammendment($serial_no='' ,$contractorid =''){ 
+	global $base_root, $base_path, $user;
+		
+	if(empty($contractorid) && $contractorid ==''){
+		$contractor_id 		= 	$user->uid;
+	}else{
+		$contractor_id 		= 	$contractorid;
+	}
+	 
+	$record = db_query( "select * from fun_contrcator_activity('".$serial_no."','".$contractor_id."')")->fetchAssoc();	
+	
+	$application_flag 			= $record['flagapplication'];
+	$renewallicenseammendmentid = $record['renewallicenseammendmentid'];
+	
+	if(!empty($application_flag) && !empty($renewallicenseammendmentid)){
+		$record_details = db_query( "select  * from fun_basic_information1('".$contractor_id."','".$renewallicenseammendmentid."','".$application_flag."')")->fetchAssoc();
+	}
+	return  $record_details;
+}
+	
+function nature_of_work_pe($application_id){
+	$query_work 							= 	db_select('l_clra_reg_nature_of_work', 'c_reg_nature');
+	$query_work								->	leftJoin('contractor_works', 'con_work','con_work.contractor_work_id = c_reg_nature.e_nature_of_work');  
+	$query_work								->	fields('c_reg_nature',array('identification_number','user_id','act_id'));
+	$query_work								->	fields('con_work',array('cont_work_name','contractor_work_id'));
+	$query_work								->	condition('c_reg_nature.application_id',$application_id,'=');
+	$query_work								->	condition('c_reg_nature.act_id','1','=');
+	$result_work 							= 	$query_work->execute();
+	
+	$nature_work							=	"";
+	
+	if( $result_work->rowCount() > 0 ){
+		
+		foreach($result_work as $objwork){
+			if($objwork->contractor_work_id != '28'){
+			$nature_work_list				=	$nature_work_list.$objwork->cont_work_name.', ';	
+			}
+		}
+	}
+	$nature_work							= 	substr($nature_work_list, 0, -2);
+	
+	return $nature_work;
+}
+
+function check_ammendment_fields($license_id,$serial){
+	
+	global $base_root, $base_path, $user;
+    $contractor_id 		= 	$user->uid;
+	//echo $license_id.'--'.$serial.'--'.$contractor_id;die;
+	$query 				= 	db_select('l_amendment_check_table', 'amendment');
+ 	$query				->	fields('amendment',array())->condition('from_v_serial_no',$serial,'=')->condition('conrtactor_user_id',$contractor_id,'=')->condition('license_id',$license_id,'=');
+	$result 			= 	$query->execute();
+	
+	return $result;
+}
+
+function applicable_ammendment_fees_calculation($max_labour){
+	
+	if($max_labour > 0 && $max_labour <=20 ){
+		$fees= 50;
+	}if($max_labour >20 && $max_labour <=50 ){
+		$fees= 125;
+	}if($max_labour >50 && $max_labour <=100 ){
+		$fees= 250;
+	}if($max_labour > 100 && $max_labour <= 200 ){
+		$fees= 500;
+	}if($max_labour > 200 && $max_labour <= 400 ){
+		$fees= 1000;
+	}if($max_labour > 400){
+		$fees= 1250;
+	}
+	
+	return $fees;
+}
+function applicable_ammendment_security_fees_calculation($max_labour,$is_coparative){ 
+	if(empty($is_coparative)|| $is_coparative==0){
+		$security_fees = $max_labour*100;
+	}if(!empty($is_coparative)|| $is_coparative==1){
+		$security_fees = $max_labour*25;
+	}
+	
+	return $security_fees;
+}
+function fileupload($file){
+	$file_details 	= file_load($file);
+	
+	     if ($file_details!="")  {
+		 			$uri						  	 	=	trim($file_details->uri); 
+					$file_details->status 				= 	FILE_STATUS_PERMANENT;
+					file_save($file_details);
+			
+	}
+	return $file_details;
+}
+function date_calculation($startdate,$enddate){
+	$est_date = '';
+	$diff=round(abs(strtotime($startdate)-strtotime($enddate))/86400).' day(s)';
+		
+	$start_date=date('dS F y', strtotime($startdate));
+	$end_date=date('dS F y', strtotime($enddate));
+	$startend_date=$start_date.' To '.$end_date;
+	$est_date = $startend_date.'<br>Estimated Duration:'.$diff; 
+ 
+   return $est_date;	
+}
+function return_ammendement_id($license_id){
+	$query = db_query("SELECT id FROM l_amendment_of_contract_labour_license  where license_id ='".$license_id."'");	
+	$ammendment_id = $query->fetchField();
+	return $ammendment_id;
+}
+function return_ammendement_license_id($id){
+	$query = db_query("SELECT license_id FROM l_amendment_of_contract_labour_license  where id ='".$id."' or license_renewal_ammendment_id= '".$id."'");	
+	$ammendement_license_id = $query->fetchField();
+	return $ammendement_license_id;
+}
+
+
+function return_ammendement_serialno($license_id){
+	$query 					= db_query("SELECT serial_no_from_v FROM l_contractor_license_application  where id ='".$license_id."'");	
+	$serialno 				= $query->fetchField();
+	return $serialno;
+}
+function return_renewal_license($id){
+	$query 					= db_query("SELECT lincense_id FROM l_contractor_license_apply_renweal  where id ='".$id."'");	
+	$lincense_id 			= $query->fetchField();
+	return $lincense_id;
+}
+function fetch_latest_remark($reference_no){
+	
+	$query 	= 	db_select('l_remark_license', 'lrl')
+			    ->	fields('lrl', array('remark_type'))
+				->	condition('lrl.particular_id', $reference_no)
+				->	condition('lrl.flag', 'A')
+				->	condition('lrl.is_active', 1)
+				->	orderBy('id', 'DESC')
+			    ->  extend('PagerDefault')->limit(1);
+						 
+	$remark_type = $query->execute()->fetchObject()->remark_type;
+	return $remark_type;
+}
+function ammendment_table($ammendid){
+	
+	$query 								= 	db_select('l_amendment_of_contract_labour_license', 'amendment');
+ 	$query								->	fields('amendment',array())->condition('id',$ammendid,'=');
+	$result 							= 	$query->execute();
+	
+	return  $result;
+}
+
+/*function renewal_data($license_renewal_id){
+	$license_renweal 		=	 db_select('l_contractor_license_apply_renweal', 'renewal_apply');
+  	$license_renweal		->	fields('renewal_apply',array())->condition('renewal_apply.action','R','=');
+  	$license_renweal		->	condition('renewal_apply.id',$license_renewal_id,'=');
+
+	$license_renweal_details = $license_renweal->execute()->fetchAssoc();
+	return $license_renweal_details;
+}*/
+function remark_details($reference_no){
+		$query 	= 	db_select('l_remark_license', 'lrl');
+		$query		->	fields('lrl', array('remark_type','remark_by','amendment_check_field','not_amendment_check_field','remark_field_title','remark_by','remark_date','remark_by_name','remark_text','remark_by_role','remark_to','id'));
+		$query		->	condition('lrl.particular_id', $reference_no);
+		$query		-> where('((lrl.remark_by_role = 4) OR (lrl.remark_by_role = 7))');
+		$query		->	condition('lrl.flag', 'A');
+		$query		->	orderBy('id', 'DESC');
+			 
+			// print_r($remark_details = $query->execute());die();
+						 
+		$remark_details = $query->execute()->fetchAll();
+		
+		
+	return $remark_details;
+		
+}
+function remark_details_second_last($reference_no){
+		$query 	= 	db_select('l_remark_license', 'lrl');
+		$query		->	fields('lrl', array('remark_type'));
+		$query		->	condition('lrl.particular_id', $reference_no);		
+		$query		->	condition('lrl.flag', 'A');
+		$query		->	condition('lrl.is_active', 1);
+		$query		->	range(1,1);
+		$query		->	orderBy('id', 'DESC');		
+		
+		$remark_details = $query->execute()->fetchObject()->remark_type;
+		// print_r($remark_details = $query->execute()->fetchObject());die();
+		
+	return $remark_details;
+		
+}
+
+function remark_details_second_last1($reference_no,$remark_id){
+		$query 	= 	db_select('l_remark_license', 'lrl');
+		$query		->	fields('lrl', array('remark_type'));
+		$query		->	condition('lrl.particular_id', $reference_no);
+		
+		$query		->	condition('lrl.flag', 'A');
+		//$query		->	condition('lrl.id', $remark_id);
+		$query		->	range(1,1);
+		$query		->	orderBy('id', 'DESC');	 
+						 
+		$remark_details = $query->execute()->fetchObject()->remark_type;
+		//print_r($remark_details = $query->execute());die();
+		
+	return $remark_details;
+		
+}
+function get_Application_type($createdby){
+	
+	$record = db_query( "select * from fun_get_latest_application_type('".$createdby."')")->fetchAll();
+	/*if(!empty($record)){
+		foreach($record as $row){
+			$flag 						   = $get_application_type->flagapplication;
+			$renewal_license_ammendment_id = $get_application_type->renewallicenseammendmentid;
+			$application_status 		   = $get_application_type->statusapplication;
+			$from_v_serial_no 		   	   = $get_application_type->from_v_no;
+			if($flag == 'A'){
+				return_reference_no($renewal_license_ammendment_id);
+			}
+		}
+	}
+	*/
+	//print_r($record);die();
+
+	
+	return $record;
+}
+
+function renewal_data_last($license_renewal_id){
+	$license_renweal 		=	 db_select('l_contractor_license_apply_renweal', 'renewal_apply');
+  	$license_renweal		->	fields('renewal_apply',array())->condition('renewal_apply.action','R','=');
+  	$license_renweal		->	condition('renewal_apply.id',$license_renewal_id,'=');
+
+	$license_renweal_details = $license_renweal->execute()->fetchAssoc();
+	return $license_renweal_details;
+}
+function amemd_log($amendid){
+		
+	$record = db_query( "select * from fun_ammend_log('".$amendid."')");
+	return $record;
+}
+function return_reference_no($id){
+	$query 					= db_query("SELECT reference_no FROM l_amendment_of_contract_labour_license  where id ='".$id."' or license_renewal_ammendment_id = '".$id."'");	
+	$reference_no 			= $query->fetchField();
+	return $reference_no;
+}
+function return_reference_no_id($id){
+	$query 					= db_query("SELECT reference_no FROM l_amendment_of_contract_labour_license  where id ='".$id."'");	
+	$reference_no 			= $query->fetchField();
+	return $reference_no;
+}
+function return_created_by($id){
+	$query 					= db_query("SELECT created_by FROM l_amendment_of_contract_labour_license  where id ='".$id."'");	
+	$created_by 			= $query->fetchField();
+	return $created_by;
+}
+function last_remark_activity($reference_no){
+		$query 	= 	db_select('l_remark_license', 'lrl')
+				->	fields('lrl', array('remark_type','remark_by','amendment_check_field','not_amendment_check_field','remark_field_title','remark_by','remark_date','remark_by_name','remark_text','remark_by_role'))
+				->	condition('lrl.particular_id', $reference_no)
+				->	condition('lrl.flag', 'A')
+				->	condition('lrl.is_active', 1)
+				->	orderBy('id', 'DESC')
+			    ->  extend('PagerDefault')->limit(1);
+						 
+		$last_remark_activity = $query->execute()->fetchAssoc();
+		
+	return $last_remark_activity;
+		
+}
+function particular_file($serial,$contractorid= ''){
+	global $base_root, $base_path, $user;
+		if(empty($contractorid)){
+			$contractor_id 		= 	$user->uid;
+		}else{
+			$contractor_id 		= 	$contractorid;
+		}
+		 
+	$query 						= 	db_select('l_particular_of_contract_labour', 'lpcl');
+ 	$query						->	fields('lpcl',array('frm_v_file_id','residential_file_id','work_order_file_id','other_file_id','signed_license_id'))->condition('serial_no_from_v',$serial,'=')->condition('contractor_user_id',$contractor_id,'=')->condition('act_id','1','=');
+	$result 					= 	$query->execute()->fetchAssoc();
+	
+	return  $result;
+}
+function renewal_file($id){
+	global $base_root, $base_path, $user;
+		if(empty($contractorid)){
+			$contractor_id 		= 	$user->uid;
+		}else{
+			$contractor_id 		= 	$contractorid;
+		}
+		 
+	$query 						= 	db_select('l_contractor_license_apply_renweal', 'renewal');
+ 	$query						->	fields('renewal',array('upload_signed_form','renewal_certificate_id'))->condition('id',$id,'=');
+	$result 					= 	$query->execute()->fetchAssoc();
+	
+	return  $result;
+}
+
+function fetch_second_tag_row($ammendid){
+
+	
+	$fetch_remark		 = 	db_select('l_contractor_activity_tag', 'tag');
+  	$fetch_remark		->	fields('tag',array('application_status'));
+	$fetch_remark		->	condition('tag.renewal_license_ammendment_id',$ammendid,'=');
+	$fetch_remark		->	condition('tag.flag','A','=');
+	$fetch_remark		->	orderBy('tag.id','DESC');
+	$fetch_remark		->	range(1,1);
+	$remark_type 		= 	$fetch_remark->execute()->fetchObject()->application_status;
+	
+	
+return $remark_type;
+	
+}
+
+function ammend_actions_dropdown_by_alc($ammendment_status,$payable_amendment_security_fees,$payable_amendment_fees,$ammendid){
+	
+	$options 			= array();
+	
+	if ($ammendment_status == 'U' || $ammendment_status == 'I'){
+			$remak_type				= fetch_second_tag_row($ammendid);
+			$options['I']			= t('Issue Certificate');
+			$options[$remak_type]	= t('Backed for Signed Application');
+		
+	}else if ($ammendment_status == 'C'){
+		
+		$options['C']		= t('Call Applicant');
+		$options['I']		= t('Issue Certificate');
+	
+		
+	}else {
+		
+		$options['B']		= t('Back For Correction');
+		//$options['BI']		= t('Back To Inspector');
+		if(empty($payable_amendment_security_fees) && empty($payable_amendment_fees))
+			$options['AW']		= t('Verified & Approval Without Fees Submission');
+		if(!empty($payable_amendment_security_fees) || !empty($payable_amendment_fees))
+		  
+			$options['A']		= t('Verified & Approval For Fees Submission');
+		//$options['R']		= t('Reject');
+			
+	} 
+
+	return $options;	
+	
+}
+function return_data($id){
+	$query 					= db_query("SELECT qr_code,ammendment_status, name_of_contractor ,ammendment_certificate_id,payable_amendment_security_fees,payable_amendment_fees FROM l_amendment_of_contract_labour_license  where id ='".$id."'");	
+	$return_data 			= $query->fetchAssoc();
+	
+	return $return_data;
+}
+function get_subdivname($worksite_subdivisioncode){
+	$get_sub_division_name		= 	db_select('sub_division', 'subdivision');
+				$get_sub_division_name		->	fields('subdivision',array('sub_div_name'));
+				$get_sub_division_name		->	condition('subdivision.sub_div_code',$worksite_subdivisioncode);
+				$sub_division_name 			= 	$get_sub_division_name->execute()->fetchObject()->sub_div_name;
+	return $sub_division_name;
+}
+function create_reference_no(){
+	$query 					= db_query("SELECT max(reference_no) FROM l_amendment_of_contract_labour_license");	
+	$reference_no 			= $query->fetchField();
+	
+	if(empty($reference_no)){
+		$referenceno = 1;
+	}else{
+		$referenceno = $reference_no+1;
+	}
+	return $referenceno;
+}
+function fetch_contrcator_name($id){
+	$query 					= db_query("SELECT name_of_contractor FROM l_amendment_of_contract_labour_license  where id ='".$id."'");	
+	$name_of_contractor 			= $query->fetchField();
+	return $name_of_contractor;
+}
+/*function fetch_contrcator_name($id){
+	$query 					= db_query("SELECT name_of_contractor FROM l_amendment_of_contract_labour_license  where id ='".$id."'");	
+	$name_of_contractor 			= $query->fetchField();
+	return $name_of_contractor;
+}*/
+function get_previous_license($serial_no,$contractor_id){
+	$previous_license_number='';
+	$previous_license 					= 	db_select('l_contrcator_previous_license', 'previous_license');
+	$previous_license					->	fields('previous_license',array('perivious_license_no'));
+	$previous_license					->	condition('previous_license.serial_no_form_v',$serial_no,'=');
+	$previous_license					->	condition('previous_license.created_by',$contractor_id,'=');
+	$previous_license					->	condition('previous_license.perivious_license_no', 'NULL', '!=');
+
+	$previous_license_no 				= 	$previous_license->execute()->fetchAll();
+	
+
+	if(!empty($previous_license_no)){
+		foreach($previous_license_no as $row){
+			$previous_license_number.=$row->perivious_license_no.',';
+		}
+		$previous_license_number_list = substr($previous_license_number, 0, -1);
+	}
+  return $previous_license_number_list;
+}
+
+function get_previous_reg($serial_no,$contractor_id){
+	$reg_no_principal_employeer_number='';
+	$reg_no_principal 					= 	db_select('l_contrcator_previous_license', 'previous_license');
+	$reg_no_principal					->	fields('previous_license',array('reg_no_principal_employeer'));
+	$reg_no_principal					->	condition('previous_license.serial_no_form_v',$serial_no,'=');
+	$reg_no_principal					->	condition('previous_license.created_by',$contractor_id,'=');
+	$reg_no_principal					->	condition('previous_license.reg_no_principal_employeer', 'NULL', '!=');
+
+	$reg_no_principal_no 				= 	$reg_no_principal->execute()->fetchAll();
+	if(!empty($reg_no_principal_no)){
+		foreach($reg_no_principal_no as $row){
+			$reg_no_principal_employeer_number.=$row->reg_no_principal_employeer.',';
+		}
+		$reg_no_principal_employeer_number_list = substr($reg_no_principal_employeer_number, 0, -1);
+	}
+	return $reg_no_principal_employeer_number_list;
+}
+function return_maximum_renewal_fees($license_id,$created_by){
+	//$license_id						=	return_renewal_license($renewal_license_ammendment_id);
+	if(!empty($license_id)){
+		$maximum_renewal_fees 			=   db_query("SELECT MAX(renewal_deposite_fees) FROM l_contractor_license_apply_renweal where lincense_id = '".$license_id."' and created_by ='".$created_by."' ")->fetchField();
+	}
+	return $maximum_renewal_fees;
+}
+function return_maximum_ammendment_fees($license_id,$created_by){
+	//$license_id						=	return_ammendement_license_id($renewal_license_ammendment_id);
+	if(!empty($license_id))
+	$maximum_ammendment_fees 		=   db_query("SELECT MAX(ammend_deposit_fees) FROM l_amendment_of_contract_labour_license_log where license_id = '".$license_id."' and created_by ='".$created_by."' ")->fetchField();
+	
+	return $maximum_ammendment_fees;
+}
+
+function return_maximum_license_fees($serial,$contractorid=''){
+	$maximum_license_fees 	=   db_query("SELECT MAX(amount_of_licence) FROM l_particular_of_contract_labour where contractor_user_id = '".$contractorid."' and serial_no_from_v ='".$serial."' ")->fetchField();
+	return  $maximum_license_fees;
+}
+
+function return_maximum_renewal_labour($license_id,$created_by){
+	//$license_id						=	return_renewal_license($renewal_license_ammendment_id);
+	if(!empty($license_id))
+	$maximum_renewal_labour 		=   db_query("SELECT MAX(max_of_contract_labour) FROM l_contractor_license_apply_renweal where lincense_id = '".$license_id."' and created_by ='".$created_by."' ")->fetchField();
+	return $maximum_renewal_labour;
+}
+function return_maximum_ammendment_labour($license_id,$created_by){
+	//$license_id						=	return_ammendement_license_id($renewal_license_ammendment_id);
+	if(!empty($license_id))
+	$maximum_ammendment_labour 		=   db_query("SELECT MAX(max_of_contract_labour) FROM l_amendment_of_contract_labour_license_log where license_id = '".$license_id."' and created_by ='".$created_by."' ")->fetchField();
+	return $maximum_ammendment_labour;
+}
+
+function return_maximum_license_labour($serial,$contractorid=''){
+	$maximum_license_labour 	=   db_query("SELECT MAX(contractor_max_no_of_labours_on_any_day) FROM l_particular_of_contract_labour where contractor_user_id = '".$contractorid."' and serial_no_from_v ='".$serial."' ")->fetchField();
+	return  $maximum_license_labour;
+}
+
+function return_maximum_license_security_fees($serial,$contractorid=''){
+	$maximum_license_security_fees 	=   db_query("SELECT MAX(amount_of_security_deposit) FROM l_particular_of_contract_labour where contractor_user_id = '".$contractorid."' and serial_no_from_v ='".$serial."' ")->fetchField();
+	return  $maximum_license_security_fees;
+}
+
+function return_maximum_ammendment_security_fess($license_id,$created_by){
+	//$license_id						=	return_ammendement_license_id($renewal_license_ammendment_id);
+	if(!empty($license_id))
+	$maximum_ammendment_security_fess = db_query("SELECT MAX(deposited_max_security_fees) FROM l_amendment_of_contract_labour_license_log where license_id = '".$license_id."' and created_by ='".$created_by."' ")->fetchField();
+	return $maximum_ammendment_security_fess;
+}
+
+function return_maximum_renewal_security($license_id,$created_by){
+	//$license_id						=	return_renewal_license($renewal_license_ammendment_id);
+	if(!empty($license_id))
+	$maximum_renewal_security_fees	=   db_query("SELECT MAX(renewal_security_new) FROM l_contractor_license_apply_renweal where lincense_id = '".$license_id."' and created_by ='".$created_by."' ")->fetchField();
+	
+	return $maximum_renewal_security_fees;
+}
+
+function pe_regmaster_details_amend($serial_no,$contractor_id){
+	
+		$reg_no_principal_lists ='';
+		$reg_no_principal 					= 	db_select('l_contrcator_previous_license', 'previous_license');
+		$reg_no_principal					->	fields('previous_license',array('reg_no_principal_employeer'));
+		$reg_no_principal					->	condition('previous_license.serial_no_form_v',$serial_no,'=');
+		$reg_no_principal					->	condition('previous_license.created_by',$contractor_id,'=');
+		$reg_no_principal					->	condition('previous_license.reg_no_principal_employeer', 'NULL', '!=');
+		$reg_no_principal_no 				= 	$reg_no_principal->execute()->fetchAll();
+		
+		//print_r($reg_no_principal_no);
+		//$reg_no_principal_lists				=  explode(',', $reg_no_principal_no);
+		
+		foreach($reg_no_principal_no as $row){ 
+			$record = db_query("select name_of_contractor, serial_no_from_v, address_of_contractor, 
+			   con_loc_e_dist, con_loc_e_subdivision, con_loc_e_borough, con_name_areatype, 
+			   con_loc_e_areatype, con_loc_e_vill_ward, con_l_e_ps, contractor_pin, 
+			   state_opts, state_others, id, e_name, loc_e_name, registration_number, 
+			   act_id, loc_e_areatype, registration_date, loc_emp_areatype, 
+			   full_name_principal_emp, address_principal_emp,user_id,contractor_max_no_of_labours_on_any_day,est_date_of_work_of_each_labour_from_date,est_date_of_work_of_each_labour_to_date
+		  FROM contractor_registrationmaster_details where registration_number ='".$row->reg_no_principal_employeer."'")->fetchAssoc();
+		  $result_work 						= get_nature_of_work_contrcator($details['id'],$serial_no); //---miscellaneous module
+		if($result_work->rowCount() > 0 ){
+					foreach($result_work as $objwork){			
+						$nature_work=$nature_work.$objwork->cont_work_name.', ';		  
+					}
+				}
+				$sub_con=substr($nature_work, 0, -2);
+				$nature_work=$sub_con;	
+			
+		  if(!empty($record['registration_date'])){
+			  $registration_date_timestamp	 	= strtotime($record['registration_date']);
+			  $formatted_reg_date 				=  date('m/d/Y', $registration_date_timestamp);
+			   $reg_no_principal_lists .='<strong>Name:-</strong>'.$record['e_name'].'<br><strong>Reg No.:-</strong>'.$record['registration_number'].'<br><strong>Address:-</strong>'.$record['loc_e_name'].'<br>'.miscellaneous_establishment_address_form($record['loc_e_areatype'],$serial_no,$record['id'])."<br/>"."<strong>Date of Certificates:-</strong> ".$formatted_reg_date."\nUnder The acts of CLRA<br/>";
+		  }
+		  
+		 
+		 
+		}
+		
+
+	return $reg_no_principal_lists;
+}
+	
+	
+function contractor_activity_tag_insert_backlog_reneeal($serial_no,$flag,$renewal_license_ammendment_id,$application_status ,$contractor_id=''){
+	global $base_root, $base_path, $user;
+	if(in_array('ALC', $user->roles)|| in_array('Inspector', $user->roles)){
+			$remark_userid 		= 	$user->uid;
+			$isblacklog			=   1;
+			$record = db_query( "select * from contractor_activity_tag('".$serial_no."','".$flag."','".$renewal_license_ammendment_id."','".$contractor_id."','".$application_status."','".$remark_userid."','".$isblacklog."')");
+	}else{
+			$contractor_id 		= 	$user->uid;
+			$isblacklog			=   1;
+		$record = db_query( "select * from contractor_activity_tag('".$serial_no."','".$flag."','".$renewal_license_ammendment_id."','".$contractor_id."','".$application_status." ','0','".$isblacklog."')");
+	}
+		
+		
+		
+}	
+
+function log_ammendment_address($log_id='',$name=''){
+	$ammendment_address_log	=	'';
+	$query					= 	db_query("SELECT  policestation, villagename, subdivname, districtname, blockname,pin, license_id, areatype, districtcode,address_line1 FROM ".$name."  where log_id ='".$log_id."'");	
+	//print_r($query);die();
+	$log_ammendment_address = $query->fetchAssoc();
+	
+	 if(!empty($log_ammendment_address)){
+		 $ammendment_address_log .= $log_ammendment_address['address_line1'].'<br/>';
+			if($log_ammendment_address['districtcode']!='17'){ 
+					if($log_ammendment_address['areatype']=='B'){
+							$ammendment_address_log		=	ucwords($log_ammendment_address['villagename']).',&nbsp;';
+							$ammendment_address_log		.=	'Block- '.$log_ammendment_address['blockname'].',&nbsp;';
+					}
+					if($log_ammendment_address['areatype']=='C'){
+						  $ammendment_address_log	.=	$log_ammendment_address['villagename'].',&nbsp;';
+						  $ammendment_address_log	.=	$log_ammendment_address['blockname'].',&nbsp;';
+					}
+					if($log_ammendment_address['areatype']=='M'){
+						  $ammendment_address_log		.=	$log_ammendment_address['blockname'].',&nbsp;';
+						  $ammendment_address_log		.=	'Ward- '.$log_ammendment_address['villagename'].',&nbsp;';
+					}if($log_ammendment_address['areatype']=='N'){
+						
+						  $ammendment_address_log		.=	'Notified Area- '.$log_ammendment_address['villagename'].',&nbsp;';
+					}
+					
+						$ammendment_address_log				.=	$log_ammendment_address['subdivname'].'<br/>';
+						$ammendment_address_log				.=	'PS - '.$log_ammendment_address['policestation'].',&nbsp;';
+						$ammendment_address_log				.=	'District - '.$log_ammendment_address['districtname'].',&nbsp;Pin Code - '.$log_ammendment_address['pin'];
+				  
+			}else{
+				$ammendment_address_log .= $log_ammendment_address['villagename'].',&nbsp;PS - '.$log_ammendment_address['policestation'].',&nbsp;'. $log_ammendment_address['districtname'].',&nbsp; Pin Code - '.$log_ammendment_address['pin'];
+			}
+		}
+	return $ammendment_address_log;
+}
+function check_pevious_license_reg($licens_reg_number,$contractor_id){
+	
+		$reg_no_principal_lists ='';
+		$reg_no_principal 					= 	db_select('l_contrcator_previous_license', 'previous_license');
+		$reg_no_principal					->	fields('previous_license',array('perivious_license_no','reg_no_principal_employeer'));
+		$reg_no_principal					->	condition('previous_license.created_by',$contractor_id,'=');
+		$db_or								= 	db_or();
+		$db_or								->	condition('perivious_license_no', $licens_reg_number , '=');
+		$db_or								->	condition('reg_no_principal_employeer', $licens_reg_number , '=');
+		$reg_no_principal					->	condition($db_or);
+		$reg_no_principal_no 				= 	$reg_no_principal->execute()->fetchAssoc();
+		return $reg_no_principal_no;
+}
+			
+function contract_labour_amendment_log($pre_amend_id){
+	$log_data 					= db_query("SELECT * FROM l_amendment_of_contract_labour_license_log WHERE id =( SELECT max(id)  FROM l_amendment_of_contract_labour_license_log WHERE previous_amendment_id ='".$pre_amend_id."')");	
+	$return_log 			= $log_data->fetchAssoc();
+	
+	return $return_log;
+}
+
+function fetch_amendment_log_certificates($pre_amend_id){
+
+			$query_amend 				= 	db_select('l_amendment_of_contract_labour_license_log', 'amend_log');
+			$query_amend				->	fields('amend_log', array())->condition('amend_log.previous_amendment_id',$pre_amend_id,'=');
+			$query_amend				->  orderBy('amend_log.id','ASC');
+			$query_amend				->  range(0, 4);
+			$amend_result				=	$query_amend->execute()->fetchAll();
+			
+			return $amend_result;
+	
+}
+
+function contractor_activity_tag_del($serial_no='' ,$contractorid ='') {
+	global $base_root, $base_path, $user;
+	if(empty($contractorid) && $contractorid ==''){
+		$contractor_id 		= 	$user->uid;
+	}else{
+		$contractor_id 		= 	$contractorid;
+	}
+	
+		$record = db_query( "select * from fun_contrcator_latest_activity_del('".$serial_no."','".$contractor_id."')")->fetchAssoc();
+		return  $record;
+		
+}
+
+function check_ammendment_reference($license_renewal_ammendment_id){
+
+	$query	=	db_query('select  * from l_amendment_of_contract_labour_license where  reference_no =:license_renewal_ammendmentid', array(':license_renewal_ammendmentid' =>$license_renewal_ammendment_id))->fetchAssoc();
+
+	return  $query;
+}
+
+function contractor_regmaster_details_issued_license($application_id='' , $serial_no=''){
+		global $base_root, $base_path, $user;
+		$contractor_id 		= 	$user->uid;
+		$record = db_query("select name_of_contractor FROM contractor_registrationmaster_details where serial_no_from_v ='".$serial_no."' and id ='".$application_id."'")->fetchAssoc();
+		
+		if(empty($record['name_of_contractor']) || $record['name_of_contractor']==''){
+			$record_details = db_query("select name_of_contractor, serial_no_from_v, address_of_contractor, 
+				   con_loc_e_dist, con_loc_e_subdivision, con_loc_e_borough, con_name_areatype, 
+				   con_loc_e_areatype, con_loc_e_vill_ward, con_l_e_ps, contractor_pin, 
+				   state_opts, state_others, id, e_name, loc_e_name, registration_number, 
+				   act_id, loc_e_areatype, registration_date, loc_emp_areatype, 
+				   full_name_principal_emp, address_principal_emp,user_id,contractor_max_no_of_labours_on_any_day,est_date_of_work_of_each_labour_from_date,est_date_of_work_of_each_labour_to_date
+			  FROM contractor_registrationmaster_details where contractor_parent_id ='".$serial_no."' and id ='".$application_id."'")->fetchAssoc();
+		}else{
+			$record_details = db_query("select name_of_contractor, serial_no_from_v, address_of_contractor, 
+				   con_loc_e_dist, con_loc_e_subdivision, con_loc_e_borough, con_name_areatype, 
+				   con_loc_e_areatype, con_loc_e_vill_ward, con_l_e_ps, contractor_pin, 
+				   state_opts, state_others, id, e_name, loc_e_name, registration_number, 
+				   act_id, loc_e_areatype, registration_date, loc_emp_areatype, 
+				   full_name_principal_emp, address_principal_emp,user_id,contractor_max_no_of_labours_on_any_day,est_date_of_work_of_each_labour_from_date,est_date_of_work_of_each_labour_to_date
+			  FROM contractor_registrationmaster_details where serial_no_from_v ='".$serial_no."' and id ='".$application_id."'")->fetchAssoc();
+		}
+			
+
+	return  $record_details;
+}
+
+function return_id($reference_no){
+	$query 					= db_query("SELECT id FROM l_amendment_of_contract_labour_license  where reference_no ='".$reference_no."'");	
+	$amd_id 			= $query->fetchField();
+	return $amd_id;
+}
+
+function check_ammendment_table_with_id($license_renewal_ammendment_id){
+
+	$query	=	db_query('select  * from l_amendment_of_contract_labour_license where  id=:license_renewal_ammendmentid or id=:license_renewal_ammendmentid', array(':license_renewal_ammendmentid' =>$license_renewal_ammendment_id));
+	
+	return  $query;
+}
+function fetch_amendment_log_details($id){
+
+		$query_amend 	= 	db_select('l_amendment_of_contract_labour_license_log', 'amend_log');
+		$query_amend	->	fields('amend_log', array())->condition('amend_log.id',$id,'=');
+						
+		$amend_result	=	$query_amend->execute()->fetchAssoc();
+			
+		return $amend_result;
+	
+}
+function fetch_amendment_log_data($from_v_serial_no='',$userid,$renewal_license_ammendment_id='',$pre_id='',$createdate=''){
+	
+
+		$query_amend 	= 	db_select('l_amendment_of_contract_labour_license_log', 'amend_log');
+		$query_amend	->	fields('amend_log', array())->condition('amend_log.previous_amendment_id',$renewal_license_ammendment_id,'=')
+						->condition('amend_log.license_renewal_ammendment_id',$pre_id,'=')->condition('amend_log.alc_inspector_action_date',$createdate,'=');;
+		$amend_result	=	$query_amend->execute()->fetchAssoc();
+		
+		return $amend_result;
+	
+}
+function get_all_license_list($createdby,$serial_no){
+	
+	$record = db_query( "select * from fun_relationship_license_renewal_amend('".$serial_no."','".$createdby."')")->fetchAll();
+	
+
+
+	return $record;
+}
+function fetch_vaild_date($contractor_id,$renewallicenseammendmentid,$application_flag)	{
+	 $record_details = db_query( "select  * from fun_basic_information1('".$contractor_id."','".$renewallicenseammendmentid."','".$application_flag."')")->fetchAssoc();
+	 return  $record_details;
+}
+function check_ammendment_table_license_renewal_ammendment_id($license_renewal_ammendment_id){ 
+
+	$query	=	db_query('select  * from l_amendment_of_contract_labour_license where  license_renewal_ammendment_id=:license_renewal_ammendmentid ', array(':license_renewal_ammendmentid' =>$license_renewal_ammendment_id))->fetchAssoc();
+
+	if(empty($query['id'])){ 
+			$query_result	=	db_query('select  * from l_amendment_of_contract_labour_license where  id=:license_renewal_ammendmentid ', array(':license_renewal_ammendmentid' =>$license_renewal_ammendment_id))->fetchAssoc();
+	}else{
+		$query_result = $query;
+	}
+		
+	return  $query_result;
+}
+
+
+?>

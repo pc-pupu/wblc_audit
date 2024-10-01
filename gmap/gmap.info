@@ -1,0 +1,11 @@
+;$Id$
+name = Gmap 
+description = Gmap of Labour
+package = Labour Module
+version = "7.x"
+core = 7.x
+files[] = gmap.module
+;dependencies[] = autoload
+
+stylesheets[all][] = css/back_to_top.css
+scripts[] = js/back_to_top.js

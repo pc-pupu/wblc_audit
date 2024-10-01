@@ -1,0 +1,99 @@
+/*
+Back to top button 
+*/
+#back-top {
+	position: fixed;
+	/*bottom: 170px;
+	left: 1300px;*/
+	bottom: 30%;
+	left: 95%;
+}
+#back-top a {
+	width: 40px;
+	display: block;
+	text-align: center;
+	font: 11px/100% Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	text-decoration: none;
+	color: #bbb;
+	/* background color transition */
+	-webkit-transition: 1s;
+	-moz-transition: 1s;
+	transition: 1s;
+}
+#back-top a:hover {
+	color: #000;
+}
+/* arrow icon (span tag) */
+#back-top span {
+	height: 40px;
+	display: block;
+	margin-bottom: 7%;
+	background: #ddd url(../images/up-arrow.png) no-repeat center center;
+	/* rounded corners */
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	/* background color transition */
+	-webkit-transition: 1s;
+	-moz-transition: 1s;
+	transition: 1s;
+}
+#back-top a:hover span {
+	background-color: #777;
+}
+
+
+
+
+
+
+
+/* table scroll css for contact info */
+
+
+#contact_info {
+    max-height: 550px;
+    overflow-x: hidden;
+    overflow-y: auto;
+	margin-top:30px;
+}
+#contact_info thead {
+  cursor: pointer;
+  background: #c9dff0;
+}
+
+#contact_info thead tr th { 
+  font-weight: normal;
+  padding: 5px 0 5px 0;
+  padding-left: 20px;
+  border-top: 1px solid #ddd;
+  
+}
+
+
+#contact_info tr.even {
+    background: #E1EEF4 !important;
+}
+
+#contact_info tr.odd {
+   background: #FDFDFD !important;
+}
+#contact_info tr:hover {
+  background-color: #9DE1FC !important;
+}
+
+/*#contact_info tr td {
+	padding:5px 0 5px 0 !important;
+	
+}
+*/
+
+#contact_info tbody>tr>td {
+  padding: 8px;
+  line-height: 1.42857143;
+  vertical-align: top;
+  border-top: 1px solid #ddd;
+}
+#contact_info table tr td{ padding:5px 8px 5px 21px;}
+

@@ -1,0 +1,221 @@
+<?php 
+// drupal_add_css(drupal_get_path('module', 'applicant_forms') . '/css/applicantform.css');
+function update_office_address($form, &$form_state){
+	global $base_root, $base_path, $user;
+	
+	$user_id = $user->uid; 
+	
+	/*** Get User role **/
+	
+	$fetch_users_role		= db_select('users_roles', 'ur');
+	$fetch_users_role		->leftJoin('role', 'ro', 'ro.rid=ur.rid');
+	$fetch_users_role		->fields('ro', array('rid'));
+	$fetch_users_role		->condition('ur.uid', $user_id);
+	$fetch_users_role_data 	= $fetch_users_role->execute()->fetchAssoc();
+
+	$users_role	=	$fetch_users_role_data['rid'];
+	
+	if(trim($users_role)== 7){
+		
+		$get_block_code = db_select('l_customuser_relation_address', 'lcra');
+		$get_block_code->InnerJoin('users_roles', 'ur','ur.uid= lcra.user_id'); 	
+		$get_block_code->fields('lcra', array('block_code','district_code'));
+		$get_block_code->condition('lcra.user_id', $user_id);
+		$get_block_code->condition('ur.rid', $users_role);
+		$get_block_code_result = $get_block_code->execute()->fetchAssoc();	
+		
+		$get_area_code_result = $get_block_code_result['block_code'];
+		$get_district_code    = $get_block_code_result['district_code'];
+		$back_link			  = 'inslink/lwfc-details';	
+		
+	}elseif(($users_role)== 4){
+		
+		$get_sub_div = db_select('l_customuser_relation_address', 'lcra');
+		$get_sub_div->InnerJoin('users_roles', 'ur','ur.uid= lcra.user_id'); 	
+		$get_sub_div->fields('lcra', array('sub_div_code','district_code'));
+		$get_sub_div->condition('lcra.user_id', $user_id);
+		$get_sub_div->condition('ur.rid', $users_role);
+		$get_sub_div_result = $get_sub_div->execute()->fetchAssoc();
+		
+		$get_area_code_result = $get_sub_div_result['sub_div_code'];
+		$get_district_code    = $get_sub_div_result['district_code'];
+		$back_link			  = 'alcdashboard/rlo-details';	
+	}
+	
+	
+	$clra_certificate = db_select('l_rlo_additional_info', 'lrai');
+	$clra_certificate->fields('lrai', array('clra_certificate_address','office_name', 'about_office', 'office_mobile_number', 'office_email_address'));
+	$clra_certificate->condition('lrai.sub_div_code', $get_area_code_result);
+	$result = $clra_certificate->execute()->fetchAssoc();
+	
+	if(empty($result['office_mobile_number']) || empty($result['office_email_address'])){
+		$form['office_address']['css'] = array(	
+							'#markup' => '<style>.main-sidebar{display:none;}</style>',
+							'#type' => 'markup'
+							);
+		
+		
+	}
+	
+	$form['office_address']['addressboxstart'] = array(	
+							'#markup' => '<div class="row">
+											<div class="col-md-12">
+												<div class="box box-primary">													
+													<div class="box-body">',
+							'#type' => 'markup'
+							);
+	
+	$form['office_address']['office_name'] 	= array(
+						  '#prefix' => '<div class="col-lg-8 col-md-8">',
+					  	  '#suffix' => '</div>',
+						  '#title' => t('Office Name'),
+						  '#type' => 'select',
+						  '#options' => office_name(),
+						  '#required' =>  TRUE,
+						  '#attributes' => array('class' => array('form-control')),
+						  '#default_value' => $result['office_name']
+						);	
+	
+	$form['office_address']['office_mobile_number'] = array(
+						  '#prefix' 		=> '<div class="col-lg-8 col-md-8">',
+						  '#suffix' 		=> '</div>',
+						  '#title' 			=> t('Enter Office Phone Number'),
+						  '#type' 			=> 'textfield',
+						  '#rows' => 2,						  
+						  '#required' 		=>  TRUE,
+						  '#default_value' 	=> $result['office_mobile_number'],
+						  '#attributes' => array('maxlength' => 10, 'class' => array('form-control')),
+						  '#element_validate'	=> array('TEXTBOX_NUMERIC_VALIDATE')
+						);
+	$form['office_address']['office_email_address'] = array(
+						  '#prefix' 		=> '<div class="col-lg-8 col-md-8">',
+						  '#suffix' 		=> '</div>',
+						  '#title' 			=> t('Enter Office email address'),
+						  '#type' 			=> 'textfield',
+						  // '#cols' 			=> 25, 
+						  '#rows' 			=> 2, 
+						  '#attributes' 	=> array('class' => array('form-control')),
+						  '#required' 		=>  TRUE,
+						  '#default_value' 	=> $result['office_email_address']
+						);											
+	$form['office_address']['clra_certificate_address'] = array(
+						  '#prefix' 		=> '<div class="col-lg-8 col-md-8">',
+						  '#suffix' 		=> '</div>',
+						  '#title' 			=> t('Enter Office address'),
+						  '#type' 			=> 'textarea',
+						  // '#cols' 			=> 25, 
+						  '#rows' 			=> 2, 
+						  '#attributes' 	=> array('class' => array('form-control')),
+						  '#required' 		=>  TRUE,
+						  '#default_value' 	=> $result['clra_certificate_address']
+						);
+									
+	
+	$form['office_address']['about_office'] = array(
+						  '#prefix' 		=> '<div class="col-lg-8 col-md-8">',
+						  '#suffix' 		=> '</div></div></div></div></div>',
+						  '#title' 			=> t('About Office'),
+						  '#type' 			=> 'textarea',
+						  //'#cols' 			=> 25, 
+						  '#rows' 			=> 2, 
+						  '#attributes' 	=> array('class' => array('form-control')),
+						  '#required' 		=> TRUE,
+						  '#default_value' 	=> $result['about_office']
+						);															
+	$form['office_address']['district_code'] = array(
+						  '#type' 			=> 'hidden', 
+						  '#value' 			=> encryption_decryption_fun('encrypt', $get_district_code)
+					  );
+																
+	 $form['office_address']['sub_div_code'] = array(
+						  '#type' 			=> 'hidden', 
+						  '#value' 			=> encryption_decryption_fun('encrypt', $get_area_code_result)
+						  );
+								
+	$form['office_address']['submit'] = array(
+						  '#type' 			=> 'submit', 
+						  '#value' 			=> t('Update'),
+						  '#attributes' 	=> array('class' => array('btn btn-primary')),
+						  '#prefix' 		=> '<div class="col-lg-3 col-md-3">',
+						  '#suffix' 		=> '</div>',
+						  );
+																	
+	/*$form['office_address']['markup'] = array(
+						  '#markup' 		=> l('<span class="btn btn-primary">Back</span>',$back_link,array('html'=>TRUE)),
+						  '#type' 			=> 'markup',
+						  '#prefix' 		=> '<div class="col-lg-3 col-md-3">',
+						  '#suffix' 		=> '</div>',
+						  );*/
+	return $form;
+}
+
+function update_office_address_submit($form, &$form_state){
+	
+	global $base_root, $base_path, $user;
+	
+	$user_id   			= $user->uid;
+	
+	/*** Get User role **/
+	
+	$fetch_users_role		= db_select('users_roles', 'ur');
+	$fetch_users_role		->leftJoin('role', 'ro', 'ro.rid=ur.rid');
+	$fetch_users_role		->fields('ro', array('rid'));
+	$fetch_users_role		->condition('ur.uid', $user_id);
+	$fetch_users_role_data 	= $fetch_users_role->execute()->fetchAssoc();
+
+	$users_role			=	$fetch_users_role_data['rid'];	
+	
+	$val 				= $form_state['values'];
+	$district_code 		= encryption_decryption_fun('decrypt', $val['district_code']);
+	$area_code			= encryption_decryption_fun('decrypt', $val['sub_div_code']);
+	
+	$check_details = db_select('l_rlo_additional_info', 'lrai');
+	$check_details->fields('lrai', array('clra_certificate_address','office_name'));
+	$check_details->condition('lrai.sub_div_code', $area_code);
+	$result = $check_details->execute();
+	
+	if( $result->rowCount() > 0 ){
+		$fields_Array		=	array(								
+								'clra_certificate_address' 	=> $val['clra_certificate_address'],	
+								'office_mobile_number' 		=> $val['office_mobile_number'],
+								'office_email_address' 		=> $val['office_email_address'],
+								'office_name' 				=> $val['office_name'],
+								'sub_div_code'				=> $area_code,
+								'district_code'				=> $district_code,
+								'user_id'					=> $user_id,
+								'about_office'				=> $val['about_office'],
+								'modified_date'				=> time()
+						   );
+						   
+		$query = db_update('l_rlo_additional_info');
+		$query->fields($fields_Array); 
+		$query->condition('sub_div_code', $area_code);
+		$query->execute();
+		
+	}else{
+		$fields_Array		=	array(								
+								'clra_certificate_address' 	=> $val['clra_certificate_address'],	
+								'office_mobile_number' 		=> $val['office_mobile_number'],
+								'office_email_address' 		=> $val['office_email_address'],
+								'office_name' 				=> $val['office_name'],
+								'sub_div_code'				=> $area_code,
+								'district_code'				=> $district_code,
+								'user_id'					=> $user_id,
+								'about_office'				=> $val['about_office'],
+								'create_date'				=> time()
+						   );		
+		db_insert('l_rlo_additional_info')->fields($fields_Array)->execute();
+	}
+	
+	if($users_role == 7){
+		drupal_goto('inslink/lwfc-details');
+	}elseif($users_role == 4){
+		drupal_goto('alcdashboard/rlo-details');
+	}	
+}
+
+function TEXTBOX_NUMERIC_VALIDATE($element, &$form_state){
+	if(!is_numeric($form_state['values']['office_mobile_number'])){
+		form_error($element, t($element['#title'].' should be numeric.'));
+	}
+}

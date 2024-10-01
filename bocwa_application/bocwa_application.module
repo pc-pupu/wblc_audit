@@ -1,0 +1,167 @@
+<?php
+	
+	function bocwa_application_init() {
+	
+	}
+	
+	function bocwa_application_permission() {
+	  	return array(
+			'applicant_forms_bocwa_all_per' => array(
+		  		'title' => t('bocwa_application permission'),
+			),
+	  	);
+	}
+	
+	function bocwa_application_menu() {
+		
+		$items						 						= array();	
+		
+		$items['bocwa-applications']						= array(
+																	'title'				=>'BOCWA Application List',
+																	'page callback'		=>'drupal_get_form',
+																	'page arguments'	=>array('bocwa_all_applications_form'),
+																	'file' 				=> 'include/bocwa_all_applications_form.inc',
+																	'access arguments' 	=> array('applicant_forms_bocwa_all_per'),
+																	);
+		
+		$items['new-bocwa-application'] 					= array(
+																	'title' 			=> 'REGISTRATION OF ESTABLISHMENTS UNDER BUILDING AND OTHER CONSTRUCTION WORKERS (RE&CS) ACT,1996',
+																	'page callback' 	=> 'drupal_get_form', 
+																	'page arguments' 	=> array('get_new_bocwa_registration_info_form'),
+																	'file' 				=> 'include/get_new_bocwa_registration_info_form.inc',
+																	'access arguments' 	=> array('applicant_forms_bocwa_all_per'),
+																	);	
+		
+		$items['bocwa-application'] 	 					= array(
+																	'title'				=> 'Application Details',
+																	'page callback'		=> 'drupal_get_form',
+																	'page arguments'	=> array('get_bocwa_registration_info_form'),
+																	'file'				=> 'include/get_bocwa_registration_info_form.inc',
+																	'access arguments' 	=> array('applicant_forms_bocwa_all_per'),
+																   );
+										
+		$items['bocwa-application/default/%']  				= array(
+																	'title' 			=> 'Application Details',
+																	'page callback'	 	=> 'drupal_get_form',
+																	'page arguments'	=> array('get_bocwa_registration_info_form',2),
+																	'file'				=> 'include/get_bocwa_registration_info_form.inc',
+																	'access arguments' 	=> array('applicant_forms_bocwa_all_per'),
+																	'type' 				=> MENU_DEFAULT_LOCAL_TASK,
+																	'weight' 			=> -10,
+																	);
+																	
+		$items['bocwa-application/bocwa-upload-documents/%'] = array(
+																	'title' 			=> 'Upload Documents',
+																	'page callback'	 	=> 'drupal_get_form',
+																	'page arguments'	=> array('get_bocwa_upload_document_form', 2),
+																	'file' 				=> 'include/get_bocwa_upload_documents_form.inc',
+																	'access arguments' 	=> array('applicant_forms_bocwa_all_per'),
+																	'weight' 			=> 3,
+																	'type' 				=> MENU_LOCAL_TASK
+																	);
+										
+		$items['bocwa-application/bocwa-application-preview/%'] = array(
+																	'title' 			=> 'Application Preview',
+																	'page callback' 	=> 'drupal_get_form',
+																	'page arguments' 	=> array('bocwa_application_preview',2),
+																	'file' 				=> 'include/bocwa_application_final_preview.inc', 
+																	'access arguments' 	=> array('applicant_forms_bocwa_all_per'),
+																	'weight' 			=> 5,
+																	'type' 				=> MENU_LOCAL_TASK
+																	);
+																	
+		
+																	
+		$items['bocwa-application-view/%'] 						= array(
+																	'title' 			=> 'Application Preview',
+																	'page callback' 	=> 'drupal_get_form',
+																	'page arguments' 	=> array('bocwa_application_preview',1),
+																	'file' 				=> 'include/bocwa_application_final_preview.inc', 
+																	'access arguments' 	=> array('applicant_forms_bocwa_all_per'),
+																	);
+																	
+																	
+		$items['bocwa-upload-signed-application/%'] 			= array(
+																	'title' 			=> 'Upload Signed Application',
+																	'page callback' 	=> 'drupal_get_form',
+																	'page arguments' 	=> array('bocwa_upload_signed_application_form',1),
+																	'file' 				=> 'include/bocwa_upload_signed_application_form.inc',
+																	'access arguments' 	=> array('applicant_forms_bocwa_all_per'),
+																	);
+																	
+																	
+		$items['bocwa-amendment'] 								= array(
+																	'title' 			=> 'Amendment of registration certificate for BOCWA.',
+																	'page callback' 	=> 'drupal_get_form',
+																	'page arguments' 	=> array('amendment_form_step_one_for_bocwa'),
+																	'file' 				=> 'include/applicant_amendment_bocwa.inc',
+																	'access arguments' 	=> array('applicant_forms_bocwa_all_per'),
+																	);
+																	
+		$items['apply-bocwa/%'] 						= array(
+																	'title' 			=> 'Amendment of registration certificate for BOCWA.',
+																	'page callback' 	=> 'drupal_get_form',
+																	'page arguments' 	=> array('amendment_form_step_two_bocwa',1),
+																	'file' 				=> 'include/applicant_amendment_bocwa.inc',
+																	'access arguments' 	=> array('applicant_forms_bocwa_all_per'),
+																	);
+																	
+		$items['amendment-bocwa']							= array(
+																	//'title'				=> t('Particulars of Contractor'),
+																	'access arguments' 	=> array('applicant_forms_bocwa_all_per'),
+																	);
+																	
+		$items['amendment-bocwa-application/%'] 		= array(
+																	'title' 			=> 'Application Details',
+																	'page callback' 	=> 'drupal_get_form',
+																	'page arguments' 	=> array('amendment_bocwa_form',1),
+																	'file' 				=> 'include/amendment_form_bocwa.inc',
+																	'access arguments' 	=> array('applicant_forms_bocwa_all_per'),
+																	);
+																	
+		$items['amendment-bocwa/bocwa-application/%'] 		= array(
+																	'title' 			=> 'Application Details',
+																	'page callback' 	=> 'drupal_get_form',
+																	'page arguments' 	=> array('amendment_bocwa_form',2),
+																	'file' 				=> 'include/amendment_form_bocwa.inc',
+																	'access arguments' 	=> array('applicant_forms_bocwa_all_per'),
+																	'weight' 			=> 2,
+																	'type' 				=> MENU_LOCAL_TASK
+																	);
+																	
+		$items['amendment-bocwa/upload-amendment/%'] 					= array(
+																	'title' 			=> 'Upload Documents',
+																	'page callback' 	=> 'drupal_get_form',
+																	'page arguments' 	=> array('get_bocwa_upload_document_amendment',2),
+																	'file' 				=> 'include/get_bocwa_upload_documents_amendment.inc',
+																	'access arguments' 	=> array('applicant_forms_bocwa_all_per'),
+																	'weight' 			=> 4,
+																	'type' 				=> MENU_LOCAL_TASK
+																	);
+																	
+		$items['amendment-bocwa/preview/%'] 					= array(
+																	'title' 			=> 'Application Preview',
+																	'page callback' 	=> 'drupal_get_form',
+																	'page arguments' 	=> array('bocwa_application_preview_amendment',2),
+																	'file' 				=> 'include/bocwa_application_final_amendment.inc',
+																	'access arguments' 	=> array('applicant_forms_bocwa_all_per'),
+																	'weight' 			=> 6,
+																	'type' 				=> MENU_LOCAL_TASK
+																	);
+																	
+		$items['amendment-bocwa/bocwa-amendment-submit/%'] 				= array(
+																	'title' 			=> 'Amendment of registration certificate for BOCWA.',
+																	'page callback' 	=> 'drupal_get_form',
+																	'page arguments' 	=> array('amendment_bocwa_form',2),
+																	'file' 				=> 'include/amendment_form_bocwa.inc',
+																	'access arguments' 	=> array('applicant_forms_bocwa_all_per'),
+																	);
+																	
+																	
+		
+										
+		return $items;
+	}
+	
+	
+	

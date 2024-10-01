@@ -1,0 +1,1097 @@
+<?php
+function clrareport_permission() {
+  return array(
+    'clrareport_per' => array(
+      'title' => t(' cms product permission'),
+    )
+  );
+}
+
+
+function clrareport_menu(){
+
+	$items = array();
+	
+	$items['labourreport'] = array(
+		'title' 			=> 'Dashboard',
+		'page callback' 	=> 'labour_report_list',   
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('clrareport_per')
+	);
+	
+	
+	/***** CLRA ******/
+	$items['clrareport'] = array(
+		'title' 			=> 'District wise application status for registration of principal employer under CLRA',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=> array('clra_district_report'), 
+		'file' 				=> 'includes/clra_report.inc',           
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('clrareport_per'),
+	);
+	
+	$items['clrareport/print'] = array(
+		'title' 			=> 'District wise application status for registration of principal employer under CLRA',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=> array('clra_district_report_print'), 
+		'file' 				=> 'includes/clra_report.inc',           
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('clrareport_per'),
+	);
+	
+	$items['clrareport/subdistrictclrarep/%'] = array(
+		'title' 			=> 'Sub Division wise application status for registration of principal employer under CLRA',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=> array('sub_district_clra_report',2), 
+		'file' 				=> 'includes/clra_report.inc',   
+		'access callback'	=> 'user_access',
+		'access arguments' 	=> array('clrareport_per'),
+	);
+	
+	$items['clrareport/subdistrictclrarep/print/%'] = array(
+		'title' 			=> 'Sub Division wise application status for registration of principal employer under CLRA',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=> array('sub_district_clra_report_print',3), 
+		'file' 				=> 'includes/clra_report.inc',   
+		'access callback'	=> 'user_access',
+		'access arguments' 	=> array('clrareport_per'),
+	);
+	
+	/*$items['clrareport/subdistrictlicenrep/%'] = array(
+		'title' 			=> 'District wise application status for contractor license under CLRA',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=> array('sub_district_clra_lincen_report',2), 
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('clrareport_per'),
+	); */
+	
+	/***** BOCWA ******/
+	
+	$items['bocwareport'] = array(
+		'title' 			=> 'District wise application status for establishments registration under BOCWA',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=>  array('bocwa_district_report'),  
+		'access callback' 	=> 'user_access',
+		'file' 				=> 'includes/bocwa_report.inc',
+		'access arguments' 	=> array('clrareport_per'),
+	);
+	
+	$items['bocwareport/print'] = array(
+		'title' 			=> 'District wise application status for establishments registration under BOCWA',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=>  array('bocwa_district_report_print'),  
+		'access callback' 	=> 'user_access',
+		'file' 				=> 'includes/bocwa_report.inc',
+		'access arguments' 	=> array('clrareport_per'),
+	);
+	
+	$items['bocwareport/subdistrictbocwarep/%'] = array(
+		'title' 			=> 'District wise application status for establishments registration under BOCWA',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=> array('sub_district_bocwa_report',2), 
+		'access callback' 	=> 'user_access',
+		'file' 				=> 'includes/bocwa_report.inc',
+		'access arguments' 	=> array('clrareport_per'),
+	);
+	
+	$items['bocwareport/subdistrictbocwarep/print/%'] = array(
+		'title' 			=> 'District wise application status for establishments registration under BOCWA',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=> array('sub_district_bocwa_report_print',3), 
+		'access callback' 	=> 'user_access',
+		'file' 				=> 'includes/bocwa_report.inc',
+		'access arguments' 	=> array('clrareport_per'),
+	);
+	/***** CLRA LICENSE ******/
+	
+	$items['clralincnreport'] = array(
+		'title' 			=> 'District wise application status for contractor license under CLRA',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=> array('clra_license_district_report'),
+		'file' 				=> 'includes/licence_report.inc',   
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('clrareport_per'),
+	);
+	
+	$items['clralincnreport/print'] = array(
+		'title' 			=> 'District wise application status for contractor license under CLRA',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=> array('clra_license_district_report_print'),
+		'file' 				=> 'includes/licence_report.inc',   
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('clrareport_per'),
+	);
+	
+	$items['clralincnreport/district-wise-report/%'] = array(
+		'title' 			=> 'Sub-division wise application status for contractor license under CLRA',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=> array('clra_license_subdivision_report',2),
+		'file' 				=> 'includes/licence_report.inc',   
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('clrareport_per'),
+	);
+	
+	$items['clralincnreport/district-wise-report/print/%'] = array(
+		'title' 			=> 'Sub-division wise application status for contractor license under CLRA',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=> array('clra_license_subdivision_report_print',3),
+		'file' 				=> 'includes/licence_report.inc',   
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('clrareport_per'),
+	);
+	/***** CLRA Licence Renewal ******/
+	
+	$items['clralinrenewalreport'] = array(
+		'title' 			=> 'District wise application status for contractor license renewal under CLRA',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=> array('clra_license_renewal_district_report'),
+		'file' 				=> 'includes/licence_renewal_report.inc',   
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('clrareport_per'),
+	);
+	$items['clralinrenewalreport/print'] = array(
+		'title' 			=> 'District wise application status for contractor license renewal under CLRA',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=> array('clra_license_renewal_district_report_print'),
+		'file' 				=> 'includes/licence_renewal_report.inc',  
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('clrareport_per'),
+	);
+	
+	$items['clralinrenewalreport/subdistrictlnrenewalrep/%'] = array(
+		'title' 			=> 'District wise application status for contractor license renewal under CLRA',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=> array('sub_district_clra_license_renewal_report',2),
+		'file' 				=> 'includes/licence_renewal_report.inc', 
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('clrareport_per'),
+	);
+	$items['clralinrenewalreport/subdistrictlnrenewalrep/print/%'] = array(
+		'title' 			=> 'District wise application status for contractor license renewal under CLRA',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=> array('sub_district_clra_license_renewal_report_print',3),
+		'file' 				=> 'includes/licence_renewal_report.inc', 
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('clrareport_per'),
+	);
+	
+	
+	/***** MTW ******/
+	
+	$items['mtwreport'] = array(
+		'title' 			=> 'District wise application status for establishments registration under MTW',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=> array('mtw_district_report'),
+		'file' 				=> 'includes/mtw_report.inc', 				
+		'access arguments' 	=> array('access content'),
+	);
+	
+	$items['mtwreport/print'] = array(
+		'title' 			=> 'District wise application status for establishments registration under MTW',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=>  array('mtw_district_report_print'),  
+		'file' 				=> 'includes/mtw_report.inc', 	
+		'access arguments' 	=> array('clrareport_per'),
+	);
+	
+	$items['mtwreport/districtreportreg/%'] = array(
+		'title' 			=> 'District wise application status for establishments registration under MTW',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=> array('sub_division_mtw_report',2), 
+		'file' 				=> 'includes/mtw_report.inc', 
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('clrareport_per'),
+	);
+	$items['mtwreport/districtreportreg/print/%'] = array(
+		'title' 			=> 'District wise application status for establishments registration under MTW',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=> array('sub_division_mtw_report_print',3),
+		'file' 				=> 'includes/mtw_report.inc',  
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('clrareport_per'),
+	);
+	
+	/***** ISMW ******/
+	
+	$items['ismwreport'] = array(
+		'title' 			=> 'District wise application status for establishments registration under ISMW',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=>  array('ismw_district_report'),
+		'file' 				=> 'includes/ismw_report.inc',   
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('clrareport_per'),
+	);
+	
+	$items['ismwreport/print'] = array(
+		'title' 			=> 'District wise application status for establishments registration under ISMW',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=>  array('ismw_district_report_print'),
+		'file' 				=> 'includes/ismw_report.inc',   
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('clrareport_per'),
+	);
+	
+	$items['ismwreport/subdistrictimsmwrep/%'] = array(
+		'title' 			=> 'District wise application status for establishments registration under ISMW',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=> array('sub_division_ismw_district_report',2), 
+		'file' 				=> 'includes/ismw_report.inc', 
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('clrareport_per'),
+	);
+	
+	$items['ismwreport/subdistrictimsmwrep/print/%'] = array(
+		'title' 			=> 'District wise application status for establishments registration under ISMW',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=> array('sub_division_ismw_district_report_print',3), 
+		'file' 				=> 'includes/ismw_report.inc', 
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('clrareport_per'),
+	);
+	
+	
+	/***** Inspection Report ******/
+	
+	$items['inspectionreport'] = array(
+		'title' 			=> 'Inspection report',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=> array('district_inspection_report'),        
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('clrareport_per'),
+	);
+	
+	$items['inspectionreport/inspectionreptview/%'] = array(
+		'title' 			=> '',
+		'page callback' 	=> 'ins_details_rpt_view', 
+		'page arguments' 	=> array(2),
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('clrareport_per'),
+	);  
+	
+	$items['oldinsreport/%'] = array(
+		'title' 			=> '',
+		'page callback' 	=> 'old_inspection_report', 
+		'page arguments' 	=> array(1),            
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('clrareport_per'),
+	);
+	
+	$items['oldinsreport/%/%'] = array(
+		'title' 			=> '',
+		'page callback' 	=> 'old_inspection_report', 
+		'page arguments' 	=> array(1 , 2 ),            
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('clrareport_per'),
+	);			
+	
+	$items['oldinspectionnoteview/%'] = array(
+		'title' 			=> '',
+		'page callback' 	=> 'old_inspection_note_view', 
+		'page arguments' 	=> array(1),            
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('clrareport_per'),
+	);	
+	
+	/***** OTHERS ******/									
+	$items['register-contractor-information'] = array(
+		'title' 			=> 'Nature of work wise contractor information',
+		'page callback' 	=> 'drupal_get_form', 
+		'page arguments' 	=> array('get_register_contractor_information'),
+		'file' 				=> 'includes/get_register_contractor_information.inc', 				
+		'access arguments' 	=> array('access content'),
+	);
+	
+	$items['user-registration-status-view'] = array( 
+		'title' => 'Payment verification status',
+		'page callback'=>'user_reg_view_details',
+		// 'page arguments'=>array('verified_epaments_data_form',1),
+		'file' => 'includes/user_reg_view_details.inc',
+		'access arguments' => array('access content'),				
+	 );
+	 
+	
+	$items['homepagebox/value'] = array(
+	 'page callback' => 'display_box_value',
+	 'access callback' => TRUE,
+	 'access arguments' 	=> array('access content'),
+	);
+	
+	$items['user-list-view'] = array(
+		'title' => 'List of Applicant',
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('user_list_view'),
+		'file' => 'includes/get_applicant_info_form.inc',
+	 	'access arguments' 	=> array('access content'),
+	);
+	
+	$items['user-list-data/print/%/%/%/%'] = array(
+		'title' => 'List of Applicant',
+		'page callback' => 'user_list_data_print',
+		'page arguments' => array(1,2,3,4,5),
+		'file' => 'includes/get_applicant_info_form.inc',
+	 	'access arguments' 	=> array('access content')
+	);
+	$items['user-list-data/download/%/%/%/%'] = array(
+		'title' => 'List of Applicant',
+		'page callback' => 'user_list_data_download',
+		'page arguments' => array(1,2,3,4,5),
+		'file' => 'includes/get_applicant_info_form.inc',
+	 	'access arguments' 	=> array('access content')
+	);
+	$items['feedback-draft'] = array(
+		'title' => 'Feedback on Draft Regulation',
+		'page callback' => 'feedback_on_draft_regulation',
+		'file' => 'includes/list_of_draft.inc',
+	 	'access arguments' 	=> array('access content')
+	);	
+	
+	$items['clra/trade-union-report-clra'] = array(						
+				'title' => 'Register Establishment with Trade Union',	
+				'page callback' => 'drupal_get_form',
+				'page arguments' => array('trade_union_report_of_clra'),					
+				'file' => 'includes/trade_union_report_of_clra.inc',
+				'access arguments' => array('clrareport_per')
+			);
+				
+	$items['clra/clra-tu-report-excel/%/%/%/%'] = array(						
+					'title' => 'Register Establishment with Trade Union',	
+					'page callback' => 'clr_tu_report_xls',
+					'page arguments' => array(2, 3, 4, 5),				
+					'file' => 'includes/trade_union_report_of_clra.inc',
+					'access arguments' => array('clrareport_per')
+				);		
+			
+	return $items;
+}
+
+function clrareport_theme(){
+  return array(
+    'clrareport' => array(
+      'variables' => array('account' => NULL),
+      'template' => 'clrareport',
+    )
+    ,
+	   'insrptviewdet' => array(
+        'variables' => array('content' =>NULL,'content2'=>NULL,'content3'=>NULL,'content4'=>NULL,'content5'=>NULL,'content7'=>NULL,'content8'=>NULL,'content9'=>NULL),
+        'template'  => 'insrptviewdet', 
+      )
+	  ,
+	  
+	'oldinsreport' => array(
+        'variables' => array('content' =>NULL),
+        'template'  => 'oldinsreport', 
+      ) 
+  );
+}
+
+function labour_report_list(){
+	
+	 $account="sdfdsfsdfsdf";
+	 return theme('clrareport',array('account' => $account)); 
+	
+}
+
+function common_header($action = ''){
+	if($action == 'district'){
+		return array(
+			'DISTRICT NAME',
+			'TOTAL <br/>APPLICATION SUBMIT',
+			'PENDING <br/>IN CITIZEN',
+			'PENDING <br/>IN OFFICE',
+			'FINAL SUBMIT <br/> AFTER PAYMENT',
+			'ISSUED',
+			'REJECTED'
+		);
+	}else{
+		return array(
+			'SUB DIVISION NAME',
+			'TOTAL <br/>APPLICATION SUBMIT',
+			'PENDING <br/>IN CITIZEN',
+			'PENDING <br/>IN OFFICE',
+			'FINAL SUBMIT <br/> AFTER PAYMENT',
+			'ISSUED',
+			'REJECTED'
+		);
+	}
+}
+
+
+function old_inspection_note_view( $filenumber = NULL){
+	   global $base_root, $base_path;
+	   
+	   
+		
+  $id= encryption_decryption_fun('decrypt', trim($filenumber));
+	
+	
+		$show_details_query = db_select('l_old_inspection_establistment', 't');
+        $show_details_query->leftjoin('district_master', 'd', 'd.district_code = t.ins_old_dist');
+        $show_details_query->leftjoin('sub_division', 's', 's.sub_div_code = t.ins_old_sub_div and d.district_code = s.district_code ');
+	   $show_details_query->leftjoin('block_mun_master', 'bm', 'bm.block_code = t.ins_old_block and bm.distict_code = d.district_code and s.sub_div_code = bm.sub_division_code');
+		$show_details_query->leftjoin('village_ward_master', 'v', 'v.village_code = t.ins_old_vill_word and v.block_code = bm.block_code');
+		$show_details_query->leftjoin('police_station', 'p', 'p.police_station_code = t.ins_old_police_st and p.dristrict_code = d.district_code');
+		$show_details_query->leftjoin('contractor_works', 'cw', 'cw.contractor_work_id = t.old_nature_id ');
+        $show_details_query->fields('d', array('district_name'));
+        $show_details_query->fields('s', array('sub_div_name')); 
+		$show_details_query->fields('bm', array('block_mun_name')); 
+		$show_details_query->fields('v', array('village_name','category')); 
+		$show_details_query->fields('p', array('name_of_police_station')); 
+        $show_details_query->fields('t', array('file_id','name_of_est','address_line','workmen_male','workmen_female','contractor_male','contractor_female','other_wk_male','other_wk_female','other_nature_nm','fid','old_nature_id','pincode','inspection_file_no','nm_inspector','insschedule','workmen_total','contractor_total','other_wk_total'));
+		$show_details_query->fields('cw', array('cont_work_name')); 
+	    $show_details_query->condition('t.file_id',trim($id),'=');
+	    $show_details_result = $show_details_query->execute();  
+		
+	
+        $content=array();
+     	foreach ($show_details_result as $show_details_row) {
+		$content[]=$show_details_row;
+	    }
+	  
+	   return theme('oldinsreport',array('content' => $content));
+	  
+}
+
+function old_inspection_report( $filenumber = NULL , $ins_act= NULL){
+	   global $base_root, $base_path;
+	   
+	   
+		
+  $id= encryption_decryption_fun('decrypt', trim($filenumber));
+   if($ins_act)
+   $ins_act= encryption_decryption_fun('decrypt', trim($ins_act));
+
+       $rows = array();
+       $header = array();
+  //print 'sss'.$ins_act;
+ // exit; 
+  
+   $header = array(
+      
+            array('data'=> 'Inspector Name', 'class' => array('')),
+			array('data'=> 'Date Of Inspection', 'class' => array('')),
+		    array('data'=> 'Name of the Establishment<br>/Industry / Shop', 'class' => array('')),
+           // array('data' => 'Address of the Establishment <br> /Industry<br>/Shop', 'class' => array('')),
+			array('data' => 'Action', 'class' => array('')),
+			//array('data' => 'Delete ', 'class' => array('')),
+		    
+		   
+		   
+	);
+	
+     $sort = 'DESC';
+     $order = 'data_entry_user_id';
+	
+    $old_ins_list_query = db_select('l_old_inspection_establistment', 't');
+	if($ins_act){ 
+		  $old_ins_list_query->leftjoin('l_old_ins_note_upload', 'p', 't.file_id = p.file_id');
+		}
+	$old_ins_list_query->leftjoin('district_master', 'd', 'd.district_code = t.ins_old_dist');
+    $old_ins_list_query->leftjoin('sub_division', 's', 's.sub_div_code = t.ins_old_sub_div and d.district_code = s.district_code ');
+	$old_ins_list_query->leftjoin('block_mun_master', 'bm', 'bm.block_code = t.ins_old_block and bm.distict_code = d.district_code and s.sub_div_code = bm.sub_division_code');
+    $old_ins_list_query->leftjoin('village_ward_master', 'v', 'v.village_code = t.ins_old_vill_word and v.block_code = bm.block_code');
+		
+		 
+         $old_ins_list_query->fields('d', array('district_name'));
+         $old_ins_list_query->fields('s', array('sub_div_name')); 
+		 $old_ins_list_query->fields('bm', array('block_mun_name')); 
+		 $old_ins_list_query->fields('v', array('village_name'));
+         $old_ins_list_query->fields('t', array('name_of_est','address_line','workmen_male','workmen_female','contractor_male','contractor_female','other_wk_male','other_wk_female','submit_status','data_entry_submit_dt','data_entry_user_id','file_id','insschedule','nm_inspector'));
+         
+		 $old_ins_list_query->condition('t.ins_type','INS_OLD','=');
+		 $old_ins_list_query->condition('t.submit_status','S','=');
+		 if($ins_act){ 
+		   $old_ins_list_query->condition('p.type_of_infring',trim($ins_act),'=');
+		}
+		 if($id !='ALL')
+		 $old_ins_list_query->condition('t.ins_old_dist',trim($id),'=');
+		 $old_ins_list_query->orderBy($order, $sort);
+		  
+		  //print $ins_list_query;
+		 // exit;
+	  
+	     $old_ins_list_query_result = $old_ins_list_query->execute();
+	
+	  $i=0;
+		foreach($old_ins_list_query_result as $data) {
+			$i++;
+			
+		
+		
+		  //$del_old_insnote=l(t($img),$bb,array('html'=>TRUE)) ;	
+			
+			
+			
+			$aa=$base_root.$base_path.'oldinspectionnoteview/'.encryption_decryption_fun('encrypt',$data->file_id);
+		    $link_k=l(t('<b><font color="DarkGreen"  > VIEW  </font> </b></br>'), $aa , array('attributes' => array('target'=>'_blank'),'html'=>TRUE));
+			
+			
+			
+			
+			
+			
+	$rows[] = array(
+      						$data->nm_inspector,
+							date('dS M, Y', strtotime($data->insschedule)),
+							$data->name_of_est,
+							
+						    $link_k,
+							
+							
+							
+			    
+	  		   );   
+}
+
+  $variables = array(
+	  			'attributes' 		=> array('class' => array('view-act-rules-table fixed_headers')), 
+	  			'header' 			=> $header,
+	  			'rows'				=> $rows,
+				//'empty' => t(' No data .'),
+		);
+	
+	$output = theme('datatable', $variables);
+	
+	
+	return 	$output;
+	
+	
+	
+	
+
+ }
+
+
+
+
+
+
+
+function inspection_rep_subdivsion_callback($form, $form_state) {
+	$disname=trim($form_state['values']['disname']);
+	$commands = array();
+	$form['insreports']['inspection_dropdown_second']['#id']='edit-inspection-dropdown-second';
+	$commands[] = ajax_command_replace('#inspection_subdivsion_replace',drupal_render($form['insreports']['inspection_dropdown_second']));
+	$form['insreports']['inspection_dropdown_third']['#id']='edit-inspection-dropdown-third';
+    $form['insreports']['inspection_dropdown_third']['#options'] = array(0 => " Block/Municipality ");
+    $commands[] = ajax_command_replace('#inspection_dropdown_third_replace',drupal_render($form['insreports']['inspection_dropdown_third'])); 
+    return array('#type' => 'ajax', '#commands' => $commands);
+}
+function clra_block_option($key = '') {
+	$blk="SELECT * FROM {block_mun_master} ORDER BY block_code";
+    $state_query=db_query($blk);
+	foreach($state_query as $state_result) {
+		$options[$state_result->sub_division_code][$state_result->block_code] =$state_result->block_mun_name;	
+	}
+    if (isset($options[$key])) {
+       return $options[$key];
+    }
+    else {
+       return array();
+	   
+    }
+	
+}
+ function insreport_block_callback($form, $form_state) {	
+	$commands = array();
+	$form['insreports']['inspection_dropdown_third']['#id']='edit-inspection-dropdown-third';
+	$commands[] = ajax_command_replace('#inspection_dropdown_third_replace',drupal_render($form['insreports']['inspection_dropdown_third']));
+    return array('#type' => 'ajax', '#commands' => $commands);
+}
+function district_inspection_report($form, &$form_state ){
+	 global $base_root, $base_path;
+	 module_load_include('inc', 'applicant_registration', 'include/applicant_registration_form'); 
+	 $options_first =    custom_user_district_list_new() + array("ALL" => "ALL");   
+     $value_dropdown_first = isset($form_state['values']['disname']) ? $form_state['values']['disname'] :key($options_first); 
+	 $form['insreports'] = array(
+		  		'#title' 	=>  t(' '),
+          		'#type' 	=> 'fieldset',
+          		);
+     $form['insreports']['disname'] = array(
+				'#title'		 => 'District',
+				'#prefix' 		 => '<div class="col-md-3"><div class="search-form">',
+	    		'#suffix' 		 => '',
+	    		'#type' 		 => 'select',
+				'#attributes' 	 => array('class'=>array('form-control')),
+				'#options'  	 => $options_first,
+        		'#default_value' =>$value_dropdown_first,
+        		'#ajax' 		 => array(
+            							'event'     => 'change',
+										'callback'  => 'inspection_rep_subdivsion_callback',
+        								),
+		
+    			);
+	 
+	 $options_subdiv_one = custom_user_subdivisionlist_list($form_state['values']['disname']);  
+	 $form['insreports']['inspection_dropdown_second'] = array(
+				'#prefix' 		 => '<div id="inspection_subdivsion_replace">',
+				'#suffix' 		 => '</div>',
+				'#type' 		 => 'select',
+				'#title' 		 => 'Sub-Division',
+				'#options' 		 => $options_subdiv_one,
+				'#attributes'    => array('class'=>array('form-control')),
+				'#default_value' => isset($form_state['values']['inspection_dropdown_second']) ? $form_state['values']['inspection_dropdown_second'] :'' , 
+				'#ajax' 	     => array(
+										'event' 	=> 'change',
+										'callback' 	=> 'insreport_block_callback',
+									),
+				); 
+	
+	$options_block_one =  array(0 => "Block/Municipality") + clra_block_option($form_state['values']['inspection_dropdown_second']);
+		 
+	$form['insreports']['inspection_dropdown_third'] = array(
+				'#prefix' 		 => '<div id="inspection_dropdown_third_replace">',
+				'#suffix' 		 => '</div>',
+				'#type' 		 => 'select',
+				'#title' 		 => ' Block/Municipality',
+				'#attributes'    => array('class'=>array('form-control')),
+				'#options' 		 => $options_block_one,
+				'#default_value' => isset($form_state['values']['inspection_dropdown_third']) ? $form_state['values']['inspection_dropdown_third'] :'',		
+   				);
+	
+	$form['insreports']['fodate'] = array(	     
+				'#title' 			=> t(' From:'),
+				'#type' 			=> 'date',
+				// '#attributes' => array('class'=>array('form-control')),  
+				'#default_value' 	=> array(
+											'month' => format_date(strtotime("-1 months"), 'custom', 'n'),
+											'day' 	=> format_date(time(), 'custom', 'j'),
+											'year' 	=> format_date(time(), 'custom', 'Y'),
+											),
+    			); 
+		 
+	
+	$form['insreports']['todate'] = array(		
+				'#title' 			=> t(' To:'),
+				'#type' 			=> 'date',
+				// '#attributes' 		=> array('class'=>array('form-control')),   
+				'#default_value' 	=> array(
+											'month' => format_date(time(), 'custom', 'n'),
+											'day' 	=> format_date(time(), 'custom', 'j'),
+											'year' 	=> format_date(time(), 'custom', 'Y'),
+											)				
+				);
+	
+	 $form['insreports']['lb_insp_nm'] = array(		
+				'#title'		=> 'Name Of The Inspector ',
+				'#size'			=> t('30'),	
+				'#type' 		=> 'textfield',
+				'#attributes'   => array('class'=>array('form-control')),
+				);
+	  $form['insreports']['insor'] = array(		
+		  		'#markup'	=> t('<b>OR</b>'),
+          		);
+		  
+	 $form['insreports']['lb_insp_estab'] = array(
+	 			'#title'		=> 'Name Of The Establishment/Industry/Shop',
+	    		'#size'			=> t('30'),	
+	   			'#type' 		=> 'textfield',
+				'#attributes'   => array('class'=>array('form-control')),
+			);
+		 
+	 $form['insreports']['ins_bt_srchbtn'] = array(
+				'#type' 		 => 'button',
+				'#prefix' 		 => '',
+        		'#suffix' 		 => '</div></div>',	
+				'#default_value' => 'Search  ',
+				'#ajax' 		 => array(
+										'callback' => 'inspection_list_search',
+										'wrapper' => 'lb_ins_reports_div',
+										'method' => 'html',
+										'effect' => 'fade'
+										)
+   			);	
+	
+	
+	
+	
+ 	$form['insreports']['comrep'] = array(
+	      '#prefix' => '<div class="col-md-9 content-box-inner"><h1 class="inner-page-title">Area wise view and download Inspection Report for various Labour Act</h1><div id="lb_ins_reports_div">',
+	      '#suffix' => '</div></div>',       
+	); 	
+			  
+	return $form;	 	
+	 
+}
+
+
+function inspection_list_search($form, $form_states){
+	$val = $form_states['values'];
+	$fdt = $val['fodate']['year'].'-'.$val['fodate']['month'].'-'.$val['fodate']['day'];
+	$tdt = $val['todate']['year'].'-'.$val['todate']['month'].'-'.$val['todate']['day'];
+	$disid = trim($val['disname']);
+	$sub_div_id = trim($val['inspection_dropdown_second']);
+	$block_id = trim($val['inspection_dropdown_third']);
+	$lb_insp_nm = trim($val['lb_insp_nm']);
+	$lb_insp_estab = trim($val['lb_insp_estab']);
+	
+	if(!$disid){		 
+		return "<font color='#FF3333'>Please select district</font>";	
+	}elseif(!checkdate($val['fodate']['month'], $val['fodate']['day'], $val['fodate']['year'])){		 
+		return "<font color='#FF3333'>From Date is invalid !</font>";	
+	}elseif(!checkdate($val['todate']['month'], $val['todate']['day'], $val['todate']['year'])){		 
+		return "<font color='#FF3333'>To Date is invalid !</font>";	
+	}elseif(strtotime($tdt)<=strtotime($fdt)){
+	 	return "<font color='#FF3333'>Please enter  To date greater then From date</font>";
+	}
+		
+	$sort = 'ASC';
+	$order = 'ins_dt';
+	$ins_list_query = db_select('l_inspection_establishment', 't');
+	$ins_list_query->join('l_infringment', 'b', 't.ins_file_number = b.ins_file_number');
+	$ins_list_query->join('district_master', 'd', 'd.district_code = t.ind_est_dist');
+	$ins_list_query->join('sub_division', 's', 's.sub_div_code = t.ind_est_subdivision and d.district_code = s.district_code ');
+	$ins_list_query->join('block_mun_master', 'bm', 'bm.block_code = t.ind_est_block and bm.distict_code = d.district_code and s.sub_div_code = bm.sub_division_code');
+	$ins_list_query->join('village_ward_master', 'v', 'v.village_code = t.est_vill_ward and v.block_code = bm.block_code');
+	$ins_list_query->join('l_custom_user_detail', 'l', 't.ins_user_id = l.usr_id');
+	$ins_list_query->fields('d', array('district_name'));
+	$ins_list_query->fields('s', array('sub_div_name')); 
+	$ins_list_query->fields('bm', array('block_mun_name')); 
+	$ins_list_query->fields('v', array('village_name'));
+	$ins_list_query->fields('l', array('fullname'));
+	$ins_list_query->fields('t', array('name_of_ind_est','name_of_prin_con','ind_est_dist','ind_est_subdivision','ind_est_block','est_vill_ward','ins_user_id','ins_file_number','ins_submit_status','show_court_cause_status','ins_dt','ins_submit_dt','fwd_verify'));
+
+	$ins_list_query->condition('t.type_of_insnote_user','inspection_note','=');
+	$ins_list_query->condition('t.ins_submit_status','S','=');
+	$ins_list_query->condition('t.fwd_verify',array('N','Y'),'IN');
+
+	if(trim($lb_insp_estab)){
+		$ins_list_query->condition('t.name_of_ind_est',"%".trim($lb_insp_estab)."%",'LIKE');
+	}
+
+	if(trim($lb_insp_nm)){
+		$ins_list_query->condition('l.fullname',"%".trim($lb_insp_nm)."%",'LIKE');
+	}
+	
+	$ins_list_query->condition('t.ins_dt',$fdt,'>=');
+	$ins_list_query->condition('t.ins_dt',$tdt,'<=');
+	if($disid !='ALL'){
+		$ins_list_query->condition('d.district_code',trim($disid),'=');	
+
+		if($sub_div_id){
+			$ins_list_query->condition('s.sub_div_code',trim($sub_div_id),'=');
+		}
+
+		if($block_id){
+			$ins_list_query->condition('bm.block_code',trim($block_id),'=');
+		}
+	}
+
+	$ins_list_query->orderBy($order, $sort);
+	$ins_rst = $ins_list_query->execute();
+
+	global $base_root, $base_path;
+    
+	$aa = $base_root.$base_path.'labourreport';
+	$jj = l(t('<font color="#CC3366"><b>BACK</b></font>'), $aa,array('html'=>TRUE)) ; 	
+
+	if($ins_rst->rowCount( )> 0){
+		$output = "<div style=' height:500px;overflow-y : auto;' align='center'>
+						<table style='width: 100%; border-collapse: collapse;' border=\"1\" >";
+		$i = 0;
+		$p = 0;
+		
+		foreach($ins_rst as $data) {
+			$p++;			
+			$district_name = drupal_strtoupper(trim($data->district_name)); 
+			$sub_div_name = drupal_strtoupper(trim($data->sub_div_name)); 
+			$block_mun_name = drupal_strtoupper(trim($data->block_mun_name)); 
+			$fullname = drupal_strtoupper(trim($data->fullname)); 
+			if($p == 1) { 
+				if($disid !='ALL'){	
+			  		$output1.= "<tr bgcolor=\"#E0FFFF\"><td colspan=\"2\" ><b>DISTRICT: ".$district_name." </b></td>";
+			  		if(!$sub_div_id)
+			  			$sub_div_name = '';
+	          			$output1.= "<td colspan=\"2\"  ><b>SUB-DIVISION:".$sub_div_name." </b></td>";
+			 
+			  			if(!$block_id)
+			  				$block_mun_name ='';
+		      				$output1.= "<td colspan=\"3\" ><center><b>BLOCK/MUNICIPALITY:".$block_mun_name." </b></center></td></tr>";			 
+			  				$output1.= "<tr></table>";
+				 		}
+		 
+						$header = 	array(
+										array('data' => 'Sl.No.', 'field' => 'slno', 'width' => ''),
+										array('data' => 'Inpector name', 'field' => '', 'width' => ''),
+										// array('data' => 'INSPECTION DATE', 'field' => '', 'width' => ''),
+										array('data' => 'File.No &<br>Inspection date', 'align' => 'center', 'width' => ''),
+										array('data' => 'Name of the Establishment/Industry', 'field' => '', 'width' => ''),
+										// array('data' => 'NAME OF THE Owners<br>/Principal Employer<br>/Contractor <br>/Manager/MD<br>/CEO/Others', 'field' => '', 'width' => ''),
+										array('data' => 'Action', 'field' => '', 'width' => '')
+									);
+		 				
+		
+		    }
+         
+		   $owner_name = db_query('select  name_mt_worker from l_mt_worker_details where  ins_file_number=:filenumber limit 1', array(':filenumber' => trim($data->ins_file_number)) );
+	   
+	       $result_own = $owner_name->fetchAssoc();
+	       $name_mt_worker = trim($result_own['name_mt_worker']);		   
+		   $name_of_ind_est = drupal_strtoupper(trim($data->name_of_ind_est)); 
+		   $ins_file_number = drupal_strtoupper(trim($data->ins_file_number)); 
+		   
+		   $cc = $base_root.$base_path.'inspectionreport/inspectionreptview/'.encryption_decryption_fun('encrypt',trim($data->ins_file_number));
+		   $link_report_detail = l('VIEW ', $cc,array('attributes'=>array('target'=>'blank'))) ;
+		   
+		   $rows[] = array(
+								$p,
+								drupal_strtoupper($fullname),
+								$ins_file_number.'<br>Date:'.date('d/m/Y', strtotime($data->ins_dt)),								
+								$name_of_ind_est,
+								// $name_mt_worker,
+								$link_report_detail
+							);
+		  $i++;
+		}
+
+	 }
+
+     
+	 $variables = 	array( 'header' => $header, 'rows' => $rows, 'attributes' => array('class' => array('view-act-rules-table')), 'empty' => t("No data found!"));
+						
+	 $output = 	theme('datatable', $variables);
+	 
+	          $pp = $base_root.$base_path.'oldinsreport/'.encryption_decryption_fun('encrypt',trim($disid));
+		      $link_old_inslink = l('<font color="#CC3366"><b>OLD INSPECTION VIEW </b></font>', $pp , array('attributes' => array('target'=>'_blank'),'html'=>TRUE) ) ;
+	
+	 return $output.'</br></br>'.$link_old_inslink ;	
+
+}
+
+function ins_details_rpt_view( $filenumber = NULL){
+	global $base_root, $base_path;
+	
+	$id = encryption_decryption_fun('decrypt', trim($filenumber));
+	
+		
+		
+	$show_details_query = db_select('l_inspection_establishment', 't');
+	$show_details_query->join('district_master', 'd', 'd.district_code = t.ind_est_dist');
+	$show_details_query->join('sub_division', 's', 's.sub_div_code = t.ind_est_subdivision and d.district_code = s.district_code ');
+	$show_details_query->join('block_mun_master', 'bm', 'bm.block_code = t.ind_est_block and bm.distict_code = d.district_code and s.sub_div_code = bm.sub_division_code');
+	$show_details_query->join('village_ward_master', 'v', 'v.village_code = t.est_vill_ward and v.block_code = bm.block_code');
+	$show_details_query->join('police_station', 'p', 'p.police_station_code = t.police_station_one and p.dristrict_code = d.district_code');
+	$show_details_query->join('contractor_works', 'cw', 'cw.contractor_work_id = t.nature_work ');
+	$show_details_query->fields('d', array('district_name'));
+	$show_details_query->fields('s', array('sub_div_name')); 
+	$show_details_query->fields('bm', array('block_mun_name')); 
+	$show_details_query->fields('v', array('village_name','category')); 
+	$show_details_query->fields('p', array('name_of_police_station')); 
+	$show_details_query->fields('t', array('name_of_ind_est','addlineone','reg_linc_no','verification_dt','verification_tm','other_nature_name','nature_work','ind_est_pin_code','ins_verify_note','ins_verify_place','verified_showcause_status','alc_bfsc_note','no_workmen_male','no_workmen_female','male_second','female_second','male_third','female_third','ins_file_number'));
+	$show_details_query->fields('cw', array('cont_work_name')); 
+	$show_details_query->condition('t.ins_file_number',trim($id),'=');
+	$show_details_result = $show_details_query->execute();  
+		
+	$content = array();
+     	foreach ($show_details_result as $show_details_row) {
+			$content[]=$show_details_row;
+	  	}
+	
+	$pre_person_query = db_query('select  * from l_insp_present_person where  ins_file_number = :filenumber  ', array(':filenumber' => trim($id)));
+    $content2 = array();
+	
+	foreach($pre_person_query as $person_result){		
+		$content2[] = $person_result;
+	}
+	
+	$order = 'cust_infring_id';
+	$sort = 'ASC';
+	$infr_prin_query = db_select('l_infringment', 't');	
+	$infr_prin_query->condition('t.ins_file_number',trim($id),'=');
+	$infr_prin_query->fields('t', array('infring_name','type_of_infring'));		
+	$infr_prin_query->orderBy($order, $sort);
+	
+	$infr_prin_query_rst =  $infr_prin_query->execute();	
+	
+	$numinfgM = $infr_prin_query_rst->rowCount();	
+	$content4 = array();
+     foreach($infr_prin_query_rst as $infgp_result){		
+		$content4[] = $infgp_result;
+	 }
+
+	$query_mt_worker= db_select('l_mt_worker_details', 'p');
+	$query_mt_worker->leftJoin('district_master', 'd', 'd.district_code = p.work_dist');
+	$query_mt_worker->leftJoin('sub_division', 's', 's.sub_div_code = p.worker_sub_div and d.district_code = s.district_code ');
+	$query_mt_worker->leftJoin('block_mun_master', 'bm', 'bm.block_code = p.worker_block and bm.distict_code = d.district_code and s.sub_div_code = bm.sub_division_code');
+	$query_mt_worker->leftJoin('village_ward_master', 'v', 'v.village_code = p.worker_vill_word and v.block_code = bm.block_code');
+	$query_mt_worker->leftJoin('police_station', 'r', 'r.police_station_code = p.worker_police_st and r.dristrict_code = d.district_code');
+	$query_mt_worker->fields('d', array('district_name','district_code'));
+	$query_mt_worker->fields('s', array('sub_div_name')); 
+	$query_mt_worker->fields('bm', array('block_mun_name')); 
+	$query_mt_worker->fields('v', array('village_name','category')); 
+	$query_mt_worker->fields('r', array('name_of_police_station'));
+	$query_mt_worker->fields('p', array('name_mt_worker','address_line','designation','own_pin','owner_email','owner_mobile','type_of_emp','other_type_name'));
+	$query_mt_worker->condition('p.ins_file_number',trim($id),'=');
+	$query_mt_worker_result = $query_mt_worker->execute();
+	
+	$content5 = array();
+    
+	foreach ($query_mt_worker_result as $work_det) {		
+		$content5[] = $work_det;		
+	} 
+	 
+	$content7  =trim($id);
+	
+	return theme('insrptviewdet',array('content' => $content,'content2' => $content2,'content4' => $content4,'content5' =>$content5,'content7' => $content7,'content8' => $numinfgM,'content9' => '')); 	
+  }
+
+
+
+function display_box_value(){ 
+	global $base_root, $base_path;
+	$total=0;
+	if (trim($_POST['actId'])== 'boswaestreg'){
+		$db_bocwa_report = db_select('l_bocwa_registration_master','lbrm');
+		$db_bocwa_report->fields('lbrm', array('id'));	
+		$db_bocwa_report->isNotNull('lbrm.user_id');	
+		$db_bocwa_report->isNotNull('lbrm.loc_e_subdivision');
+		// $db_bocwa_report->isNotNull('lbrm.name_areatype');
+		$db_bocwa_report->condition('lbrm.final_submit_status', 'P', '=');
+		$db_bocwa_report->condition('lbrm.status', 'I', '=');		
+		echo $db_bocwa_report->execute()->rowCount();
+	}
+	
+	if (trim($_POST['actId']) == 'clrapereg'){
+		$db_clra_report = db_select('l_clra_registration_master','lcrm');
+		$db_clra_report	->fields('lcrm', array('id'));	
+		$db_clra_report->isNotNull('lcrm.status');
+		$db_clra_report->isNotNull('lcrm.user_id');	
+		$db_clra_report->isNotNull('lcrm.loc_e_subdivision');
+		$db_clra_report->isNotNull('lcrm.name_areatype');
+		$db_clra_report->condition('lcrm.user_id', '0', '!=');
+		$db_clra_report->condition('lcrm.final_submit_status', 'P', '=');
+		$db_clra_report->condition('lcrm.status', 'I', '=');		
+		echo $db_clra_report->execute()->rowCount();			
+	}
+	if (trim($_POST['actId']) == 'clralicence'){	
+		$db_license_report = db_select('l_contractor_license_application', 'la');	
+		$db_license_report->fields('la', array('id'));
+		$db_license_report->join('l_particular_of_contract_labour','pa','pa.id=la.contractor_particular_id and la.contractor_user_id = pa.contractor_user_id');
+		$db_license_report->isNotNull('la.status');
+		$db_license_report->isNotNull('la.contractor_user_id');
+		$db_license_report->isNotNull('la.application_id');	
+		$db_license_report->condition('la.final_status', 'F', '=');
+		$db_license_report->condition('la.status', 'I', '=');
+		$db_license_report->isNull('la.is_backlog_license');	
+		echo $db_license_report->execute()->rowCount();
+	}
+	
+	if(trim($_POST['actId']) == 'imwpereg'){
+		$db_ismw_report = db_select('l_interstate_workman_master','lcrm');
+		$db_ismw_report	->fields('lcrm', array('id'));	
+		$db_ismw_report->isNotNull('lcrm.status');
+		$db_ismw_report->isNotNull('lcrm.user_id');	
+		$db_ismw_report->isNotNull('lcrm.loc_e_subdivision');
+		$db_ismw_report->isNotNull('lcrm.loc_e_areatype_code');
+		$db_ismw_report->condition('lcrm.final_submit_status', 'P', '=');
+		$db_ismw_report->condition('lcrm.status', 'I', '=');		
+		echo $db_ismw_report->execute()->rowCount();		
+	}
+
+	if(trim($_POST['actId']) == 'mtwreg'){
+		$db_mtw_report = db_query("
+			select t1.mtw_issued_appli 
+			from (
+			select count(*) mtw_issued_appli
+			from l_mtw_registration_master a, l_mtw_registration_renewal as ren
+			where a.user_id != 0 and a.user_id is not null and a.id = ren.application_id
+			and a.mtw_loc_dist is not null
+			and a.status = 'I'
+			and a.final_submit_status = 'P' 
+			) as t1 "
+		)->fetchObject();
+			
+		if(!empty($db_mtw_report)){
+			echo $mtw_issued_appli = $db_mtw_report->mtw_issued_appli;
+		}else{
+			echo '0';
+		}
+	}
+	
+	if(trim($_POST['actId']) == 'tureg'){
+		$trade_union_query = db_select('tradeunion_master','tu');
+		$trade_union_query->fields('tu', array('id'));
+		$trade_union_query->condition('tu.is_active', 1,'=');
+		$trade_union_query->condition('tu.is_disable', 'N','=');
+		echo $trade_union_query->execute()->rowCount();
+	}
+	
+	/*if ($_REQUEST['flag']=='total_clra_registration'){
+		$db_license_renewal_report = db_select('l_contractor_license_apply_renweal','lclar');
+		$db_license_renewal_report	->fields('lclar', array('id'));
+		$db_license_renewal_report->isNotNull('lclar.renewal_application_final_status');
+		$db_license_renewal_report->isNotNull('lclar.renewal_appliaction_status');
+		echo $total_license_renewal_application = $db_license_renewal_report->execute()->rowCount();
+	}
+	
+
+	if ($_REQUEST['flag']=='mtw_total_application'){
+		$query = db_select('l_mtw_registration_master', 't');
+		$query->fields('t', array('id'));
+		$query->condition('t.final_submit_status', 'P', '=');
+		//$query->condition('t.status', 'I', '=');
+		$query->isNotNull('t.status');
+		$query->isNotNull('t.user_id');
+		$query_value = $query->execute();
+		echo $mtw_Total_application		=	$query_value->rowCount();
+	}*/
+
+	if(trim($_POST['actId']) == 'total_no_sibmitted_application'){		
+		$db_bocwa_report = db_select('l_bocwa_registration_master','lbrm');
+		$db_bocwa_report->fields('lbrm', array('id'));	
+		$db_bocwa_report->isNotNull('lbrm.user_id');	
+		$db_bocwa_report->isNotNull('lbrm.loc_e_subdivision');
+		$db_bocwa_report->condition('lbrm.final_submit_status', 'P', '=');
+		// $db_bocwa_report->condition('lbrm.status', 'I', '=');		
+		
+		$total_bocwa_application = $db_bocwa_report->execute()->rowCount();
+		
+		$db_clra_report = db_select('l_clra_registration_master','lcrm');
+		$db_clra_report	->fields('lcrm', array('id'));	
+		$db_clra_report->isNotNull('lcrm.status');
+		$db_clra_report->isNotNull('lcrm.user_id');	
+		$db_clra_report->isNotNull('lcrm.loc_e_subdivision');
+		$db_clra_report->isNotNull('lcrm.name_areatype');
+		$db_clra_report->condition('lcrm.final_submit_status', 'P', '=');
+		// $db_clra_report->condition('lcrm.status', 'I', '=');		
+		
+		$total_clra_application = $db_clra_report->execute()->rowCount();			
+	
+		$db_license_report = db_select('l_contractor_license_application', 'la');	
+		$db_license_report->fields('la', array('id'));
+		$db_license_report->isNotNull('la.status');
+		$db_license_report->isNotNull('la.contractor_user_id');
+		$db_license_report->isNotNull('la.application_id');	
+		$db_license_report->condition('la.final_status', 'F', '=');
+		// $db_license_report->condition('la.status', 'I', '=');
+		$db_license_report->isNull('la.is_backlog_license');	
+		
+		$total_clra_license_application = $db_license_report->execute()->rowCount();
+	
+		$db_ismw_report = db_select('l_interstate_workman_master','lcrm');
+		$db_ismw_report	->fields('lcrm', array('id'));	
+		$db_ismw_report->isNotNull('lcrm.status');
+		$db_ismw_report->isNotNull('lcrm.user_id');	
+		$db_ismw_report->isNotNull('lcrm.loc_e_subdivision');
+		$db_ismw_report->isNotNull('lcrm.loc_e_areatype_code');
+		$db_ismw_report->condition('lcrm.final_submit_status', 'P', '=');
+		// $db_ismw_report->condition('lcrm.status', 'I', '=');		
+		
+		$total_ismw_application = $db_ismw_report->execute()->rowCount();		
+	
+		$db_mtw_report = db_select('l_mtw_registration_master','lmtw');
+		$db_mtw_report->fields('lmtw', array('id'));		
+		$db_mtw_report->condition('lmtw.is_renew', 0, '=');
+		$db_mtw_report->condition('lmtw.backlog_id', 0, '=');
+		$db_mtw_report->condition('lmtw.final_submit_status', 'P', '=');
+		// $db_mtw_report->isNotNull('lmtw.status', 'I', '=');
+		$db_mtw_report->isNotNull('lmtw.user_id');		
+		
+		$total_mtw_application = $db_mtw_report->execute()->rowCount();	
+	
+		echo $total_bocwa_application+$total_clra_application+$total_clra_license_application+$total_ismw_application+$total_mtw_application;
+	}
+	
+}
+    
+
+?>

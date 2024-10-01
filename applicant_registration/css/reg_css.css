@@ -1,0 +1,74 @@
+#setPasswordMessage{
+	width: 97.5%;
+	height: 25px;
+	border: 1px solid #e7e7e7;
+	border-radius: 4px;
+	color: #888;
+	text-align: center;
+	font: 12px/25px Arial, Helvetica, sans-serif;
+}
+
+#setPasswordMessage.lowPassword{
+	border: 1px solid #FF9191;
+	background: #FFC7C7;
+	color:#FF0000;
+	margin: 5px 0 0 10px;
+}
+
+#setPasswordMessage.stilllowPassword {
+	border: 1px solid #FBB;
+	background: #FDD;
+	color:#FF0000;
+	margin: 5px 0 0 10px;
+}
+
+#setPasswordMessage.mediumPassword {
+	border: 1px solid #C4EEC8;
+	background: #E4FFE4;
+	color:#FF0000;
+	margin: 5px 0 0 10px;
+}
+
+#setPasswordMessage.averagePassword {
+	border: 1px solid #6ED66E;
+	background: #79F079;
+	color:#FF0000;
+}
+
+#setPasswordMessage.strongPassword {
+	border: 1px solid #379137;
+	background: #48B448;
+	color:#FF0000;
+	text-shadow: 1px 1px 1px #296429;
+	margin: 5px 0 0 10px;
+}
+
+#setPasswordMessage.goodpass {
+	border: 1px solid #379137;
+	background: #48B448;
+	color:#FF0000;
+	margin: 5px 0 0 10px;
+}
+
+#common_username_div{
+	font-size:12px;
+	position:absolute;
+	float:left;
+}
+
+#common_email_img_div{
+	margin-left: 314px;
+    margin-top: -30px;
+    position: absolute;
+   
+}
+#common_username_img_div{
+	margin-left: 314px;
+    margin-top: -30px;
+    position: absolute;
+    
+}
+/*#edit-same-as{
+	margin-bottom: -28px;
+    margin-left: 6px;
+}*/

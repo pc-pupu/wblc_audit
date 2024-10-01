@@ -1,0 +1,5 @@
+name = miscellaneous
+description = miscellaneous
+package = Labour Module
+core = 7.x
+version = "7.x"

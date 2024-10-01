@@ -1,0 +1,5 @@
+name = CLRA Backlog
+description = CLRA Backlog Module
+package = CLRA Module
+version = "7.x"
+core = 7.x

@@ -1,0 +1,10 @@
+;$Id$
+
+name =alcinspection
+description =  ALC inspection.
+package = Drupal 7 Development
+core = 7.x
+files[] = alcinspection.module
+
+;dependencies[] = autoload
+;php = 5.1

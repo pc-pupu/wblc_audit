@@ -1,0 +1,9 @@
+name = Applicant Registration
+description = Applicant Registration Module
+package = COMMON Module
+version = "7.x"
+core = 7.x
+
+
+
+;scripts[] = js/custom.js

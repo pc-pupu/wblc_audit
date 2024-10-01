@@ -1,0 +1,24 @@
+.heading{font-weight:bold; padding: 14px 0px 25px 353px; text-transform:uppercase; font-size:16px;}
+.heading_reg_frm{ border:1px solid #f00;}
+
+.applicant_dashboard span{ width:187px; padding-left:0px;}
+.applicant_dashboard input[type="submit"]{border-bottom: medium none;margin: 14px 0 25px 322px;padding: 9px 26px 29px;text-transform: uppercase; font-size:16px; border-radius:0;}
+.messages{width:890px !important;}
+
+.applicant_dashboard label{width:200px; float:left; padding:6px 0 9px 123px; font-weight: normal;}
+.applicant_dashboard input[type="text"]{border:1px solid #C1C1C1;background-color:#fff; color:#898989; width:330px; border-radius:0px;}
+.form-select{border:1px solid #C1C1C1;background-color:#fff; color:#898989; width:343px; border-radius:0px;background: #fff url("../images/arrowdown.gif") no-repeat scroll 99% 50%; -moz-appearance: none;}
+.applicant_dashboard input[type="text"]:hover{ border:1px solid #0070a7;}
+.form-select:hover{ border:1px solid #0070a7;}
+
+/*#get-clra-registration-info-form span{ width:187px; padding-left:10px;}
+#get-clra-registration-info-form input[type="text"]{border:1px solid #C1C1C1;background-color:#fff;color:#898989;}*/
+
+.applicant_dashboard .form-item-f-name{ }
+
+.form-item{ margin:0px 0px 6px;}
+
+.form-textarea-wrapper textarea{ width:auto;}
+.form-textarea{border-radius:0px; width:200px; background-color:#FFFFFF;border:1px solid #C1C1C1;color:#898989;}
+.form-textarea:hover{ border:1px solid #0070a7;}
+.option{float:left; width:54px !important; padding:0px !important;;}

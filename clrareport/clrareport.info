@@ -1,0 +1,10 @@
+;$Id$
+
+name =clrareport
+description =  clra report.
+package = Drupal 7 Development
+core = 7.x
+files[] = clrareport.module
+
+;dependencies[] = autoload
+;php = 5.1

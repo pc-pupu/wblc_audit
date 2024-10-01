@@ -1,0 +1,5 @@
+name = Clra Amendment Forms
+description = Clra Amendment Forms Module
+version = "7.x"
+package = CLRA Module
+core = 7.x

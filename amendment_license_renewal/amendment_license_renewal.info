@@ -1,0 +1,4 @@
+name = amendment_license_renewal
+description = Amendment of license and renewal
+core = 7.x
+package = Labour Module

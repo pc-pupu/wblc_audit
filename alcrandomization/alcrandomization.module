@@ -1,0 +1,1113 @@
+<?php
+function alcrandomization_permission() {
+	$permission = array();
+	$permission['alcrandomization_per'] = array(
+      			'title' 		=> t('alcrandomization permission'),
+     		 	'description' 	=> t('alcrandomization permission'),
+   	);
+	
+	$permission['viewrandamizationorder_inspector'] = array(
+      			'title' 		=> t('Permission for view randamization order by inspector'),
+     		 	'description' 	=> t('Permission for view randamization order by inspector'),
+   	);
+	 
+   return $permission;
+}
+function alcrandomization_menu(){
+    
+	 $items = array();
+	
+	 /*$items['alcrandomization'] = array(
+     'title' => 'ALC inspector randomization',
+	 'page callback' => 'drupal_get_form', 
+    //'page callback' => 'fun4_page',
+     'page arguments' => array('alcrandomization_list'),            
+	// 'page callback' => 'cmscircular_list', //'em1status_table',
+	  'type' => MENU_CALLBACK,
+	  
+	   
+	   'access callback' => 'user_access',
+	 'access arguments' => array('alcrandomization_per'),
+	
+     );*/
+	$items['alcrandomization/%/%/%/%/%/gprandom'] = array(
+				'page callback' 	=> 'alc_gp_randomization', 
+				'page arguments' 	=> array(1,2,3,4,5),
+				'access callback'	=> 'user_access',
+	 			'access arguments' 	=> array('alcrandomization_per'),
+    			'type' => MENU_CALLBACK,
+  				); 
+	 
+ /*$items['alcrandomization/%/%/%/gprandom'] = array(
+    // 'title' => t('View Rec'),
+	'page callback' => 'alc_gp_randomization', 
+	'page arguments' => array(1,2,3),
+	//'access callback' => 'user_access',
+	// 'access arguments' => array('pensionapprov_per'),
+	
+	'access callback' => 'user_access',
+	 'access arguments' => array('alcrandomization_per'),
+    'type' => MENU_CALLBACK,
+  );*/
+  
+  $items['est-wise-randomization'] = array(
+	 			'title'				=> 'Schedule Inspection for Inspector and Establishment',
+				'page callback' 	=> 'drupal_get_form',
+				'page arguments' 	=> array('get_inspection_dlc_list'),
+				// 'page callback' 	=> 'get_inspection_dlc_list',					 				
+				'file' 				=> 'includes/inspection_dlc_list.inc',
+				'access arguments' 	=> array('access content'),		
+			    );	 
+	 
+	 
+	$items['alcrandomization']			= array(
+											'title' 				=> 'Randomization Schedule(GP/Ward & Inspector)',
+											'page callback'			=> 'drupal_get_form',
+											'page arguments'		=> array('alcrandomization_list'),
+											'file' 					=> 'includes/alcrandomization_list.inc',
+											'access arguments' 		=> array('alcrandomization_per')
+									  	  );
+	$items['randomization-submit']		= array(
+											'page callback' 		=> 'randomization_submission',
+											'access arguments' 		=> array('access content'),
+											'type' 					=> MENU_CALLBACK
+										  );
+										  
+	$items['generate-alc-randomization-order'] 	 				= array(
+																	'title' 			=> 'Order Form',
+																	'page callback' 	=> 'drupal_get_form',
+																	'page arguments'	=> array('order_form'),
+																	'file' 				=> 'includes/order_form.inc',
+																	'access arguments' 	=> array('alcrandomization_per')
+																);
+									
+	$items['generate-alc-randomization-order/default/%/%/%']  		= array(
+																	'title' 			=> 'Order Form',
+																	'page callback'	 	=> 'drupal_get_form',
+																	'page arguments'	=> array('order_alc_form', 2, 3, 4),
+																	'file' 				=> 'includes/order_alc_form.inc',
+																	'access arguments' 	=> array('alcrandomization_per'),
+																	'type' 				=> MENU_DEFAULT_LOCAL_TASK,
+																	'weight' 			=> -10
+																  );
+																
+	$items['generate-alc-randomization-order/order-alc-upload/%/%/%'] 	= array(
+																	'title' 			=> 'Upload Signed Order',
+																	'page callback'	 	=> 'drupal_get_form',
+																	'page arguments'	=> array('upload_signed_alc_order_form', 2, 3, 4),
+																	'file' 				=> 'includes/upload_signed_alc_order_form.inc',
+																	'access arguments' 	=> array('alcrandomization_per'),
+																	'weight' 			=> 3,
+																	'type' 				=> MENU_LOCAL_TASK
+																  ); 
+																  
+	 $items['alc-previous-list']	 =	array(
+											'title' 	 			=> 'ALC Previous List',
+											'page callback'	 		=> 'drupal_get_form',
+											'page arguments'	 	=> array('alcrandomization_view_previous_list'),
+											'file' 	 				=> 'includes/alcrandomization_view_previous_list.inc',
+											'access arguments' 	 	=> array('alcrandomization_per')
+										);
+	  $items['alc-and-dlc-inspection-order-list'] =	array(
+											'title' 	 			=> 'Inspection schedule order List',
+											'page callback'	 		=> 'get_inspection_schedule_order_list',											
+											'file' 	 				=> 'includes/get_inspection_schedule_order_list.inc',
+											'access arguments' 	 	=> array('viewrandamizationorder_inspector')
+										);
+
+	return $items; 
+}
+	
+/*function alcrandomization_list($form, &$form_state ){
+	global $user;
+	
+	$uid=$user->uid;
+	//print 'sssssssssssssss'.$uid;
+	$query_alc_type=db_query(' select  area_division_type   from l_custom_user_detail where  usr_id = :uid', array(':uid' => trim($uid) ));
+	$result=$query_alc_type->fetchAssoc();
+	
+	$area_division_type = $result['area_division_type'];
+	
+	$form['#attached']['js'] = array(drupal_get_path('module', 'alcrandomization') . '/alcrandomization.js',);	
+	$form['alcrandomfield'] = array(
+				  '#title' => t('<font color="DarkGreen"><b> INSPECTOR RANDOMIZATION LIST  </b>'),
+				  '#type' => 'fieldset',
+				  '#collapsed' => FALSE
+				  );
+	$order='inspector_id';
+	$sort='ASC';
+	$show_details_query = db_select('l_area_inspector_random_tag', 't');
+	
+	$show_details_query->join('l_custom_user_detail', 'v', 'v.usr_id =  t.inspector_id');
+	
+	$show_details_query->fields('t', array('inspector_name','inspector_code','distict_code','block_municipality_code','inspector_id'));
+	//$show_details_query->fields('v', array('fullname'));
+	
+	
+	$show_details_query->condition('t.is_confirm','C','=');
+	$show_details_query->condition('v.created_by',trim($uid),'=');
+	
+	$show_details_query->orderBy($order, $sort);
+	
+	$show_details_query = $show_details_query->extend('PagerDefault')->limit(50);
+	
+	
+	//print $app_user_query;
+	$total_name =  $show_details_query->execute();
+	
+	
+	// $total_name=db_query("select *  from m_artisanpensioner_details where  districtcode='".$districtid."' and status='Y' and livestatus='L'");
+	
+	$numrow=$total_name->rowCount();  
+
+	$form['alcrandomfield']['pensionfc'] = array(
+		    '#prefix' => '<table width="100%"><tr bgcolor="#87CEFA" ><td align="left">',
+	        '#suffix' => '</td>',
+			'#markup'=>'<b>Select</b>',
+        );
+	$form['alcrandomfield']['insarea'] = array(
+		    '#prefix' => '<td align="left" >',
+	        '#suffix' => '</td>',
+		    '#markup'=>'<b>Area Name</b>',
+	    );
+		
+	$form['alcrandomfield']['raninsname'] = array(
+		    '#prefix' => '<td  align="center">',
+	        '#suffix' => '</td>',
+		    '#markup'=>'<b>Inspector Name</b>',	   	   
+        );
+		
+   
+$form['alcrandomfield']['insfdt'] = array
+        (
+		    '#prefix' => '<td  align="center">',
+	        '#suffix' => '</td>',
+		   '#markup'=>'<b>Inspection Period From </b>',
+	   
+	   
+        );
+		$form['alcrandomfield']['instdt'] = array
+        (
+		    '#prefix' => '<td  align="center">',
+	        '#suffix' => '</td>',
+		   '#markup'=>'<b>Inspection Period To </b>',
+	   
+	   
+        );
+		$form['alcrandomfield']['insgpname'] = array
+        (
+		    '#prefix' => '<td  align="center">',
+	        '#suffix' => '</td>',
+		   '#markup'=>'<b> GP NAME </b>',
+	   
+	   
+        );
+		
+		$form['alcrandomfield']['insgprandom'] = array
+        (
+		    '#prefix' => '<td  align="center">',
+	        '#suffix' => '</td></tr>',
+		   '#markup'=>'<b> GP WISE RANDOMIZATION </b>',
+	   
+	   
+        );
+		
+		
+		
+		
+		$i=0;
+	foreach ($total_name as $data) {
+			$i++;
+	     $inspector_code = $data->inspector_id; 
+         $inspector_name = $data->inspector_name;
+		  $area_code = $data->block_municipality_code;
+		   $d_code = $data->distict_code;
+		 // $scheduling_status=$data->scheduling_status;
+		 // $scheduling_fdt=$data->scheduling_fdt;
+		 // $scheduling_tdt=$data->scheduling_tdt;
+		 
+		 $query_ar_name=db_query(' select   area_name  from l_inspector_random_master where  block_municipality_code = :wcode and distict_code = :dcode  ', array(':wcode' => trim($area_code) , ':dcode' => trim($d_code)));	
+		
+		$result=$query_ar_name->fetchAssoc();
+		 $area_name = $result['area_name']; 
+		 
+		 $village_name='';
+		 // $query_vill_name=db_query(' select   scheduling_status, village_name , scheduling_fdt , scheduling_tdt from l_gp_ward_inspector_tag a, village_ward_master b where a.block_code=b.block_code and a.village_code=b.village_code and  inspector_id = :insid and confirm_s = :cst  ', array(':insid' => trim($inspector_code) , ':cst' => 'C'));	
+		 if(trim($area_division_type)=='W'){
+		 $query_vill_name=db_query(' select   scheduling_status, scheduling_fdt , scheduling_tdt from l_gp_ward_inspector_tag where  inspector_id = :insid and confirm_s = :cst  ', array(':insid' => trim($inspector_code) , ':cst' => trim('C')));
+		  $result2=$query_vill_name->fetchAssoc();
+		     // $village_name = $result2['village_name']; 
+		      $scheduling_status = $result2['scheduling_status']; 
+		   $scheduling_fdt=$result2['scheduling_fdt'];
+		  $scheduling_tdt=$result2['scheduling_tdt'];
+		 }
+		 else
+		 {
+			 $query_vill_name=db_query(' select   scheduling_status, village_name , scheduling_fdt , scheduling_tdt from l_gp_ward_inspector_tag a, village_ward_master b where a.block_code=b.block_code and a.village_code=b.village_code and  inspector_id = :insid and confirm_s = :cst  ', array(':insid' => trim($inspector_code) , ':cst' => 'C')); 
+			  $result2=$query_vill_name->fetchAssoc();
+		      $village_name = $result2['village_name']; 
+		      $scheduling_status = $result2['scheduling_status']; 
+		   $scheduling_fdt=$result2['scheduling_fdt'];
+		  $scheduling_tdt=$result2['scheduling_tdt'];
+		 }
+		//$d=$query_vill_name->rowCount();
+		     //$result2=$query_vill_name->fetchAssoc();
+		     // $village_name = $result2['village_name']; 
+		      //$scheduling_status = $result2['scheduling_status']; 
+		   //$scheduling_fdt=$result2['scheduling_fdt'];
+		  //$scheduling_tdt=$result2['scheduling_tdt'];
+		 
+		 
+		 //print 'aaaaaaaaaaaaaaaaaaa'.$d;
+		// exit;
+		 
+		 
+		 
+		 
+	 if($i%2==0){
+		        $bgcol = "#FCF6CF";
+				 }
+				else
+				{
+				$bgcol = "#FEFEF2";
+				}	 
+	
+	
+	$form['alcrandomfield']['hiddinsid'.$i] = 
+	    array('#type' => 'hidden',  
+	    '#value' => $inspector_code,
+	   
+	   );	
+		 
+		 
+		 
+		 $form['alcrandomfield']['wardgpcode'.$i] = 
+	    array('#type' => 'hidden',  
+	    '#value' => $area_code,
+	   
+	   );
+		 
+		 
+		 if(trim($scheduling_status)=='S'){
+			$form['alcrandomfield']['insid'.$i] = array
+          (
+		 '#prefix' => '<tr bgcolor='.$bgcol.' ><td >',
+	    
+	      '#markup' => '',
+		  '#suffix' => '</td>',
+		
+          ); 
+		 }
+		 else
+		 {
+	$form['alcrandomfield']['insid'.$i] = array
+          (
+		 '#prefix' => '<tr bgcolor='.$bgcol.' ><td >',
+	      '#suffix' => '</td>',
+	      '#type' => 'checkbox',
+		
+		
+          );
+		 }
+		$form['alcrandomfield']['arname'.$i] = array
+        (
+		    '#prefix' => '<td align="left"  >',
+	         '#suffix' => '</td>',
+		   '#markup'=>'<b>'.$area_name.'</b>',
+	   
+	   
+        );
+		
+		
+		           $linktwo=$base_root.$base_path.'alcrandomization/'.$d_code.'/'.$area_code.'/'.$inspector_code.'/'.'gprandom';
+				   $link_alc_random_gp=l(t('<font color="blue"><b>'.$inspector_name.'</b></font></br></br>'), $linktwo,array('html'=>TRUE)) ;
+		
+		
+	// print 'aaaaaaaaaaaaaaaaaaaaaaaaaa'.$area_division_type;
+	//exit;	
+		
+		if(trim($area_division_type)=='S'){
+		$form['alcrandomfield']['insname'.$i] = array
+        (
+		    '#prefix' => '<td align="center"  >',
+	         '#suffix' => '</td>',
+		  '#markup'=>'<b>'.$link_alc_random_gp.'</b>',
+	   
+	   
+        );
+		}
+		else
+		{
+		$form['alcrandomfield']['insname'.$i] = array
+        (
+		    '#prefix' => '<td align="center"  >',
+	         '#suffix' => '</td>',
+		  '#markup'=>'<b>'.$inspector_name.'</b>',
+	   
+	   
+        );	
+		}
+	if(trim($scheduling_status)=='S'){
+		
+	$form['alcrandomfield']['inssfdate'.$i] = array(
+	  '#prefix' => '<td >',
+	  '#suffix' => '</td>',	
+		'#markup'=> '<b>'.date('d-m-Y', strtotime($scheduling_fdt)).'</b>',
+		 );
+	}
+	else
+	{
+	 $form['alcrandomfield']['inssfdate'.$i] = array(
+	  '#prefix' => '<td >',
+	  '#suffix' => '</td>',
+  //  '#title' => t(' From:'),
+  
+    '#type' => 'date',
+   // '#required' => TRUE,
+   '#default_value' =>
+    array(
+     'month' => format_date(time(), 'custom', 'n'),
+   'day' => format_date(time(), 'custom', 'j'),
+   'year' => format_date(time(), 'custom', 'Y'),
+    ),
+	 
+	//'#prefix' => '<div class="container-inline">',  
+   // '#suffix' => '</div>',
+    ); 
+		 
+	}
+	 
+		 
+		 
+		 
+	
+		 
+		if(trim($scheduling_status)=='S'){
+		
+	$form['alcrandomfield']['insstdate'.$i] = array(
+	  '#prefix' => '<td >',
+	  '#suffix' => '</td>',	
+		'#markup'=> '<b>'.date('d-m-Y', strtotime($scheduling_tdt)).'</b>',
+		 );
+	}
+	else
+	{ 
+	
+		$form['alcrandomfield']['insstdate'.$i] = array(
+		'#prefix' => '<td>',
+	    '#suffix' => '</td>',
+   // '#title' => t(' To:'),
+    '#type' => 'date',
+  // '#required' => TRUE,
+    '#default_value' => 
+	array(
+    'month' => format_date(time(), 'custom', 'n'),
+   'day' => format_date(time(), 'custom', 'j'),
+   'year' => format_date(time(), 'custom', 'Y'),
+    ),
+	 
+	
+    ); 
+	
+	
+	
+	
+	
+	}
+	
+	
+	
+	
+	 if(trim($scheduling_status)=='S' && trim($area_division_type)=='S'){
+			$form['alcrandomfield']['insgpname'.$i] = array
+          (
+		    '#prefix' => '<td align="center"  >',
+	         '#suffix' => '</td>',
+	    
+	      '#markup' =>'<b>'.$village_name.'</b>',
+		
+		
+          ); 
+		 }
+		 
+		 else
+		 {
+	$form['alcrandomfield']['insgpname'.$i] = array
+          (
+		  '#prefix' => '<td align="center"  >',
+	         '#suffix' => '</td>',
+	    
+	      '#markup' => '',
+		
+		
+          );
+		  
+		 }
+	
+	
+	
+	
+	
+	
+	
+	
+	     
+	
+	
+	
+	
+	
+	           $link_alc_random_gp_subdiv='';
+	
+	             if(trim($area_division_type)=='S'){
+	               $linktwo=$base_root.$base_path.'alcrandomization/'.$d_code.'/'.$area_code.'/'.$inspector_code.'/'.'gprandom';
+				   $link_alc_random_gp_subdiv=l(t('<font color="blue"><b>CLICK FOR GP WISE RANDOMIZATION</b></font></br></br>'), $linktwo,array('html'=>TRUE)) ;
+				 }
+	$form['alcrandomfield']['insgpran'.$i] = array
+        (
+		    '#prefix' => '<td align="center"  >',
+	         '#suffix' => '</td>',
+		  '#markup'=>'<b>'.$link_alc_random_gp_subdiv.'</b>',
+	   
+	   
+        );
+	
+	
+	$form['alcrandomfield']['inspectorname'.$i] = 
+	    array('#type' => 'hidden',  
+	    '#value' => $inspector_name,
+	   
+	   );
+		 
+	}
+	$form['alcrandomfield']['totalins'] = 
+	    array('#type' => 'hidden', 
+		   '#id' => 'totalins',
+	    '#value' => $numrow,
+	   
+	   );
+	   
+	   
+	$form['alcrandomfield']['areatype'] = 
+	    array('#type' => 'hidden', 
+		   //'#id' => 'totalins',
+	    '#value' => $area_division_type,
+	   
+	   );
+	
+	
+	if($numrow > 0){  
+	   $form['alcrandomfield']['submit'] = array (
+		  '#prefix' => '<tr><td colspan="5" align="center">',
+	      '#suffix' => '</td></tr>',
+          '#type' => 'submit',
+       
+        '#default_value' => 'Save',
+      
+        );
+	}
+		$form['alcrandomfield']['formend'] = array (
+		  '#prefix' => '',
+	      '#suffix' => '</table>'
+      
+        );
+		return $form;
+		
+	}*/
+	
+function randomization_submission(){
+	$village_code 		= 	$_POST['area_code'];
+	$inspector_id 		= 	$_POST['inspector_code'];
+	$scheduling_fdt 	= 	$_POST['finalFrom'];
+	$scheduling_tdt 	= 	$_POST['finalTo'];
+	$block_code			=	171001;
+	$rnd_confirm_dt		=	date('Y-m-d');
+	$confirm_s			=	'C';
+	$scheduling_status	=	'K';
+	$dlc_random_tag_id	=	$_POST['id'];
+	
+	if( $village_code != "" && $inspector_id != "" && $scheduling_fdt != "" && $scheduling_tdt != "" && $dlc_random_tag_id != "" ){
+		
+		$query			=	db_query('select fullname from l_custom_user_detail where usr_id=:usr_id', array( ':usr_id' => $inspector_id ));
+		$query_res		=	$query->fetchAssoc();
+		$fullname		=	$query_res["fullname"];
+		$randomization	=	array(
+								'block_code'		=>	$block_code,
+								'village_code'		=>	$village_code,
+								'inspector_id'		=>	$inspector_id,
+								'inspector_name'	=>	$fullname,
+								'rnd_confirm_dt'	=>	$rnd_confirm_dt,
+								'confirm_s'			=>	$confirm_s,
+								'scheduling_status'	=>	$scheduling_status,
+								'scheduling_fdt'	=>	$scheduling_fdt,
+								'scheduling_tdt'	=>	$scheduling_tdt,
+								'dlc_random_tag_id'	=>	$dlc_random_tag_id
+							);
+		$last_id 		= 	db_insert('l_gp_ward_inspector_tag')->fields($randomization)->execute();
+	}
+	if($last_id != ""){
+		$output			= 	"Submitted";
+	}else{
+		$output			= 	"NotSubmitted";
+	}
+	return drupal_json_output($output);
+}
+	
+	function alcrandomization_list_validate($element,&$form_states)
+{
+ $val=$form_states['values']; 
+    $totalins=$val['totalins'];
+	
+	
+	
+	$k=0;
+	 for($i=1; $i<=$totalins ; $i++){
+
+  $inspectorid=trim($val['insid'.$i]);
+	
+    if (!$inspectorid) {
+		$k++;
+   
+    }
+	
+   }
+	if ($k==$totalins) {
+		  form_error($element, t('PLEASE SELECT AT LEAST ONE  INSPECTOR'));
+   
+    }
+	
+	
+	
+	
+	
+	
+	for($i=1; $i<=$totalins ; $i++){
+
+  $inspectorid=trim($val['insid'.$i]);
+  
+   if($inspectorid){
+	  $insid=trim($val['hiddinsid'.$i]);
+	  
+	   $fdt=$val['inssfdate'.$i]['year'].'-'.$val['inssfdate'.$i]['month'].'-'.$val['inssfdate'.$i]['day'];
+	$tdt=$val['insstdate'.$i]['year'].'-'.$val['insstdate'.$i]['month'].'-'.$val['insstdate'.$i]['day'];
+	  
+	  $insname=trim($val['inspectorname'.$i]);
+		
+		if(!checkdate($val['inssfdate'.$i]['month'], $val['inssfdate'.$i]['day'], $val['inssfdate'.$i]['year'])) 
+	   {
+	 
+	   form_error($element, t('inspector name ( '. $insname.' ) From Date is invalid !'));
+	  // $form_state['rebuild'] = TRUE;	
+	   }
+		
+	if(!checkdate($val['insstdate'.$i]['month'], $val['insstdate'.$i]['day'], $val['insstdate'.$i]['year'])) 
+	  {
+	 
+	   form_error($element, t('inspector name ( '.$insname.' )  To Date is invalid !'));
+	 
+	// $form_state['rebuild'] = TRUE;	
+	   }	
+		
+		if(strtotime($tdt)<=strtotime($fdt))
+	 {
+	
+      form_error($element, t('inspector name ( '.$insname.' ) To Date is always greater than from date !'));
+	 }
+	
+   }
+	}
+}
+	 function alcrandomization_list_submit($form , &$form_states) {
+		$val=$form_states['values'];
+		  $totalins=$val['totalins'];
+		  
+		 $areatype=$val['areatype'];  
+		  
+		  
+		    //echo $totalins;
+               //exit;
+		 
+	
+	
+	
+		  
+		  
+		  
+		$txn = db_transaction();
+		
+		
+
+try { 
+
+		for($i=1; $i<=$totalins ; $i++){
+
+  $inspectorid=trim($val['insid'.$i]);
+  
+   if($inspectorid){
+	  $insid=trim($val['hiddinsid'.$i]);
+	  
+	   $fdt=$val['inssfdate'.$i]['year'].'-'.$val['inssfdate'.$i]['month'].'-'.$val['inssfdate'.$i]['day'];
+	$tdt=$val['insstdate'.$i]['year'].'-'.$val['insstdate'.$i]['month'].'-'.$val['insstdate'.$i]['day'];
+	  
+	  $insname=trim($val['inspectorname'.$i]);
+		
+		 $wardgpcode=trim($val['wardgpcode'.$i]);
+	
+	  if($areatype=='W'){
+		  
+		  
+		  $query_alc_type=db_query('select subdivision_code from l_inspector_random_master where block_municipality_code =:bid', array(':bid' => trim($wardgpcode) ));	
+		
+	        $result=$query_alc_type->fetchAssoc();
+	       // $distid = $result['distid']; 
+			//$dlc_id = $uid;
+			$subdivision_code = $result['subdivision_code'];
+		  
+		  
+		$fieldsA = array('scheduling_status' => 'S',  'scheduling_fdt' =>$fdt, 'scheduling_tdt' =>$tdt,  'inspector_name' => $insname , 'village_code' => $wardgpcode, 'block_code' => $subdivision_code, 'inspector_id' =>  $insid, 'confirm_s' => 'C');
+       db_insert('l_gp_ward_inspector_tag')->fields($fieldsA)->execute();   
+		  
+		  
+	 /*  $queryOth = db_update('l_gp_ward_inspector_tag');
+         $queryOth->fields(array(
+		 'scheduling_status' =>'O',
+		
+         ));
+         $queryOth->condition('inspector_id',$insid);
+		 $queryOth->condition('confirm_s','C');
+	    
+         $queryOth->execute();*/
+	  
+	  
+	  }
+	  else
+	  {
+		  
+		$queryOth = db_update('l_gp_ward_inspector_tag');
+         $queryOth->fields(array(
+		 'scheduling_status' =>'S',
+		 'scheduling_fdt' =>$fdt,
+		 'scheduling_tdt' =>$tdt,
+         ));
+         $queryOth->condition('inspector_id',$insid);
+		 $queryOth->condition('confirm_s','C');
+	     $queryOth->condition('scheduling_status','U');
+         $queryOth->execute();  
+	  }
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+  
+		}
+		}
+		
+	$message = 'scheduling successfully  confirmed';
+	
+	
+}
+catch (Exception $e) {
+    // Something went wrong somewhere, so roll back now.
+    $txn->rollback();
+    // Log the exception to watchdog.
+    watchdog_exception('type', $e);
+	$message = 'scheduling not  confirmed';
+  }
+  
+ drupal_set_message(t($message));	
+	}
+	
+	
+	function alc_gp_randomization($districtid, $blockid, $insid, $id, $masters_tag_id){
+	  return  drupal_get_form('alc_block_gp_randomization',$districtid, $blockid , $insid, $id, $masters_tag_id);
+   }
+ 
+   function alc_block_gp_randomization($form, &$form_state, $districtid, $blockid, $insid, $id, $masters_tag_id){
+	   //echo "hii"; exit;
+	    global $user , $base_root, $base_path ;
+		
+		 $val="a".trim($districtid);
+		   $val2="a".trim($blockid);
+		    $val3="a".trim($insid);
+			 $val4="a".trim($id);
+			  $val5="a".trim($masters_tag_id);
+		 if(!is_numeric(trim($districtid)) || !is_numeric(trim($blockid)) || !is_numeric(trim($insid)) || !is_numeric(trim($id)) || $insid <= 0 || $blockid <= 0 || $districtid <= 0 || $id <= 0 || intval($districtid) != $districtid || intval($blockid) != $blockid || intval($insid) != $insid || intval($id) != $id){
+		   
+		   
+		  // $message = ' Product Code is Wrong !  ';
+		  //drupal_set_message(t($message));
+	      $full_base = $base_root . $base_path.'alcrandomization';
+	      drupal_goto($full_base);
+		   }
+		elseif(stripos($val,"~") >0  || stripos($val,"!") >0 || stripos($val,"@")>0 || stripos($val,"<")>0 || stripos($val,">")>0 || stripos($val,"'")>0 || stripos($val,"$")>0 || stripos($val,"#")>0 || stripos($val,"%")>0 || stripos($val,"^")>0 || stripos($val,"&")>0 || stripos($val,"*")>0){
+	 
+	   
+		//$message = ' product Code is Wrong !  ';
+		// drupal_set_message(t($message));
+	   $full_base = $base_root . $base_path.'alcrandomization';
+	    drupal_goto($full_base);
+	 }
+	 elseif(stripos($val2,"~") >0  || stripos($val2,"!") >0 || stripos($val2,"@")>0 || stripos($val2,"<")>0 || stripos($val2,">")>0 || stripos($val2,"'")>0 || stripos($val2,"$")>0 || stripos($val2,"#")>0 || stripos($val2,"%")>0 || stripos($val2,"^")>0 || stripos($val2,"&")>0 || stripos($val2,"*")>0){
+	 
+	   
+		//$message = ' product Code is Wrong !  ';
+		// drupal_set_message(t($message));
+	   $full_base = $base_root . $base_path.'alcrandomization';
+	    drupal_goto($full_base);
+	 }
+	 elseif(stripos($val3,"~") >0  || stripos($val3,"!") >0 || stripos($val3,"@")>0 || stripos($val3,"<")>0 || stripos($val3,">")>0 || stripos($val3,"'")>0 || stripos($val3,"$")>0 || stripos($val3,"#")>0 || stripos($val3,"%")>0 || stripos($val3,"^")>0 || stripos($val3,"&")>0 || stripos($val3,"*")>0){
+	 
+	   
+		//$message = ' product Code is Wrong !  ';
+		// drupal_set_message(t($message));
+	   $full_base = $base_root . $base_path.'alcrandomization';
+	    drupal_goto($full_base);
+	 }
+	 elseif(stripos($val4,"~") >0  || stripos($val4,"!") >0 || stripos($val4,"@")>0 || stripos($val4,"<")>0 || stripos($val4,">")>0 || stripos($val4,"'")>0 || stripos($val4,"$")>0 || stripos($val4,"#")>0 || stripos($val4,"%")>0 || stripos($val4,"^")>0 || stripos($val4,"&")>0 || stripos($val4,"*")>0){
+	 
+	   
+		//$message = ' product Code is Wrong !  ';
+		// drupal_set_message(t($message));
+	   $full_base = $base_root . $base_path.'alcrandomization';
+	    drupal_goto($full_base);
+	 }
+	 elseif(stripos($val5,"~") >0  || stripos($val5,"!") >0 || stripos($val5,"@")>0 || stripos($val5,"<")>0 || stripos($val5,">")>0 || stripos($val5,"'")>0 || stripos($val5,"$")>0 || stripos($val5,"#")>0 || stripos($val5,"%")>0 || stripos($val5,"^")>0 || stripos($val5,"&")>0 || stripos($val5,"*")>0){
+	 
+	   
+		//$message = ' product Code is Wrong !  ';
+		// drupal_set_message(t($message));
+	   $full_base = $base_root . $base_path.'alcrandomization';
+	    drupal_goto($full_base);
+	 }
+		
+	$form['gprandom'] = array(
+          '#title' => t('<font color="DarkGreen"><b> GP WISE RANDOMIZATION </b>'),
+          '#type' => 'fieldset',
+          '#collapsed' => FALSE
+          );
+	
+	$form['gprandom']['inssfdate'] 	= 	array(
+												'#title' 			=> 	'Inspection From Date',
+												'#required'			=>	TRUE,
+												'#prefix' 			=> 	'<table><tr><td>',
+												'#suffix' 			=> 	'</td>',
+												'#type' 			=> 'date',
+   												'#default_value'	=>	array(
+																			'month' => format_date(time(), 'custom', 'n'),
+																			'day' 	=> format_date(time(), 'custom', 'j'),
+																			'year' 	=> format_date(time(), 'custom', 'Y'),
+																		)
+										);
+																
+	$form['gprandom']['insstdate']		=	array(
+												'#title' 			=> 	'Inspection To Date',
+												'#required'			=>	TRUE,
+												'#prefix' 			=> 	'<td>',
+												'#suffix' 			=> 	'</td></tr></table>',
+												'#type' 			=> 'date',
+   												'#default_value'	=>	array(
+																			'month' => format_date(time(), 'custom', 'n'),
+																			'day' 	=> format_date(time(), 'custom', 'j'),
+																			'year' 	=> format_date(time(), 'custom', 'Y'),
+																		)
+											);
+		  											
+	       $query_dis_id=db_query('select fullname from l_custom_user_detail where  usr_id = :uid', array(':uid' => trim($insid) ));	
+		
+	        $result=$query_dis_id->fetchAssoc();
+	        $fullname = $result['fullname']; 																	
+		
+	$output		=	'<div style=" height:200px;overflow-y : auto;" align="center"><table border="1" width="100%">
+		 <tr> <td style="border-bottom:1px solid #000; background-color:#c1c1c1;" colspan="4"> INSPECTOR NAME : '.$fullname.' .</td></tr>
+						<tr>
+							<td style="border-bottom:1px solid #000; background-color:#c1c1c1;">SL.No.</td>
+							<td style="border-bottom:1px solid #000; background-color:#c1c1c1;">GP/WARD NAME</td>
+							<td style="border-bottom:1px solid #000; background-color:#c1c1c1;">INSPECTOR NAME</td>
+							<td style="border-bottom:1px solid #000; background-color:#c1c1c1;">RANDOMIZATION DATE</td>
+						</tr>';	
+						
+		//echo $blockid;// exit;				
+		$show_details_query = db_select('village_ward_master', 't');
+		
+         $show_details_query->fields('t', array('block_code','village_name','village_code','category'));				
+							
+		$show_details_query->condition('t.block_code',$blockid,'=');
+		
+		   
+			
+			 $show_details_result = $show_details_query->execute();
+			 //print_r($show_details_result);	exit;
+	  if($show_details_result->rowCount() > 0) {
+	  foreach($show_details_result as $result) {
+			$i++;
+	    
+	   $village_code = $result->village_code;
+	   $category	=	$result->category;
+	   if($category=='W'){
+		   $village_name ='Ward-'.$result->village_name;
+	   }else{
+		  $village_name =$result->village_name; 
+	   }
+	   
+	   $query_ins_nm=db_query('select inspector_name, rnd_confirm_dt from l_gp_ward_inspector_tag where village_code = :vid and confirm_s=:cstatus', array(':vid' => trim($village_code), ':cstatus' => 'C' ));
+	   	
+		   $rnd_con_dt='';
+		   $inspector_name='';
+		   
+	        $result2=$query_ins_nm->fetchAssoc();
+			if($query_ins_nm->rowCount() > 0) {
+	        $inspector_name = $result2['inspector_name'];
+	         $rnd_con_dt = date('d-m-Y', strtotime($result2['rnd_confirm_dt']));
+			}
+	    $output .=	'<tr><td style="border-bottom:1px solid #000;">'.$i.'</td>';
+		$output .=	'<td style="border-bottom:1px solid #000;border-left:1px solid #000;">'.$village_name.'</td>';
+		$output .=	'<td style="border-bottom:1px solid #000;border-left:1px solid #000;">'.$inspector_name.'</td>';
+		$output .=	'<td style="border-bottom:1px solid #000;border-left:1px solid #000;">'.$rnd_con_dt.'</td></tr>';
+		 }
+		 
+	  }
+	  $output .='</table></div>';		
+	  $form['gprandom']['gp_ward_show'] = array(
+															'#prefix' => '<div id="randomprevshow">'.$output,
+															'#suffix' => '</div>',
+														);	
+		
+		
+		
+	$form['gprandom']['randomcall']				=	array(
+																'#prefix' => '<div align="left">',  
+                                                                 '#suffix' => '</div>',
+																 '#type' => 'button',
+		 
+		                                                        '#id' => 'plantaddid',
+      
+		                                                   
+                                                                   '#default_value' => 'Randomization',
+                                                                   '#ajax' => array(
+                                                                   'callback' => 'gp_ward_inspector_Randomization',
+                                                                   'wrapper' => 'gprandomshow',
+                                                                   'method' => 'html',
+                                                                   'effect' => 'fade'
+                                                                 )
+																
+																 
+															);
+															
+	$form['gprandom']['submit']				=	array(
+																 '#prefix' => '<div align="center">',  
+                                                                 '#suffix' => '</div>',
+																 '#type' 	=> 	'submit',
+																 '#value' 	=> 	'Confirm',
+															   // '#submit' => array('inspector_Randomization_confirm'),
+															  //'#disabled' => 'disabled',
+															   '#attributes' => array('onclick' => 'if(!confirm("Are you sure you want to confirm Randomization ?")){return false;}'),
+															);	
+															
+															
+												
+															
+																												
+															
+	$form['gprandom']['random_result'] = array(
+															'#prefix' => '<div id="gprandomshow">',
+															'#suffix' => '</div>',
+														);	
+	$form['gprandom']['blockid'] = 
+	    array('#type' => 'hidden',  
+	    '#value' => $blockid,
+	   
+	   );	
+	   $form['gprandom']['insid'] = 
+	    array('#type' => 'hidden',  
+	    '#value' => $insid,
+	   
+	   );
+	   $form['gprandom']['dlc_random_tag_id'] = 
+	    array('#type' => 'hidden',  
+	    '#value' => $id,
+	   
+	   );
+	   $form['gprandom']['masters_tag_id'] = 
+	    array('#type' => 'hidden',  
+	    '#value' => $masters_tag_id,
+	   
+	   );
+														
+	return 	 $form;	
+															
+   }
+   
+   function alc_block_gp_randomization_submit($form, &$form_state){
+	
+ 	$insid=$form_state['values']['insid'];
+ 	$dlc_random_tag_id=$form_state['values']['dlc_random_tag_id'];
+	$masters_tag_id=$form_state['values']['masters_tag_id'];
+ 	$inssfdate=$form_state['values']['inssfdate']['year'].'-'.$form_state['values']['inssfdate']['month'].'-'.$form_state['values']['inssfdate']['day'];
+ 	$insstdate=$form_state['values']['insstdate']['year'].'-'.$form_state['values']['insstdate']['month'].'-'.$form_state['values']['insstdate']['day'];
+ 
+  		$txn = db_transaction();
+
+      	try { 
+	  
+   $queryA = db_update('l_gp_ward_inspector_tag');
+         $queryA->fields(array(
+         'confirm_s' =>'O',
+		 
+		  ));
+       // 
+		$queryA->condition('inspector_id',$insid);
+		$queryA->condition('confirm_s','C');
+		
+        $queryA->execute(); 
+		
+		$queryB = db_update('l_gp_ward_inspector_tag');
+         $queryB->fields(array(
+           'confirm_s' =>'C',
+		   'rnd_confirm_dt'=>date("Y-m-d"),
+		   'scheduling_status'=>'U',
+		   'scheduling_fdt'	=> $inssfdate,
+		   'scheduling_tdt'	=> $insstdate,
+		   'dlc_random_tag_id' => $dlc_random_tag_id,
+		   'masters_tag_id' => $masters_tag_id
+		  ));
+       // $queryB->condition('distict_code',$disid);
+		$queryB->condition('inspector_id',$insid);
+		$queryB->condition('confirm_s','R');
+		$queryB->execute(); 
+		
+		 $message = '    Randomization Successfully confirm.';
+		 drupal_goto('alcrandomization');
+    }
+		catch (Exception $e) {
+    
+    $txn->rollback();
+  
+    watchdog_exception('type', $e);
+	$message = ' Randomization not confirm ,because database error....';
+		}
+   drupal_set_message(t($message));   
+   }
+   
+	function gp_ward_inspector_Randomization($form,&$form_state){
+	
+	       $blockid=$form_state['values']['blockid'];
+	   
+          //$subdivision_code=$form_state['values']['subdivision_code'];
+	    // $dlcid=$form_state['values']['dlcid'];
+	  
+	    $insid=$form_state['values']['insid'];
+	
+	
+	$get_inspector_names_array	=	array();
+	$get_inspector_code_array	=	array();
+	
+	$get_vill_names_array	=	array();
+	$get_vill_code_array	=	array();
+	
+	      //$show_details_query = db_select('village_ward_master', 't');
+		
+         // $show_details_query->fields('t', array('block_code','village_name','village_code'));				
+							
+		 // $show_details_query->condition('t.block_code',$blockid,'=');
+		
+		 // $show_details_result = $show_details_query->execute();	
+		 
+		 
+		 $insqu="select village_name , village_code  from village_ward_master where  block_code=$blockid and village_code not in (select  village_code  from l_gp_ward_inspector_tag where block_code=$blockid and  confirm_s='C')  ";
+	  $show_details_result		=	db_query($insqu);
+	  foreach($show_details_result as $result) {
+		     $get_vill_code_array[] = $result->village_code;
+		  	 $get_vill_names_array[] = $result->village_name;
+		  
+	      }
+		 
+		//$arr = array(5 => 1, 12 => 2); 
+		 
+		 $query_dis_id=db_query(' select   fullname   from l_custom_user_detail where  usr_id = :uid', array(':uid' => trim($insid) ));	
+		
+	        $result=$query_dis_id->fetchAssoc();
+	        $fullname = $result['fullname']; 
+			
+			
+			 $get_inspector_names_array[] = $fullname;
+		     $get_inspector_code_array[]	 = $insid;
+			 
+		   	 
+			 
+		 shuffle($get_vill_code_array);
+		 $total_vill 		= count($get_vill_code_array); 	
+		// return "aaaaaaaaaaaaaaaaaaaaaaa".$total_vill;
+		 $t = $total_vill;
+		 //for( $i=1; $i < $t; $i++ ){
+			 
+		// }
+		 	 db_delete('l_gp_ward_inspector_tag')
+            ->condition('block_code',$blockid)
+	        ->condition('confirm_s', 'R')
+            ->execute();
+		 for( $i=0; $i < $t; $i++ ){	
+		 //if (!empty($get_inspector_code_array[$i]))
+		 
+      // {
+		  
+		  
+		  
+		  if($get_inspector_code_array[$i]){
+		 $inspector_id=$get_inspector_code_array[$i];
+		 $fieldsA = array('village_code' => $get_vill_code_array[$i], 'block_code' => $blockid, 'inspector_id' => $inspector_id, 'inspector_name' => $get_inspector_names_array[$i], 'confirm_s' => 'R');
+         db_insert('l_gp_ward_inspector_tag')->fields($fieldsA)->execute(); 
+	   
+	   }
+	   //$i++;
+	}
+	
+	$output		=	'<table border="1" width="100%">
+		
+						<tr>
+							<td style="border-bottom:1px solid #000; background-color:#c1c1c1;">SL.No.</td>
+							<td style="border-bottom:1px solid #000; background-color:#c1c1c1;">GP/WARD NAME</td>
+							<td style="border-bottom:1px solid #000; background-color:#c1c1c1;">INSPECTOR NAME</td>
+							
+						</tr>';	
+						
+						
+		$show_details_query = db_select('village_ward_master', 't');
+		 $show_details_query->join('l_gp_ward_inspector_tag', 'd', 'd.block_code = t.block_code and d.village_code = t.village_code');
+         $show_details_query->fields('t', array('block_code','village_name','village_code', 'category'));
+		 $show_details_query->fields('d', array('inspector_name','inspector_id'));				
+							
+		$show_details_query->condition('t.block_code',$blockid,'=');
+		$show_details_query->condition('d.confirm_s','R','=');
+		
+		   
+			
+			 $show_details_result = $show_details_query->execute();	
+	  if($show_details_result->rowCount() > 0) {
+		  $i=0;
+	  foreach($show_details_result as $result) {
+			$i++;
+			if($result->category=="W"){
+				$village_name = 'Ward-'.$result->village_name; 
+			}else{
+				$village_name =$result->village_name;  
+			}
+	   //$village_name =$result->village_name; 
+	   $village_code = $result->village_code;
+	   $inspector_name = $result->inspector_name;
+	    $output .=	'<tr><td style="border-bottom:1px solid #000;">'.$i.'</td>';
+		$output .=	'<td style="border-bottom:1px solid #000;border-left:1px solid #000;">'.$village_name.'</td>';
+		$output .=	'<td style="border-bottom:1px solid #000;border-left:1px solid #000;">'.$inspector_name.'</td></tr>';
+		 }
+		 
+	  }
+	  $output .='</table>';	
+	
+	
+	return  $output ;
+	
+	
+	}
+	 ?>

@@ -1,0 +1,135 @@
+.clra_applications{margin:20px 0 17px;padding:0px;width:100%;	border:1px solid #DDDDDD; font-family:"Open Sans",sans-serif;border-collapse:collapse; float:left;}
+.clra_applications table{border-collapse: collapse;border-spacing: 0;width:100%;height:100%;margin:0px;padding:0px;}
+.clra_applications tr th{ height:35px; font-weight:400; padding:2px 2px 2px 0; color:#fff;}
+.incomplete{background:#F90;border-radius:3px; padding:2px 17px !important;color:#fff;}
+.issued{background:#96B771;border-radius:3px;/* padding:2px 32px !important;*/color:#fff;cursor:-moz-grab;}
+.approved{background:#33831E;border-radius:3px; padding:2px 32px !important;color:#fff;cursor:-moz-grab;}
+.forward{background: #963;border-radius:3px; padding:2px 32px !important;color:#fff;cursor:-moz-grab;}
+.pending{background:#E5291C;border-radius:3px; padding:4px 12px !important;color:#fff;cursor:-moz-grab; text-align: center; display: block;}
+.final_submit{background:#3399ff;border-radius:3px; padding:2px 12px !important;color:#fff;cursor:-moz-grab;}
+.feespending{background:#F60; border-radius:3px; padding:2px 8px !important; color:#fff;cursor:-moz-grab;}
+.fees_paid{background:#96B771;border-radius:3px; padding:2px 15px !important;color:#fff;cursor:-moz-grab;}
+.heading{color: #3d5454; font-family: cursive; font-size: 22px ; font-weight: normal; margin: 5px 0;}
+.trans_success{background:#CC6666; border-radius:3px; padding:2px 13px !important;color:#fff;cursor:-moz-grab;}
+.backtoins{background: #FC0;border-radius:3px; padding:2px 13px !important;color:#fff;cursor:-moz-grab;}
+.applied {background:#233308;border-radius:3px; padding:2px 29px !important;color:#fff;cursor:-moz-grab;}
+.comments{color:#060;font-weight: bold; padding: 30px; margin-top: 13px;text-align: center;}
+
+.view_test{color:#03F;font-weight: bold; padding: 30px; margin-top: 13px;text-align: left;}
+
+
+.call_applicant{background:#9B7DC4; border-radius:3px; padding:2px 8px !important;color:#fff;}
+.reject{background:#C55043; border-radius:3px; padding:2px 32px !important;color:#fff;}
+.application_view{border:1px solid #DDDDDD;margin-top:14px;}
+.application_view td{border:none;background:none; }
+.feespaid{ background:#C90;  border-radius:3px; padding:2px 20px !important;color:#fff;}
+.underprocess{background: #060;border-radius:3px; padding:2px 16px !important;color:#fff;cursor:-moz-grab;}
+.finalsubmit{background:#6e2783; border-radius:3px; padding:4px 10px !important;color:#fff; display: block; text-align: center;}
+.exp_pendng {color:#f00 !important;font-weight:700 !important;background-color:#fff;font-size:14px !important;}
+
+.myButton{background: rgb(89, 155, 179) linear-gradient(to bottom, rgb(89, 155, 179) 5%, rgb(64, 140, 153) 100%) repeat scroll 0% 0%; border-radius: 4px; display: inline-block; cursor: pointer; color: rgb(255, 255, 255); font-family: Verdana; font-size: 8px; font-weight: bold; padding: 7px 13px; text-decoration: none;margin-left:22px;}
+
+@keyframes glowing {
+  0% { background-color: #004A7F; box-shadow: 0 0 3px #004A7F; }
+  50% { background-color: #0094FF; box-shadow: 0 0 10px #0094FF; }
+  100% { background-color: #004A7F; box-shadow: 0 0 3px #004A7F; }
+}
+.myButton{animation: glowing 1500ms infinite;}
+
+
+.clra_applications tr:last-child td:last-child {
+	-moz-border-radius-bottomright:0px;
+	-webkit-border-bottom-right-radius:0px;
+	border-bottom-right-radius:0px;
+}
+.clra_applications table tr:first-child td:first-child {
+	-moz-border-radius-topleft:0px;
+	-webkit-border-top-left-radius:0px;
+	border-top-left-radius:0px;
+}
+.clra_applications table tr:first-child td:last-child {
+	-moz-border-radius-topright:0px;
+	-webkit-border-top-right-radius:0px;
+	border-top-right-radius:0px;
+}.clra_applications tr:last-child td:first-child{
+	-moz-border-radius-bottomleft:0px;
+	-webkit-border-bottom-left-radius:0px;
+	border-bottom-left-radius:0px;
+}.clra_applications tr:hover td{
+	
+}
+.clra_applications th{ background-color:#3294D6;}
+.clra_applications th a{ color:#ffffff; padding:2px 3px 4px  1px;}
+
+.clra_applications tr th{padding-top:4px;vertical-align:middle;text-align: center;}
+.sorting_asc{background:none;}
+.clra_applications tr:nth-child(odd){ background:#F9F9F9;}
+.clra_applications tr:nth-child(even)    { background:#FFFFFF; }.clra_applications td{
+	vertical-align:middle;	
+	border:1px solid #DDDDDD;
+	border-width:0px 1px 1px 0px;
+	text-align:left;
+	padding:9px;
+	font-size:13px;
+	font-family:Arial;
+	font-weight:normal;
+	color:#000000;
+}.clra_applications tr:last-child td{
+	border-width:0px 1px 0px 0px;
+}.clra_applications tr td:last-child{
+	border-width:0px 0px 1px 0px;
+}.clra_applications tr:last-child td:last-child{
+	border-width:0px 0px 0px 0px;
+}
+.fieldset-wrapper .add_new{ border:1px solid #f00;background:url(../images/plus_icon.png) no-repeat left;}
+#equalr-inspection-infrig .form-text{width:97%; min-height:25px; border-radius:0px;}
+#change_phone_no{color:#0066CC; cursor:pointer; padding-left:25px;}
+#change_phone_no:hover{color:#0066CC; cursor:pointer; padding-left:25px; text-decoration:underline;}
+.high_risk{background: url(../images/icon-high-risk2.png) no-repeat left top; width:103px; height:23px; display: block;}
+.medium_risk{background: url(../images/icon-medium-risk2.png) no-repeat left top; width:103px; height:23px; display: block;}
+.low_risk{background: url(../images/icon-low-risk2.png) no-repeat left top; width:103px; height:23px; display: block;}
+.view_details{background: url(../images/icon-view.png) no-repeat left top; width:61px; height:23px; display: block;}
+
+
+.read{ font-weight:400 !important; color:#666666 !important;}
+.read a{ font-weight:400 !important; color:#666666 !important;}
+.unread{ font-weight:700 !important; color:#000 !important;}
+.unread a{ font-weight:700 !important; color:#000 !important;}
+
+
+.fees-paid_not_fs {
+    -webkit-animation-name: blinker;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+
+    -moz-animation-name: blinker;
+    -moz-animation-duration: 1s;
+    -moz-animation-timing-function: linear;
+    -moz-animation-iteration-count: infinite;
+
+    animation-name: blinker;
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+	color:#F60;
+	font-weight:700;
+}
+
+@-moz-keyframes blinker {  
+    0% { opacity: 1.0; }
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; }
+}
+
+@-webkit-keyframes blinker {  
+    0% { opacity: 1.0; }
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; }
+}
+
+@keyframes blinker {  
+    0% { opacity: 1.0; }
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; }
+}

@@ -1,0 +1,28 @@
+<?php
+
+function admin_advance_search_permission() {
+  	return array(
+    		'admin_advance_search_per' => array(
+      									'title' => t('admin_advance_search permission'),
+    								)
+  	);
+}
+
+function admin_advance_search_menu(){
+	$items 											=	array();
+	$items['super-admin-advanced-search']			= 	array(
+															'title' 				=> 'Advanced Search',
+															'page callback'			=> 'drupal_get_form',
+															'page arguments'		=> array('superadmin_advance_search'),
+															'file' 					=> 'includes/superadmin_advance_search.inc',
+															'access arguments' 		=> array('admin_advance_search_per')
+														);
+	$items['super-admin-advanced-search/%/%']		= 	array(
+															'title' 				=> 'Advanced Search',
+															'page callback'			=> 'drupal_get_form',
+															'page arguments'		=> array('advce_search_showlist', 1, 2),
+															'file' 					=> 'includes/superadmin_advance_search.inc',
+															'access arguments' 		=> array('admin_advance_search_per')
+														);
+	return $items;
+}

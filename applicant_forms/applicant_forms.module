@@ -1,0 +1,1378 @@
+<?php
+	 
+	function applicant_forms_init() {
+		drupal_add_js(drupal_get_path('module', 'applicant_forms') . '/js/contractor_tab.js');
+	}
+	
+	function applicant_forms_permission() {
+								return array(
+										'applicant_forms_clra_all_per' 				=> array(
+										'title' 									=> t('applicant_forms permission'),
+											),
+									
+										'Permission for applications view_alc'  	=> array(
+      									'title' 									=> t('Permission for applications view_alc'),
+   										),
+										'only_applicant_permission'					=> array(
+										'title'										=> t('Only Applicant Permission')
+										)
+								);
+	}
+	
+	function applicant_forms_menu() {
+		
+		
+		$items						 												= array();
+		
+		$items['applicant-profile/autocomplete']									= array(
+																						'page callback' 			=> '_module_name_autocomplete',
+																						'access arguments'			=> array('access content'),
+																						'type'						=> MENU_CALLBACK
+																						);	
+		
+		$items['applicant-profile']													= array(
+																						'title'						=>'My Profile',
+																						'page callback'				=>'drupal_get_form',
+																						'page arguments'			=>array('applicant_profile_form'),
+																						'file' 						=>'include/applicant-profile.inc',
+																						'access arguments' 			=> array('only_applicant_permission'),
+																						);
+																				
+		$items['my-profile'] = array(
+							'title'			   => 'My Profile',
+							'page callback'	   => 'my_profile_view',							
+							'file' 			   =>'include/my_profile.inc',
+							'access arguments' => array('only_applicant_permission'),
+							);
+		$items['applicant-profile-update']											= array(
+																						'title'						=>'My Profile',
+																						'page callback'				=>'drupal_get_form',
+																						'page arguments'			=>array('applicant_profile_form'),
+																						'file' 						=> 'include/applicant-profile.inc',
+																						'access arguments' 			=> array('only_applicant_permission'),
+																						);
+		
+		$items['applicant-profile-update-dev']											= array(
+																						'title'						=>'My Profile',
+																						'page callback'				=>'drupal_get_form',
+																						'page arguments'			=>array('applicant_profile_form'),
+																						'file' 						=> 'include/applicant-profile-dev.inc',
+																						'access arguments' 			=> array('only_applicant_permission'),
+																						);
+		
+										
+		$items['applicant-profile-update/sc']	= array(
+									'title'				=> 'My Profile',
+									'page callback'		=> 'drupal_get_form',
+									'page arguments'	=> array('applicant_profile_form', 1),
+									'file' 				=> 'include/applicant-profile.inc',
+									'access arguments' 	=> array('only_applicant_permission'),
+									);
+		$items['clra-applications']													= array(
+																						'title'						=>'CLRA Applications List',
+																						'page callback'				=>'drupal_get_form',
+																						'page arguments'			=>array('clra_all_applications_form'),
+																						'file' 						=> 'include/clra_all_applications_form.inc',
+																						'access arguments' 			=> array('only_applicant_permission'),
+																						);
+										
+		$items['applicant-profile/default'] 										= array(
+																						'title' 					=> 'Profile Details',
+																						'type' 						=> MENU_DEFAULT_LOCAL_TASK,
+																						'weight' 					=> -10
+																						);
+										
+
+		$items['applicant-profile/clra-registration/new'] 							= array(
+																						'title'						=> 'REGISTRATION OF ESTABLISHMENT EMPLOYING CONTRACT LABOUR',
+																						'page callback' 			=> 'drupal_get_form', 
+																						'page arguments' 			=> array('get_clra_registration_info_new_form'),
+																						'file' 						=> 'include/get_clra_registration_info_new_form.inc',
+																						'access arguments' 			=> array('only_applicant_permission'),
+																						);
+																				
+		$items['view-clra-application-details/view-clra-application/%']				= array(
+																						  'title' 					=> 'Application Details',
+																						  'page callback' 			=> 'drupal_get_form', 
+																						  'page arguments' 			=> array('get_clra_registration_info_form',2),
+																						  'file' 					=> 'include/get_clra_registration_info_form.inc',
+																						  'access arguments' 		=> array('only_applicant_permission'),
+																						  'weight' 					=> 2,
+																						  'type' 					=> MENU_LOCAL_TASK
+																						  );
+																				  
+																				  
+		
+		/*** Menu For TRADE UNION Tabs ****/
+		
+		$items['tradeunion/autocomplete'] 											= array(
+																						  'title' 					=> t('AutoCompomplete'),
+																						  'page callback' 			=> 'selectAllTradeUnion',
+																						  'access arguments' 		=> array('access content'),
+																						  'type' 					=> MENU_CALLBACK
+																					 );	
+		$items['view-clra-application-details/view-trade-union-application/%']		= array(
+																						  'title' 					=> 'Trade Union Details',
+																						  'page callback' 			=> 'drupal_get_form', 
+																						  'page arguments' 			=> array('get_trade_union_info_form',2),
+																						  'file' 					=> 'include/get_trade_union_info_form.inc',
+																						  'access arguments' 		=> array('only_applicant_permission'),
+																						  'weight' 					=> 4,
+																						  'type' 					=> MENU_LOCAL_TASK
+																						  );
+																						  
+		
+		$items['view-clra-application-details/add-trade-union/%'] 					= array(
+																						'title' 					=> 'Add Trade Union',
+																						'page callback' 			=> 'drupal_get_form', 
+																						'page arguments' 			=> array('add_trade_union_info_form', 2),
+																						'file' 						=> 'include/add_trade_union_info_form.inc',
+																						'access arguments' 			=> array('only_applicant_permission'),
+																						'type' 						=> MENU_NORMAL_ITEM
+																						);
+																						
+																						
+		$items['view-clra-application-details/edit-trade-union/%/%'] 				= array(
+																						'title' 					=> 'Edit Trade Union Details',
+																						'page callback' 			=> 'drupal_get_form', 
+																						'page arguments' 			=> array('edit_trade_union_details', 2, 3),
+																						'file' 						=> 'include/edit_trade_union_details.inc',
+																						'access arguments' 			=> array('only_applicant_permission')
+																					);
+										  																		
+		/*** Menu For Contractor Add Modal Box ****/	
+										
+		$items['view-clra-application-details/add-contractor/%'] 					= array(
+																						'title' 					=> 'Add Contractor',
+																						'page callback' 			=> 'drupal_get_form', 
+																						'page arguments' 			=> array('add_contractor_info_form', 2),
+																						'file' 						=> 'include/add_contractor_info_form.inc',
+																						'access arguments' 			=> array('only_applicant_permission')
+																						);
+
+		/*** Menu For Contractor TABS ****/	
+		
+		
+		$items['view-clra-application-details/clra-contractor-info/%'] 				= array(
+																						'title' 					=> 'Contractor Information',
+																						'page callback' 			=> 'drupal_get_form', 
+																						'page arguments' 			=> array('get_clra_contractor_info_form',2),
+																						'file' 						=> 'include/get_clra_contractor_info_form.inc',
+																						'access arguments' 			=> array('applicant_forms_clra_all_per'),
+																						'weight' 					=> 6,
+																						'type' 						=> MENU_LOCAL_TASK
+																						);
+									
+		$items['applicant-profile/clra-contractor-info/%/%'] 						= array(
+																						'title' 					=> 'View Information',
+																						'page callback' 			=> 'contractor_view_callback',
+																						'page arguments' 			=> array(2, 3),
+																						'file' 						=> 'include/get_clra_contractor_info_form.inc',
+																						'access arguments' 			=> array('applicant_forms_clra_all_per')
+																						);
+																						
+		$items['contractor-view/%/%'] 						= array(
+																						'title' 					=> 'Contractor Information',
+																						'page callback' 			=> 'drupal_get_form',
+																						'page arguments' 			=> array('contractor_view',1, 2),
+																						'file' 						=> 'include/contractor_view.inc',
+																						'access arguments' 			=> array('applicant_forms_clra_all_per')
+																						);
+
+		/*** Menu For Contractor Edit Modal Box ****/	
+		
+									
+		$items['applicant-profile/edit-contractor-form/%']							= array(
+																						'title' 					=> 'Contractors Edit',
+																						'page callback' 			=> 'drupal_get_form',
+																						'page arguments'			=>array('edit_contractor_form', 2),
+																						'file' 						=> 'include/edit_contractor_form.inc',
+																						'access arguments' 			=> array('applicant_forms_clra_all_per'),
+																					);
+		
+		/*** FORM-V DOWNLOAD link ****/	
+																				
+		$items['pdf_from_v_download/%']												= array(
+																						'title' 					=> 'From-V Download',
+																						'page callback' 			=> 'drupal_get_form',
+																						'page arguments' 			=> array('pdf_from_v_page_download', 1),
+																						'file' 						=> 'include/pdf_from_v_page_download.inc',
+																						'access arguments' 			=> array('applicant_forms_clra_all_per'),
+																						);
+																						
+		$items['download_pdf_formV/%']												= array(
+																						'title' 					=> 'FORM-V Download',
+																						'page callback' 			=> 'drupal_get_form',
+																						'page arguments' 			=> array('contractor_pdf_from_v_page_download', 1),
+																						'file' 						=> 'include/pdf_from_v_page_download.inc',
+																						'access arguments' 			=> array('applicant_forms_clra_all_per'),
+																						);
+									
+																	
+		$items['applicant-dashboard'] 												= array(
+																						'title'						=> 'My Dashboard',
+																						'page callback' 			=> 'applicant_dashboard_data',																		
+																						'access arguments' 			=> array('applicant_forms_clra_all_per')									
+																						);
+																						
+		$items['view-clra-application-details']										= array(
+																						'title' 					=> 'View And Edit Application',
+																						'access arguments' 			=> array('applicant_forms_clra_all_per'),
+																						);
+										
+		$items['applicant-profile/view-all-contractors'] 							= array(
+																						'title' 					=> 'Contractors List',
+																						'page callback' 			=> 'drupal_get_form', 
+																						'page arguments' 			=> array('get_contractors_list_form'),
+																						'file' 						=> 'include/get_contractors_list_form.inc',
+																						'access arguments' 			=> array('applicant_forms_clra_all_per')
+																						);
+										
+	
+										
+		/*$items['view-clra-application-details/clra-fees-calculation/%'] 			= array(
+																						'title' 					=> 'Fees Details',
+																						'page callback' 			=> 'drupal_get_form', 
+																						'page arguments' 			=> array('get_clra_fees_info_form',2),
+																						'file' 						=> 'include/get_clra_fees_info_form.inc',
+																						'access arguments' 			=> array('applicant_forms_clra_all_per'),
+																						// 'weight' 					=> 8,
+																						// 'type' 						=> MENU_LOCAL_TASK
+																						);*/
+										
+										
+		$items['view-clra-application-details/verify/%'] 							= array(
+																						'title' 					=> 'Application Preview',
+																						'page callback' 			=> 'drupal_get_form',
+																						'page arguments' 			=> array('clra_application_preview',2),
+																						'file' 						=> 'include/clra_application_final_preview.inc', 
+																						'access arguments' 			=> array('applicant_forms_clra_all_per'),
+																						'weight' 					=> 10,
+																						'type' 						=> MENU_LOCAL_TASK
+																						);
+										
+		$items['clra-application/view/%'] 											= array(
+																						'title' 					=> 'Application Information Preview',
+																						'page callback' 			=> 'drupal_get_form',
+																						'page arguments' 			=> array('clra_application_preview',2),
+																						'file' 						=> 'include/clra_application_final_preview.inc', 
+																						'access arguments' 			=> array('applicant_forms_clra_all_per'),
+																						'weight' 					=> 10,
+																						//'type' 						=> MENU_DEFAULT_LOCAL_TASK
+																						);
+										
+		$items['view-clra-application-details/upload-contractor-doc-form/%'] 		= array( 
+																						'title' 					=> 'Upload Contractors in .xlsx file',
+																						'page callback'				=> 'drupal_get_form',
+																						'page arguments'			=> array('upload_doc_form_contractor', 2),
+																						'file' 						=> 'include/upload_doc_form_contractor.inc',
+																						'access arguments' 			=> array('applicant_forms_clra_all_per'),
+																					  );
+		
+		$items['view-remark/%/%']														= array(
+																						'title' 					=> 'Application Remark List',
+																						'page callback' 			=> 'view_remark_details',
+																						'page arguments' 			=> array(1,2),
+																						'file' 						=> 'include/view_remark_details.inc',
+																						//'access arguments' 			=> array('applicant_forms_clra_all_per'),
+																						'access arguments' 		=> array('access content'),
+																						);
+																						
+																						
+		$items['upload_signed_application_form/%']									= array(
+																						'title' 					=> 'Upload Signed Forms',
+																						'page callback' 			=> 'drupal_get_form',
+																						'page arguments' 			=> array('upload_signed_application_form', 1),
+																						'file' 						=> 'include/upload_signed_application_form.inc',
+																						'access arguments' 			=> array('applicant_forms_clra_all_per'),
+																						);	
+																						
+																						
+		$items['view-contractors-form-v/%'] 										= array(
+																						'title' 					=> 'Contractor Form V List',
+																						'page callback' 			=> 'drupal_get_form', 
+																						'page arguments' 			=> array('get_clra_contractor_info_form',1),
+																						'file' 						=> 'include/get_clra_contractor_info_form.inc',
+																						'access arguments' 			=> array('applicant_forms_clra_all_per'),
+																						);	
+																						
+		$items['alc-view-formV/%/%']												= array(
+																						'title' 					=> 'From-V Download',
+																						'page callback' 			=> 'drupal_get_form',
+																						'page arguments' 			=> array('pdf_from_v_page_download', 1,2),
+																						'file' 						=> 'include/pdf_from_v_page_download.inc',
+																						'access arguments' 			=> array('Permission for applications view_alc'),
+																						);	
+																						
+		/** To Activate and Deactivate Contractor *****/
+		
+		
+		$items['contractor-status-active-deactive/%/%/%'] 							= array(
+																						'page callback' 			=> 'drupal_get_form', 
+																						'page arguments' 			=> array('contractor_status_activate_deactivate',1,2,3),
+																						'file' 						=> 'include/get_clra_contractor_info_form.inc',
+																						'access arguments' 			=> array('applicant_forms_clra_all_per'),
+																						);
+																						
+																						
+		$items['view-more/%/%'] 													= array(
+																						'title'						=> 'My Applications',
+																						'page callback' 			=> 'drupal_get_form',
+																						'page arguments' 			=> array('dashboard_view_more_applications',1,2),
+																						'file' 						=> 'include/dashboard_view_more_applications.inc',
+																						'access arguments' 			=> array('applicant_forms_clra_all_per')	
+																						
+																						);
+	$items['view-more-application'] = array( 
+					'title' 			=> 'My Applications',
+					'page callback' 	=> 'view_more_applications',
+					// 'page arguments' 	=> array('view_more_applications'),
+					'file' 				=> 'include/view_more_applications.inc',								
+					'access arguments' 	=> array('applicant_forms_clra_all_per'),
+					);	
+		
+	$items['view-payment-info'] = array( 
+					'title' 			=> 'Payment History',
+					'page callback' 	=> 'view_payment_information',					
+					'file' 				=> 'include/view_payment_information.inc',								
+					'access arguments' 	=> array('applicant_forms_clra_all_per'),
+					);
+					
+	$items['view-payment-info/%/%'] = array( 
+					'title' 			=> 'Payment History',
+					'page callback' 	=> 'view_payment_information',
+					'page arguments' 	=> array(1,2),					
+					'file' 				=> 'include/view_payment_information.inc',								
+					'access arguments' 	=> array('applicant_forms_clra_all_per'),
+					);
+					
+	
+	/******** Added by Nibedita Ghosh ***********/
+																						
+	$items['view-clra-application-details/clra-contractor-info/print/%'] = array(					
+					'page callback' 	=> 'get_clra_contractor_info_form_print', 
+					'page arguments' 	=> array(3),
+					'file' 				=> 'include/get_clra_contractor_info_form_print_and_excel.inc',
+					'access arguments' 	=> array('applicant_forms_clra_all_per')					
+					);	
+	$items['view-clra-application-details/clra-contractor-info/excel/%'] = array(					
+					'page callback' 	=> 'get_clra_contractor_info_form_excel', 
+					'page arguments' 	=> array(3),
+					'file' 				=> 'include/get_clra_contractor_info_form_print_and_excel.inc',
+					'access arguments' 	=> array('applicant_forms_clra_all_per')
+					);	
+																																																												
+		/******** End Nibedita Ghosh **********/ 
+		
+		/** FOR AMENDMENT ***/
+	
+	$items['register-record-repository-confirm'] = array(
+						'title' => 'Register Record Repository',
+						'page callback' => 'drupal_get_form', 
+						'page arguments' => array('register_record_repository_confirm'),
+						'file' => 'include/register_record_repository.inc',
+						'access arguments' => array('applicant_forms_clra_all_per')
+						);
+	$items['register-record-repository-form'] = array(
+						'title' => 'Register Record Repository',
+						'page callback' => 'drupal_get_form', 
+						'page arguments' => array('register_record_form'),
+						'file' => 'include/register_record_repository.inc',
+						'access arguments' => array('only_applicant_permission')
+						);
+	$items['register-record-repository-list'] = array(
+						'title' => 'Register Record Repository',
+						'page callback' => 'register_record_list', 
+						'page arguments' => array('register_record_list'),
+						'file' => 'include/register_record_repository.inc',
+						'access arguments' => array('only_applicant_permission')
+						);
+	$items['add-contractor/%'] 	= array(
+							'title' 				=> 'Add Contractor',
+							'page callback' 		=> 'drupal_get_form', 
+							'page arguments' 		=> array('add_contractor_info_form', 1),
+							'file' 					=> 'include/add_contractor_info_form.inc',
+							'access arguments' 		=> array('Permission only applicant for amendmend')
+							);
+	$items['register-record-repository-list-file/%'] = array( 
+		'title arguments'   => array(1),							
+		'page callback'		=>'drupal_get_form',
+		'page arguments'	=>array('alc_view_plantation_view_file_applicant', 1),
+		'file' 				=> 'include/register_record_repository.inc', 
+		'access arguments' 	=> array('access content'),
+	);
+	
+	$items['register-record-repository-row-delete/%'] = array( 
+		'title arguments'   => array(1),							
+		'page callback'		=>'drupal_get_form',
+		'page arguments'	=>array('register_record_repository_row_delete', 1),
+		'file' 				=> 'include/register_record_repository.inc', 
+		'access arguments' 	=> array('access content'),
+	);	
+	
+	/****** Deemed Approved Start ********/		
+				
+	$items['deemed-appoval-certificate/%/%'] = array(
+				'title' => 'Edit Trade Union Details',
+				'page callback' => 'drupal_get_form', 
+				'page arguments' => array('deemed_appoval_certificate', 1, 2),
+				'file' => 'include/deemed_appoval_certificate.inc',
+				'access arguments' => array('only_applicant_permission')
+				);		
+	
+	
+	
+	/*$items['download-certificate/%/%'] = array( 
+		'title callback'   => 'Download Certificate',
+		'page callback'		=> 'drupal_get_form',
+		'file' 				=>'include/download_certificate.inc',
+		'page arguments' 	=> array('download_certificate',1,2),
+		'access arguments' 	=> array('only_applicant_permission'),
+	);*/
+		
+		
+	
+	
+	/****** End *******/
+	
+	
+	
+	
+	return $items;
+}
+	
+	function contractor_works_multiSelect_options() {
+		$contractor_work_query=db_query("SELECT * FROM {contractor_works} where is_default = '1' and contractor_work_id!=28 order by cont_work_name ASC ");  
+			foreach ($contractor_work_query as $result){
+			   $res[$result->contractor_work_id]=$result->cont_work_name;       
+			}
+			$res[28]='Others';
+		return $res;
+	}
+	
+	/*function selectAllTradeUnion($string){
+		if( is_numeric($string) ){
+			$result 	= db_query("SELECT e_trade_union_regn_no FROM {tradeunion_master} WHERE e_trade_union_regn_no LIKE '%$string%' LIMIT 10");
+			$matches 	= array();
+			if( $result->rowCount() > 0 ){
+				foreach($result as $item) {
+					$matches[$item->e_trade_union_regn_no] = check_plain($item->e_trade_union_regn_no);
+				}
+				drupal_json_output($matches);
+				exit;	
+			}else{
+				$matches	=	"";
+				exit;
+			}
+		}
+	}*/
+	
+	function selectAllTradeUnion($string){
+			$result 	= db_query("SELECT e_trade_union_regn_no FROM {tradeunion_master} WHERE e_trade_union_regn_no LIKE '%$string%' LIMIT 10");
+			$matches 	= array();
+			if( $result->rowCount()>0 ){
+				foreach($result as $item) {
+					$matches[$item->e_trade_union_regn_no] = check_plain($item->e_trade_union_regn_no);
+				}
+			}else{
+				$matches[] = "";
+				
+			}
+			drupal_json_output($matches);
+			exit;
+			/*foreach($result as $item) {
+				$matches[$item->e_trade_union_regn_no] = check_plain($item->e_trade_union_regn_no);
+			}
+			drupal_json_output($matches);
+			exit;*/	
+	}
+	
+	
+	function _module_name_autocomplete($string) {
+			global $user;
+			$uid = $user->uid;
+			//echo $uid; exit;
+  			$matches = array();
+  
+  			// Some fantasy DB table which holds cities
+  			$query = db_select('l_contractor_info_master', 'lcim');
+
+  			// Select rows that match the string
+  			$return = $query
+				->fields('lcim', array('name_of_contractor'))
+				->condition('lcim.name_of_contractor', '%' . db_like($string) . '%', 'LIKE')
+				->condition('lcim.user_id', $uid)
+				->range(0, 10)
+				->execute();			
+  
+  			// add matches to $matches  
+  			foreach ($return as $row) {
+    			$matches[$row->name_of_contractor] = check_plain($row->name_of_contractor);
+  			}
+		  	print_r(drupal_json_output($matches)); exit;
+  			// return for JS
+  			drupal_json_output($matches);
+	}
+	
+	
+function applicant_dashboard_data(){
+	drupal_add_css(drupal_get_path('module', 'applicant_forms') . '/css/clra_applications.css');
+		
+	global $user; 
+		
+	$user_id = $user->uid;
+	
+	if($_REQUEST){ die;
+		$username = $_REQUEST['userName'];
+		$auth_key = $_REQUEST['authKey'];
+		$src = $_REQUEST['src'];
+		$oswicsApplicationId = $_REQUEST['oswicsApplicationId'];
+		$x = db_select('users','u');
+		$x->join('l_common_application_master','lcam','lcam.user_id = u.uid');
+		$x->fields('lcam',array('oswicsapplicationflag'))->fields('u',array('name'));
+		$x->condition('u.name',$username);
+		$y = $x->execute();
+		
+		if($y->rowCount() >= 1 ){
+			$z = $y->fetchObject();			
+			if($z->oswicsapplicationflag == 1){
+				//$service_url = 'https://199.228.83.141/eformsap/seam/resource/rest/userService/validateUserAuthentication';
+				$service_url = 'https://eservices.wb.gov.in/eformsap/seam/resource/rest/userService/validateUserAuthentication';
+				$curl_post_data = array(
+				"userName"=>$username,
+				"authKey" => $auth_key
+				);			
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json; charset=utf-8'));
+				curl_setopt($ch, CURLOPT_URL, $service_url);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); 
+				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
+				curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode( $curl_post_data ) );
+				curl_setopt($ch, CURLOPT_POST, true);
+				$results=curl_exec($ch);
+				/*echo 'RESULT : <pre>';
+				print_r($results);
+				$errors=curl_error($ch);
+				echo 'ERROR : <pre>';
+				print_r($errors); die;*/
+				curl_close($ch);			
+				$tmp = json_decode($results);
+				$var_userName = $tmp->userName;
+				$var_code = $tmp->code;
+				$p = explode(':',$tmp->content);
+				$var_id = $p[1];
+				//echo "lasterror => ".$errors;		
+				if(isset($var_userName) && $var_code == 200 && $var_id > 0){
+					$pass = 'oswicsuser@123';
+					if ($uid = user_authenticate($var_userName, $pass)) {
+					  global $user;
+					  $user = user_load($uid);
+					  $login_array = array ('name' => $username);
+					  user_login_finalize($login_array);
+					}	
+					drupal_goto('applicant-dashboard');			
+				}
+			}else{
+				//return URL of OSWICS DASHBOARD
+				drupal_get_form('user_login_block');
+			}
+		}else{
+			drupal_get_form('user_login_block');
+		}
+	}
+	 	
+	if(user_is_logged_in()){		
+		$queryuser = db_select('l_common_application_master', 'cam');
+		$queryuser->fields('cam', array('id'));		
+		$queryuser->condition('cam.user_id',$user_id);
+		$queryuser->isNotNull('cam.est_name');
+		$queryuser = $queryuser->execute();		
+		
+		if( $queryuser->rowCount() < 1){
+			drupal_goto('applicant-profile');
+		}
+			
+		$param2 = array();
+		$query2 = db_query("select f_name, m_name, l_name, email ,mobile from l_common_application_master where user_id = '".$user_id."'");
+		$param2 = 	$query2->fetchAssoc();		
+				
+		$contractor_count =	db_query("select count(id) as id_count_1 from l_contractor_info_master lcim where lcim.identification_number=:sess_iden_num and lcim.user_id=:sess_user_id", array( ':sess_iden_num' => $_SESSION['sess_iden_num'], ':sess_user_id' => $user_id ));
+		$count_res_1 =	$contractor_count->fetchAssoc();
+		
+		$contractor_count_bocwa	=	db_query("select count(id) as id_count_2 from l_bocwa_registration_master lbrm where lbrm.identification_number=:sess_iden_num and lbrm.user_id=:sess_user_id", array( ':sess_iden_num' => $_SESSION['sess_iden_num'], ':sess_user_id' => $user_id ));
+		$count_res_2 =	$contractor_count_bocwa->fetchAssoc();
+		
+		$all_applications_respect_applicant = fetch_clra_applications_with_respect_applicant();
+		
+		$all_license_applications_respect_applicant = '';
+		
+		return theme('applicantDashboard_page', array('common_appli_data'=>$param2, 'count_res_1' => $count_res_1, 'count_res_2' => $count_res_2, 'all_applications_respect_applicant' => $all_applications_respect_applicant, 'all_license_applications_respect_applicant' => $all_license_applications_respect_applicant));
+	}	
+}
+	
+	
+	
+function fetch_clra_applications_with_respect_applicant(){ 
+	
+	global $base_root, $base_path, $user;
+	
+	
+ 	$userid					=	$user->uid;
+	$action					=	'encrypt';
+	$pay_now 				= 	'<br><i class="fa fa-chevron-circle-right"></i>';
+	$pay_now 				.= 	'<span style="color:#aeaeae;"> Pay Now</span>';
+	$payment_details 		= 	'';
+	$output 				= 	'';
+	$view_link				=	'';
+	$operation_link 		= 	'';
+	$registration_number 	=   'UNDER PROCESS_aaa';
+	$download_certificate	=   '';
+	$form_v_link			=   '';
+	$upload_certificates_file_url = '';
+	
+	$timelimit				=	30; // 30days for deemed approval checking
+	$download_certificate_new_clra = '';
+	
+	$header 	= array(
+					  array('data' => 'Sl. No'),
+					  array('data' => 'REG NO.& DATE' ),
+					  array('data' => 'ESTABLISHMENT NAME', 'width'=>'25%'),
+					  array('data' => 'SERVICE'),
+					  array('data' => 'STATUS','style'=>'text-align:center','width'=>'15%'),
+					  array('data' => 'ACTION', 'width'=>'20%'),
+	  		 	  );
+				  
+		
+			
+	$query1 = db_select('l_clra_registration_master', 'lcrm');
+	$query1->fields('lcrm', array('id', 'user_id', 'act_id', 'e_name', 'registration_number', 'application_date', 'status', 'final_submit_status','registration_date', 'final_submit_status','clra_qr_code','identification_number'));
+	$query1->addExpression('certificates_fid', 'certificates_fid');
+	$query1->addExpression('amendment_parent_id', 'amendment_parent_id');
+	$query1->condition('lcrm.user_id',$userid);
+	
+	
+	
+	$query2 = db_select('l_bocwa_registration_master', 'lbrm');
+	$query2->fields('lbrm', array('id', 'user_id', 'act_id', 'e_name', 'registration_number', 'application_date', 'status', 'final_submit_status','registration_date', 'final_submit_status','bocwa_qr_code','identification_number'));
+	$query2->condition('lbrm.user_id',$userid);
+	$query2->addExpression('NULL', 'certificates_fid');
+	$query2->addExpression('amendment_parent_id', 'amendment_parent_id');
+	//$query2->addExpression('NULL', 'amendment_parent_id');
+	
+	
+	$query3 = db_select('l_mtw_registration_master', 'lmrm');
+	$query3->fields('lmrm', array('id', 'user_id', 'act_id', 'mtw_name', 'registration_number', 'application_date', 'status', 'final_submit_status','registration_date', 'final_submit_status','mtw_qr_code','identification_number'));
+	$query3->condition('lmrm.user_id',$userid);
+	$query3->addExpression('NULL', 'certificates_fid');
+	$query3->addExpression('NULL', 'amendment_parent_id');
+	
+	$query4 = db_select('l_interstate_workman_master', 'liwm');
+	$query4->fields('liwm', array('id', 'user_id', 'act_id', 'e_name', 'registration_number', 'application_date', 'status', 'final_submit_status','registration_date', 'final_submit_status','iwm_qr_code','identification_number'));
+	$query4->condition('liwm.user_id',$userid);
+	$query4->addExpression('iwm_certificates_fid', 'iwm_certificates_fid');
+	$query4->addExpression('NULL', 'amendment_parent_id');
+	
+	$query3->union($query4,'UNION ALL');
+	$query2->union($query3,'UNION ALL');
+	$query1->union($query2,'UNION ALL');
+	$query4->orderBy('id', 'DESC');	
+			
+	
+	$query_clra_reg_apps_result = $query1->execute();
+   	
+	// if($userid == 352){
+	// 	 echo '<pre>'; print_r($query_clra_reg_apps_result->fetchAll()); die;}
+	
+	
+	
+	if( $query_clra_reg_apps_result->rowCount() > 0 ){
+		$counter	= 0;
+		while($data = $query_clra_reg_apps_result->fetchObject()) { 
+			
+			$counter++;
+			$view 							= '<i class="fa fa-chevron-circle-right"></i>'.' View Details';
+			
+			$act_name						= '';
+			$act_wise_link					= '';
+			$download_certificate_link 		= '';
+			$remark_link					= '';
+			$payment_details				= '';
+			$upload_forms_link				= '';
+			$pay_now						= '';
+			$download_certificate			= '';
+			$registration_number			= '';
+			$form_v_link					= '';
+			
+			if($data->act_id == 1){
+				
+				$act_name					= 'CLRA REG';	
+				if($data->amendment_parent_id!=''){
+					
+					$get_amended_fields	= db_select('l_clra_amendment', 'lca');
+					$get_amended_fields	->fields('lca', array('id','amendment_fields','flag','approved_by_uid'));
+					$get_amended_fields	->condition('lca.application_id', $data->amendment_parent_id);
+					$get_amended_fields->condition('lca.status', 1);
+					$get_amended_fields->orderBy('lca.id','DESC');
+					$get_amended_fields->range(0, 1);
+					$amended_fields_result  = $get_amended_fields->execute()->fetchAssoc();	
+					if(!empty($amended_fields_result)){
+						if($amended_fields_result['flag'] == 'R' && $amended_fields_result['approved_by_uid']!='' && $data->status == 'B'){
+							$amendedAddition = explode(",",$amended_fields_result['amendment_fields']);
+							if(in_array("e_location", $amendedAddition)){ 
+								$act_wise_link 			= 'applicant-location-amendment/'.encryption_decryption_fun('encrypt', 1).'/';
+							}else{
+								$act_wise_link 			=  'clra-reg-amendment/view-clra-application/';	
+							}
+						}else{
+							$act_wise_link 		=  'clra-reg-amendment/view-clra-application/';	
+							$act_wise_view_link = 'clra-application/view/';
+						}
+					}else{
+						$act_wise_link 			= 'clra-reg-amendment/view-clra-application/';
+					}
+					$act_wise_view_link 	= 'clra-application/view/';	
+					$act_name				= 'CLRA REG AMENDMENT';	
+				}else{
+					$act_wise_link 			= 'view-clra-application-details/view-clra-application/';
+					$act_wise_view_link 	= 'clra-application/view/';
+					
+					if($userid == 64){
+				 		$act_wise_view_link 	= 'deemed-appoval-certificate/'.encryption_decryption_fun('encrypt', 1).'/';	
+					}
+				}
+				
+				/** Fetch Certificate of CLRA *****/
+				
+				$upload_certificates_id 	= db_select('file_managed','fm');
+				$upload_certificates_id		-> fields('fm',array());
+				$upload_certificates_id		-> condition('fid',$data->certificates_fid);
+				$upload_certificates_file	= $upload_certificates_id-> execute()->fetchAssoc();
+				
+				if(!empty($upload_certificates_file)){ 
+				
+				  $url									= explode('//',$upload_certificates_file['uri']);
+				  $upload_certificates_file_url			= $url[1];
+				  $upload_certificates_file_name		= $upload_certificates_file['filename'];
+				  
+				  $download_certificate_link 	= $base_root.$base_path.'sites/default/files/'.$upload_certificates_file_url;
+					  
+				}else if($data->status=='I' && $data->certificates_fid=='' && $data->registration_number!=''){
+					
+					if($data->amendment_parent_id!=''){						
+						$getreferenceDetails = db_query("select amendment_reference_no FROM l_clra_registration_master WHERE id = '".$data->id."' and status= 'I' and amendment_parent_id ='".$data->amendment_parent_id."'")->fetchAssoc();					
+						
+						$download_certificate_link	= $GLOBALS['base_url'].'/clra-amendment/'.encryption_decryption_fun('encrypt', $data->id).'/'.encryption_decryption_fun('encrypt', $getreferenceDetails['amendment_reference_no']).'/AMENDED-CERTIFICATE';
+						
+					}else{
+						$download_certificate_link	= $GLOBALS['base_url'].'/download-pdf-clra-registration/'.time().'/'.encryption_decryption_fun('encrypt', $data->id).'/'.encryption_decryption_fun('encrypt', $data->user_id);
+						
+					}
+					
+				}else{					
+					$download_certificate_link	 = '<span style="color:#aeaeae;"> <i class="fa fa-chevron-circle-right"></i> Download Certificate</span>';					
+				}
+				
+				
+			  
+			  
+				
+			}else if($data->act_id == 2){
+				
+				$act_name					= 'BOCWA REG'; 
+				$act_wise_link 				= 'bocwa-application/default/';
+				$act_wise_view_link 		= 'bocwa-application-view/';
+				
+				$upload_certificates_id = db_select('l_bocwa_registration_master','lbrm');
+				$upload_certificates_id->fields('lbrm',array('bocwa_registration_certificate','bocwa_qr_code','registration_number'));
+				$upload_certificates_id->condition('lbrm.user_id',$userid);
+				$upload_certificates_id->condition('lbrm.id',$data->id);
+				$upload_certificates_file = $upload_certificates_id->execute()->fetchAssoc();
+				//print_r($upload_certificates_file);exit;
+				if(!empty($data->amendment_parent_id)){ 
+					$act_wise_link = 'amendment-bocwa/bocwa-application/';
+					$act_name = 'BOCWA REG AMENDMENT';
+					
+					$upload_certificates_id = db_select('l_encrypted_uploaded_documents','ur');
+					$upload_certificates_id->fields('ur',array('document_type_code','id'));
+					$upload_certificates_id->condition('ur.document_type_code', 'RC');
+					$upload_certificates_id->condition('ur.application_id', $data->id);
+					$upload_certificates_id->condition('ur.act_id', $data->act_id);	
+					$upload_certificates_id->condition('ur.status','1');
+					$getencrypted_file = $upload_certificates_id->execute()->fetchAssoc(); 
+				}
+				
+				if(!empty($getencrypted_file['document_type_code'])){ 
+					
+					$download_certificate_link 	= $GLOBALS['base_url'].'/view_documents/'.encryption_decryption_fun('encrypt', $getencrypted_file['id']);
+				
+				}elseif(!empty($upload_certificates_file['bocwa_registration_certificate'])){
+					
+					$download_certificate_link 	= $GLOBALS['base_url'].'/sites/default/files/upload/BOCWA_Registration_Certificate/'.$upload_certificates_file['bocwa_registration_certificate'];
+					
+				}elseif($data->status=='I' &&  $data->registration_number!='' && empty($data->bocwa_registration_certificate)){ 					
+										
+					$download_certificate_link = $GLOBALS['base_url'].'/generate-bocwa-certificate/'.encryption_decryption_fun('encrypt', $upload_certificates_file['bocwa_qr_code']);
+					
+				}else{					
+					$download_certificate_link = '<span style="color:#aeaeae;"> <i class="fa fa-chevron-circle-right"></i> Download Certificate</span>';					
+				}
+				
+				
+			}else if($data->act_id == 3){
+				$act_name					= 'MTW REG'; 
+				
+				$act_wise_link 				= 'mtw-registration-details/preview/';
+				$act_wise_view_link 		= 'mtw-registration-details/view/';
+				
+				$upload_certificates_id 	= db_select('l_mtw_registration_master','lmrm');
+				$upload_certificates_id		-> fields('lmrm',array('id','backlog_id','mtw_registration_certificate','is_renew','is_amend','status','mtw_qr_code'));
+				$upload_certificates_id		-> condition('lmrm.user_id',$userid);
+				$upload_certificates_file	= $upload_certificates_id-> execute()->fetchAssoc();
+				$application_id				= $upload_certificates_file['id'];
+				$backlog_id					= $upload_certificates_file['backlog_id'];
+				$mtw_qr_code				= $upload_certificates_file['mtw_qr_code'];
+				
+				if(!empty($backlog_id) && $backlog_id!='' && $backlog_id!=0){
+						$act_wise_link 				= 'mtw-backlog-renewal/';
+						$act_wise_view_link 		= 'mtw-backlog-renewal/';
+						$act_name					= 'MTW RENEWAL';
+				}
+				
+				if($upload_certificates_file['is_renew']==1){
+					$act_name					= 'MTW RENEWAL';
+				}
+				if($upload_certificates_file['is_amend']==1){
+					$act_name					= 'MTW AMENDMENT';
+				}
+				
+				// get renewal data
+				$getRenewalQuery			= db_select('l_mtw_registration_renewal','lmrr');	
+				$getRenewalQuery			->fields('lmrr',array('renewal_ref_number','renewal_date','expiry_date','mtw_registration_certificate'));
+				$getRenewalQuery			->condition('lmrr.application_id',$application_id);
+				$getRenewalQuery			->condition('lmrr.status','1');
+				$getRenewalExe				= $getRenewalQuery->execute();
+				if($getRenewalExe->rowCount()>0){
+					
+					$getRenewalResult		= $getRenewalExe->fetchObject();
+					$upload_renewal_certificates_file	= $getRenewalResult->mtw_registration_certificate;
+					
+					$download_certificate_link 	= $GLOBALS['base_url'].'/sites/default/files/upload/MTW_Registration_Certificate/'.$upload_renewal_certificates_file;
+				}else{
+					if($upload_certificates_file['mtw_registration_certificate'] !=''){
+						$download_certificate_link 	= $GLOBALS['base_url'].'/sites/default/files/upload/MTW_Registration_Certificate/'.$upload_certificates_file['mtw_registration_certificate'];
+					}else{
+						$download_certificate_link = $GLOBALS['base_url'].'/mtw-certificate-generate/'.encryption_decryption_fun('encrypt', $mtw_qr_code);
+					}
+				}
+				
+				$renewalLink					= 'mtw-renewal/'.encryption_decryption_fun('encrypt', $data->id);
+				
+			}else if($data->act_id == 4){
+				
+				$act_name					= 'ISMW REG';				
+				$act_wise_view_link 		= 'ismw_application/view/';
+				$act_wise_link 				= 'ismw_application/registration-form/';
+				
+				/** Fetch Certificate of ISMW *****/
+				
+				$ismw_certificates_id 		= db_select('file_managed','fm');
+				$ismw_certificates_id		-> fields('fm',array());
+				$ismw_certificates_id		-> condition('fid',$data->certificates_fid);
+				$ismw_certificates_file		= $ismw_certificates_id-> execute()->fetchAssoc();
+				
+				if(!empty($ismw_certificates_file)){ 
+				
+					  $url									= explode('//',$ismw_certificates_file['uri']);
+					  $upload_certificates_file_url			= $url[1];
+					  $upload_certificates_file_name		= $ismw_certificates_file['filename'];
+					  
+					  $download_certificate_link = $GLOBALS['base_url'].'/sites/default/files/'.$upload_certificates_file_url;
+					  
+				}else if($data->status=='I' && $data->iwm_certificates_fid=='' && $data->registration_number!=''){
+					
+					$getreferenceDetails 		= db_query("select iwm_qr_code FROM l_interstate_workman_master WHERE id = '".$data->id."' and status= 'I'")->fetchAssoc();					
+					$download_certificate_link 	= $GLOBALS['base_url'].'/generate-ismw-certificate/'.encryption_decryption_fun('encrypt', $getreferenceDetails['iwm_qr_code']);
+					
+				}
+				
+					
+			}
+			
+			if(!empty($data->application_date)){
+				
+				$application_date 			= date('dS M Y', strtotime($data->application_date));	
+			}else{
+				$application_date 			= '';
+			}
+			
+			
+			
+			if(empty($data->status) && empty($data->final_submit_status)){
+							         		
+				$STATUS_IMG 					= '<span class="incomplete" title="Incomplete Application"></span>';
+				$view_link 						= l($view, $act_wise_link.encryption_decryption_fun($action, $data->id), array('html' => TRUE));				
+				
+				$download_certificate 			= '<br><i class="fa fa-chevron-circle-right"></i> ';
+				$download_certificate 	   	   .= '<span style="color:#aeaeae;"> Download Certificate</span>';
+				
+				$remark_link 				    = '<br><i class="fa fa-chevron-circle-right"></i> ';
+				$remark_link 			       .= '<span style="color:#aeaeae;"> View Remarks</span>';
+				
+				if($data->amendment_parent_id!='' && $data->act_id == 1 && $counter== 1 ){
+				
+					$form_v_link			   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> Download Form-V</span>', 'view-contractors-form-v/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+				}		
+				
+          	}
+			
+			if(trim($data->status) == "RN" && trim($data->final_submit_status) =='P'){
+				$view 							= '<i class="fa fa-chevron-circle-right"></i>'.' View Details';
+							         		
+				$STATUS_IMG 					= '<span class="applied" title="Applied"></span>';				
+				$view_link 						= l($view, $act_wise_link.encryption_decryption_fun($action, $data->id), array('html' => TRUE));				
+				
+				$download_certificate 			= '<br><i class="fa fa-chevron-circle-right"></i> ';
+				$download_certificate 	   	   .= '<span style="color:#aeaeae;"> Download Certificate</span>';
+				
+				$remark_link 				    = '<br><i class="fa fa-chevron-circle-right"></i> ';
+				$remark_link 			       .= '<span style="color:#aeaeae;"> View Remarks</span>';				
+				
+          	}
+			
+			if( trim($data->status) == "0" && !empty($data->final_submit_status)){	
+					         		
+				$STATUS_IMG 					= '<span class="applied" title="Applied"></span>';				
+				$view_link						= l($view, $act_wise_link.encryption_decryption_fun($action, $data->id) , array('html' => TRUE));
+				
+				$download_certificate			= '<br><i class="fa fa-chevron-circle-right"></i> ';
+				$download_certificate	   	   .= '<span style="color:#aeaeae;"> Download Certificate</span>';
+				
+				$remark_link 					= '<br><i class="fa fa-chevron-circle-right"></i> ';
+				$remark_link 				   .= '<span style="color:#aeaeae;"> View Remarks</span>';
+				
+				if($data->amendment_parent_id!='' && $data->act_id == 1 && $counter== 1 ){
+				
+					$form_v_link			   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> Download Form-V', 'view-contractors-form-v/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+				}
+          	}
+			
+          
+           	if( trim($data->status) == "B" && !empty($data->final_submit_status) ){
+				          		
+
+				$STATUS_IMG 					= '<span class="backed" title="Rectify Application"></span>';
+				$view_link						= l($view, $act_wise_link.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+								
+				$remark_link	 			   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> View Remarks', 'view-remark/'.encryption_decryption_fun($action, $data->id).'/'.encryption_decryption_fun($action, $data->act_id), array('html' => TRUE));
+				
+				$download_certificate		    = '<br><i class="fa fa-chevron-circle-right"></i> ';
+				$download_certificate	       .= '<span style="color:#aeaeae;"> Download Certificate</span>';
+				
+				if($data->amendment_parent_id!='' && $data->act_id == 1 && $counter== 1 ){
+				
+					$form_v_link			   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> Download Form-V', 'view-contractors-form-v/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+				}
+			}
+			
+			if(trim($data->status) == "VA" && !empty($data->final_submit_status) ){				
+
+				$STATUS_IMG 					= '<span class="approved" title="Approved"></span>';					
+				$view_link						= l($view, $act_wise_link.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+				
+				$remark_link 				   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i>  View Remarks', 'view-remark/'.encryption_decryption_fun($action, $data->id).'/'.encryption_decryption_fun($action, $data->act_id), array('html' => TRUE));
+				
+				if($data->act_id == 1){
+					
+					if($data->amendment_parent_id!='' && $counter== 1 ){
+				
+						$form_v_link		 .= '<br>'. l('<i class="fa fa-chevron-circle-right"></i> Download Form-V', 'view-contractors-form-v/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+					}
+					
+					$upload_forms_link 	       .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> <span class="fees-paid_not_fs"> Download &amp; upload Form-I with signature</span>', 'upload_signed_application_form/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));				
+					
+				}else if($data->act_id == 2){					
+					
+					$upload_forms_link 		   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> <span class="fees-paid_not_fs"> Download &amp; upload Form-I with signature</span>', 'bocwa-upload-signed-application/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));					
+									
+				}else if($data->act_id == 3){					
+					
+					$upload_forms_link 		   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> <span class="fees-paid_not_fs"> Download &amp; upload Form-I with signature</span>', 'mtw-upload-signed-application/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));					
+									
+				}else if($data->act_id == 4){					
+					
+					$upload_forms_link		   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> <span class="fees-paid_not_fs"> Download Form-I and upload with signature</span>', 'ismw-upload-signed-application/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));					
+									
+				}					
+          	}
+			
+          	if(trim($data->status) == "V" && !empty($data->final_submit_status) ){
+				
+
+			    $STATUS_IMG 					= l('<span class="feespending" title="Fees Pending"></span>', 'view-payment-info/'.encryption_decryption_fun($action, $data->id).'/'.encryption_decryption_fun($action, $data->act_id),array('html' => TRUE));					
+				$view_link						= l($view, $act_wise_link.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+				
+				$pay_now 				   	   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> <span class="fees-paid_not_fs"> Pay Now</span>', 'epayments_preview/'.encryption_decryption_fun($action, $data->id).'/'.encryption_decryption_fun($action, $data->act_id), array('html' => TRUE));
+				
+				$download_certificate		    = '<br><i class="fa fa-chevron-circle-right"></i> ';
+				$download_certificate	       .= '<span style="color:#aeaeae;"> Download Certificate</span>';
+				
+				$remark_link 				   .= '<br>'. l(' <i class="fa fa-chevron-circle-right"></i> View Remarks', 'view-remark/'.encryption_decryption_fun($action, $data->id).'/'.encryption_decryption_fun($action, $data->act_id), array('html' => TRUE));
+				
+				if($data->amendment_parent_id!='' && $data->act_id == 1 && $counter== 1 ){
+				
+					$form_v_link			   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> Download Form-V', 'view-contractors-form-v/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+				}
+				
+          	}
+			
+			
+          	if( $data->status == "BI" && !empty($data->final_submit_status) ){
+				          		
+
+				$STATUS_IMG 					= '<span class="inprocess" title="In Process"></span>';	
+				$view_link						= l($view, $act_wise_link.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+				
+				$download_certificate			= '<br><i class="fa fa-chevron-circle-right"></i> ';
+				$download_certificate	   	   .= '<span style="color:#aeaeae;"> Download Certificate</span>';
+				
+				$remark_link 				   .=  '<br>'.l('<i class="fa fa-chevron-circle-right"></i>  View Remarks', 'view-remark/'.encryption_decryption_fun($action, $data->id).'/'.encryption_decryption_fun($action, $data->act_id), array('html' => TRUE));
+				
+				if($data->amendment_parent_id!='' && $data->act_id == 1 && $counter== 1 ){
+				
+					$form_v_link			   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i>  Download Form-V', 'view-contractors-form-v/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+				}
+          	}
+			
+			
+          	if( $data->status == "C" && !empty($data->final_submit_status)){ 			         		
+
+				$STATUS_IMG 					= '<span class="callapplicant" title="Call Applicant"></span>';
+				$view_link 						= l($view, $act_wise_link.encryption_decryption_fun($action, $data->id), array('html' => TRUE));			
+				
+				
+				$remark_link 				   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i>  View Remarks', 'view-remark/'.encryption_decryption_fun($action, $data->id).'/'.encryption_decryption_fun($action, $data->act_id), array('html' => TRUE));
+				
+				$download_certificate			= '<br><i class="fa fa-chevron-circle-right"></i> ';
+				$download_certificate	   	   .= '<span style="color:#aeaeae;"> Download Certificate</span>';
+				
+          	}
+			
+			
+          	if( trim($data->status) == "I" && !empty($data->final_submit_status) && !empty($data->registration_number) ){	
+					
+				
+				$STATUS_IMG 					= '<span class="issued" title="Certificate Issued"></span>';
+				$view_link						= l($view, $act_wise_link.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+				
+				$download_certificate	   	   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> Download Certificate',$download_certificate_link, array('attributes' => array('target' => '_blank'), 'html' => TRUE));
+				
+				$remark_link 				   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> View Remarks', 'view-remark/'.encryption_decryption_fun($action, $data->id).'/'.encryption_decryption_fun($action, $data->act_id), array('html' => TRUE));
+				
+				$registration_number 			= '<strong>'.$data->registration_number.'</strong><br>'.date('dS M Y', strtotime($data->registration_date));
+				
+				
+				if($data->act_id == 1){
+					
+					if(!empty($data->amendment_parent_id) && $data->amendment_parent_id!='' && $counter== 1){
+						
+						$form_v_link			   .= '<br>'. l('<i class="fa fa-chevron-circle-right"></i> Download Form-V', 'view-contractors-form-v/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+						
+					}elseif($data->amendment_parent_id=='' && empty($data->amendment_parent_id ) && $counter== 1){
+						
+						$form_v_link			   .= '<br>'. l('<i class="fa fa-chevron-circle-right"></i> Download Form-V', 'view-contractors-form-v/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+						
+					}else{
+					
+						$form_v_link				= '<br><i class="fa fa-chevron-circle-right"></i> ';
+						$form_v_link			   .= '<span style="color:#aeaeae;"> Download Form-V</span>';
+					}
+					
+				}else if($data->act_id == 3){
+					$form_v_link			   .= '<br>'. l('<i class="fa fa-chevron-circle-right"></i> Renewal', $renewalLink,array('html' => TRUE, 'attributes' => array('target' => '_blank'),'html' => TRUE));
+					
+				}else if($data->act_id == 4){
+					
+					$form_v_link			   .= '<br>'. l('<i class="fa fa-chevron-circle-right"></i> Download Form-VI', '/ismw_application/contractor_details/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE, 'attributes' => array('target' => '_blank'),'html' => TRUE));
+				}
+				
+          	}else{
+				
+				
+				$registration_number 			= 'UNDER PROCESS';
+			}
+			
+			
+          	if( $data->status == "R" && !empty($data->final_submit_status)){
+				          		
+
+				$STATUS_IMG 					= '<span class="reject" title="Rejected"></span>';				
+				$view_link						= l($view, $act_wise_link.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+				
+				$remark_link	 			   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> View Remarks', 'view-remark/'.encryption_decryption_fun($action, $data->id).'/'.encryption_decryption_fun($action, $data->act_id), array('html' => TRUE));
+				
+				$download_certificate		    = '<br><i class="fa fa-chevron-circle-right"></i> ';
+				$download_certificate	       .= '<span style="color:#aeaeae;"> Download Certificate</span>';
+				
+          	}
+			
+			if( $data->status == "F" && !empty($data->final_submit_status)){  
+			        		
+
+				$STATUS_IMG 					= '<span class="inprocess" title="In Process"></span>';				
+				$view_link	 					= l($view, $act_wise_link.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+				
+				$download_certificate 			= '<br><i class="fa fa-chevron-circle-right"></i> ';
+				$download_certificate 		   .= '<span style="color:#aeaeae;"> Download Certificate</span>';
+				
+				$remark_link 				   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> View Remarks', 'view-remark/'.encryption_decryption_fun($action, $data->id).'/'.encryption_decryption_fun($action, $data->act_id), array('html' => TRUE));
+				
+				if($data->amendment_parent_id!='' && $data->act_id == 1 && $counter== 1 ){
+				
+					$form_v_link			   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> Download Form-V', 'view-contractors-form-v/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+				}
+				
+          	}
+			
+			if( $data->status == "T" && !empty($data->final_submit_status)){ 
+				
+				$STATUS_IMG 					= '<span class="feespaid" title="Fees Paid"></span>';
+				$view_link						= l($view, $act_wise_link.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+				
+				$payment_details			   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> Payment Details', 'payment-details/'.encryption_decryption_fun($action, $data->id).'/'.encryption_decryption_fun($action, $data->act_id), array('html' => TRUE));
+				
+				$remark_link 				   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> View Remarks', 'view-remark/'.encryption_decryption_fun($action, $data->id).'/'.encryption_decryption_fun($action, $data->act_id), array('html' => TRUE));
+				
+				if($data->act_id == 1){
+					
+					if($data->amendment_parent_id!='' && $counter== 1 ){
+				
+						$form_v_link		   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> Download Form-V', 'view-contractors-form-v/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+					}
+					
+					$upload_forms_link		   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> <span class="fees-paid_not_fs"> Download &amp; upload Form-I with signature </span>', 'upload_signed_application_form/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+					
+				}else if($data->act_id == 2){
+					
+					$amend_check_id 	= db_select('l_bocwa_registration_master','lmrm');
+					$amend_check_id		-> fields('lmrm',array('amendment_parent_id'));
+					$amend_check_id		-> condition('lmrm.user_id',$userid);
+					$amend_check	= $amend_check_id-> execute()->fetchAssoc();
+					
+					if(!empty($amend_check['amendment_parent_id'])){					
+					
+					$upload_forms_link 		   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> <span class="fees-paid_not_fs"> Download &amp; upload Amended application with signature</span>', 'bocwa-upload-signed-application/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+					}else{
+					
+					$upload_forms_link 		   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> <span class="fees-paid_not_fs"> Download &amp; upload Form-I with signature</span>', 'bocwa-upload-signed-application/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));	
+						
+					}
+					}else if($data->act_id == 3){
+					
+					$upload_forms_link		   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> <span class="fees-paid_not_fs"> Download &amp; upload Form-I with signature</span>', 'mtw-upload-signed-application/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+						
+				}else if($data->act_id == 4){
+					
+					$upload_forms_link		   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> <span class="fees-paid_not_fs"> Download &amp; upload Form-I with signature</span>', 'ismw-upload-signed-application/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));	
+				}
+				
+          	}
+			
+			if( $data->status == "S" && !empty($data->final_submit_status)){ 
+			         		
+				$STATUS_IMG 					= '<span class="finalsubmit" title="Finally Submitted"></span>';		
+				$view_link						= l($view, $act_wise_link.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+				
+				$download_certificate			= '<br><i class="fa fa-chevron-circle-right"></i> ';
+				$download_certificate	   	   .= '<span style="color:#aeaeae;"> Download Certificate</span>';
+				
+				/** FOR DEEMED UPDATE***/
+				
+				//if($data->act_id==1 || $data->act_id==2 || $data->act_id==4){ 
+					$info = get_final_submit_data(encryption_decryption_fun('encrypt', $data->act_id), encryption_decryption_fun('encrypt', $data->id));			
+					if(!empty($info) && $info['remark_type'] == 'S'){					
+						$final_submit_date = $info['remark_date'];
+						$today = time();						
+						$datediff = $today - $final_submit_date;	
+						$diff = round($datediff / (60 * 60 * 24));
+						
+						if($diff > 30){ 
+							common_deemed_update_status(encryption_decryption_fun('encrypt', $data->act_id),encryption_decryption_fun('encrypt', $data->id),encryption_decryption_fun('encrypt', $data->user_id));
+							
+						}
+					}
+				//}
+
+				$remark_link 				   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> View Remarks', 'view-remark/'.encryption_decryption_fun($action, $data->id).'/'.encryption_decryption_fun($action, $data->act_id), array('html' => TRUE));
+				
+				if($data->amendment_parent_id!='' && $data->act_id == 1 && $counter== 1 ){
+				
+					$form_v_link			   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> Download Form-V', 'view-contractors-form-v/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+				}
+				
+          	}
+			
+			if( trim($data->status) == "U" && !empty($data->final_submit_status) ){
+				          		
+				$STATUS_IMG 					= '<span class="backed" title="Rectify Application"></span>';
+				$view_link						= l($view, $act_wise_link.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+				
+				$remark_link	 			   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> View Remarks', 'view-remark/'.encryption_decryption_fun($action, $data->id).'/'.encryption_decryption_fun($action, $data->act_id), array('html' => TRUE));
+				
+				$download_certificate		    = '<br><i class="fa fa-chevron-circle-right"></i> ';
+				$download_certificate	       .= '<span style="color:#aeaeae;"> Download Certificate</span>';
+				
+				if($data->act_id == 1){
+					
+					if($data->amendment_parent_id!='' && $data->act_id == 1 && $counter== 1 ){
+				
+						$form_v_link		   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> Download Form-V', 'view-contractors-form-v/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+					}	
+					
+					$upload_forms_link		   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> <span class="fees-paid_not_fs"> Download &amp; upload Form-I with signature </span>', 'upload_signed_application_form/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+					
+				}else if($data->act_id == 2){
+					
+					$amend_check_id 	= db_select('l_bocwa_registration_master','lmrm');
+					$amend_check_id		-> fields('lmrm',array('amendment_parent_id'));
+					$amend_check_id		-> condition('lmrm.user_id',$userid);
+					$amend_check	= $amend_check_id-> execute()->fetchAssoc();
+					
+					if(!empty($amend_check['amendment_parent_id'])){					
+					
+					$upload_forms_link 		   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> <span class="fees-paid_not_fs"> Download &amp; upload Amended application with signature</span>', 'bocwa-upload-signed-application/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+					}else{
+					
+					$upload_forms_link 		   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> <span class="fees-paid_not_fs"> Download &amp; upload Form-I with signature</span>', 'bocwa-upload-signed-application/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));	
+						
+					}
+				}else if($data->act_id == 3){
+					
+					$upload_forms_link		   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> <span class="fees-paid_not_fs"> Download &amp; upload Form-I with signature</span>', 'mtw-upload-signed-application/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+											
+				}else if($data->act_id == 4){
+					
+					$upload_forms_link		   .= '<br>'.l('<i class="fa fa-chevron-circle-right"></i> <span class="fees-paid_not_fs"> Download &amp; upload Form-I with signature</span>', 'ismw-upload-signed-application/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));	
+				}
+				
+			}
+			
+						
+			
+			if((!empty($data->final_submit_status)) && trim($data->status) != "B" && trim($data->status) != "C"){
+				if($data->act_id == 1 ){
+					$view_link	= l($view, $act_wise_view_link.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+				}else{				
+					$view_link	= l($view, $act_wise_view_link.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+				}
+			}
+			
+			/******Download Acknowledgement Start******/
+			
+			$acknowledgement = '';
+			$ackquery = 0;
+			
+			if($data->act_id == 1 && $data->final_submit_status == 'P'){ 
+				$ackquery = db_select('l_remarks_master','r')->fields('r', array('remark_id'))->condition('r.application_id',$data->id)->condition('r.remark_type','S')->condition('r.is_active',1)->execute()->rowCount();	
+				// if($user->uid == 64){echo $ackquery; die;} 
+							
+			}else if($data->act_id == 2 && $data->final_submit_status == 'P'){
+				$ackquery = db_select('l_bocwa_remark_master','r')->fields('r', array('id'))->condition('r.application_id',$data->id)->condition('r.remark_type','S')->condition('r.is_active',1)->execute()->rowCount();	
+			}elseif($data->act_id == 3 && $data->final_submit_status == 'P'){
+				// $ackquery = db_select('l_mtw_remark_master','r')->fields('r', array('id'))->condition('r.application_id',$data->id)->condition('r.remark_type','S')->execute()->rowCount();	
+			}elseif($data->act_id == 4 && $data->final_submit_status == 'P'){
+				// $ackquery = db_select('l_interstate_remarks_license','r')->fields('r', array('id'))->condition('r.application_id',$data->id)->condition('r.remark_type','S')->execute()->rowCount();	
+			}			
+					
+			if($ackquery > 0){			
+				$acknowledgement = '<br>'.l('<i class="fa fa-chevron-circle-right"></i> Download Acknowledgement', 'service-ack/'.encryption_decryption_fun($action, $data->act_id).'/'.encryption_decryption_fun($action, $data->id), array('html' => TRUE));
+			}
+			
+			/******End Download Acknowledgement******/
+			
+			/*if($user->uid == 352){
+				$action_link = $view_link.$remark_link.$upload_forms_link.$pay_now.$download_certificate_link.$form_v_link.$payment_details.$acknowledgement;	
+			}else{*/
+				$action_link = $view_link.$remark_link.$upload_forms_link.$pay_now.$download_certificate.$form_v_link.$payment_details.$acknowledgement;
+			//}
+			$rows[] = array(
+					array('data' =>	$counter, 'align' => 'left', 'class' => array('')),
+					array('data' => $registration_number, 'align' => 'left', 'class' => array('')),
+					array('data' =>	$data->e_name, 'align' => 'left', 'class' => array('')),
+					array('data' =>	'<strong>'.$act_name.'</strong>', 'align' => 'left', 'class' => array('')),
+					array('data' =>	$STATUS_IMG, 'align' => 'left', 'style' => array('text-align:center;')),					
+					array('data' =>	$action_link, 'align' => 'left', 'class' => array(''))
+			  );
+		}
+	}
+	$variables = array(
+	  		'attributes' 		=> array('class' => array('table table table-striped table-responsive dashboard-table')), 
+	  		'header' 			=> $header,
+	  		'rows'				=> $rows,
+			'empty' 			=> t("No data found!")
+	  );
+	
+	$outputModal = ' <a href="#" class="small-box-footer" data-toggle="modal" data-target="#gripsPayment">More info <i class="fa fa-arrow-circle-right"></i></a></div>
+	<div class="modal fade" id="gripsPayment" role="dialog">
+    <div class="modal-dialog">
+    	<div class="box box-primary box-solid">
+        	<div class="box-header">
+          		<button type="button" class="close" data-dismiss="modal">&times;</button>
+          		<h3 class="box-title">More Info.(Application for Registration Under CLRA)</h3>
+        	</div>       
+          	<div class="modal-body">
+         		  <table cellpadding="0" cellspacing="0" border="0" class="table table-responsive admin-custom-table">
+                      <tr>
+                          <td>TYPE</td>
+                      </tr>                                         
+                  </table>
+        		</div>
+        	<div class="modal-footer">
+          		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        	</div>
+      	</div>      
+    </div>
+</div>';
+	$output = theme('datatable', $variables);
+	
+	return $output;
+}	
+	
+function applicant_forms_theme($existing, $type, $theme, $path){
+	return array(
+		'final_detail' => array(
+							'variables' => array(),
+							'template'  => 'final_detail'
+						),
+		'applicantDashboard_page' => array(
+			'path'		=> drupal_get_path('module', 'applicant_forms') . '/templates',
+			'variables' => array('param' => NULL),
+			'template'  => 'applicantDashboard'
+		)
+	);		
+}
+
+function get_final_submit_data($act_id =0, $application_id = 0){ 
+
+	global $user;
+	$act_id = encryption_decryption_fun('decrypt', $act_id);
+	$application_id = encryption_decryption_fun('decrypt', $application_id);
+	
+	if($act_id == 1){
+		$query = db_select('l_remarks_master','rm')->fields('rm',array())->condition('application_id',$application_id)->condition('remark_type','S')->orderBy('remark_id','desc');
+		$result = $query->execute()->fetchAssoc();
+	}else if($act_id == 2){
+		$query = db_select('l_bocwa_remark_master','rm')->fields('rm',array())->condition('application_id',$application_id)->condition('remark_type','S')->orderBy('id','desc');
+		$result = $query->execute()->fetchAssoc();
+	}else if($act_id == 3){
+		$query = db_select('l_mtw_remark_master','rm')->fields('rm',array())->condition('application_id',$application_id)->condition('remark_type','S')->orderBy('id','desc');
+		$result = $query->execute()->fetchAssoc();
+	}else if($act_id == 4){
+		$query = db_select('l_interstate_remark_master','rm')->fields('rm',array())->condition('application_id',$application_id)->condition('remark_type','S')->orderBy('id','desc');
+		$result = $query->execute()->fetchAssoc();
+	}
+	
+	return $result;
+	
+}	

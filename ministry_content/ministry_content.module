@@ -1,0 +1,53 @@
+<?php
+ 
+/**
+ * Implementation of hook_block_info().
+ */
+ 
+function ministry_content_block_info() {
+  $blocks = array();	
+  $blocks['ministry-content'] = array(
+    'info' => t('Related Ministry Content Block'),
+  );
+ 
+  return $blocks;
+}
+ // last_five_news_from_agot
+/**
+ * Implementation of hook_block_view().
+ */
+
+function ministry_content_block_view($delta='') {
+  $block = array();
+  switch ($delta) {
+    case 'ministry-content':
+      $block['content'] = ministry_content_contents();
+      break;
+  }
+  return $block;
+}
+
+/**
+ * custom html block
+ * @return string
+ */
+
+function ministry_content_contents() {
+	//$var2_data = getdata();
+	
+	//return 'ministry content....';
+	//return theme('ministry_content_template', array('var1' => 'Tapas Ghosal', 'var2' => ''));
+	return theme('ministry_content_template');
+}
+
+
+
+function ministry_content_theme(){
+	
+	  return array(
+        	'ministry_content_template' => array(
+            'template' => 'ministry_content',
+   			//'variables' => array('var1' => NULL, 'var2' => NULL),
+        ),
+    );
+}

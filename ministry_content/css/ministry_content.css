@@ -1,0 +1,17 @@
+#ministry_main ul li {
+	float: left;
+    list-style: outside none none !important;
+    width: 45%;
+	padding: 10px;
+	margin-left:0px !important;
+	
+}
+#ministry_main h3 {
+	color:#084C89;
+	font-weight:bold;
+	
+}
+#ministry_main img {
+	border: 2px solid #F2CD85;
+    padding: 2px;
+}

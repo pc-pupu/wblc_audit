@@ -1,0 +1,204 @@
+<?php
+	function motor_transport_init() {
+	}
+	
+	function motor_transport_permission() {
+	  	return array(
+			'applicant_forms_motor_transport_all_per' => array(
+		  													'title' => t('Motor Transport Permission'),
+			),
+			
+			'permission_for_appicant_alc_inspector' => array(
+		  												'title' => t('Addmore Permission for Applicant, ALC, Inspector'),
+			),
+	  	);
+	}
+	
+	function motor_transport_menu() {
+		
+		$items = array();
+		
+		/****** mtw registration section start *******/
+		$items['mtw-registration'] = array(
+			'title'				=> 'Registration of Motor Transport Undertaking (MTW)',
+			'page callback'		=> 'drupal_get_form',
+			'page arguments'	=> array('get_new_motor_transport_registration_info_form'),
+			'file'				=> 'include/get_new_motor_transport_registration_info_form.inc',
+			'access arguments'	=> array('applicant_forms_motor_transport_all_per'),
+		);
+		$items['mtw-registration/%'] = array(
+			'title'				=> 'Registration of Motor Transport Undertaking (MTW)',
+			'page callback'		=> 'drupal_get_form',
+			'page arguments'	=> array('get_new_motor_transport_registration_info_form',1),
+			'file'				=> 'include/get_new_motor_transport_registration_info_form.inc',
+			'access arguments'	=> array('applicant_forms_motor_transport_all_per'),
+		);
+		$items['mtw-registration-details'] = array(
+			'title'				=> 'Application Details',
+			'page callback'		=> 'drupal_get_form',
+			'page arguments'	=> array('mtw_application_details',1),
+			'file'				=> 'include/mtw_application_details.inc',
+			'access arguments'	=> array('applicant_forms_motor_transport_all_per')
+		);
+		$items['mtw-registration-details/default/%'] = array(
+			'title' 	 => 'Application Details',
+			'page callback'	 	=> 'drupal_get_form',
+			'page arguments'	=> array('mtw_application_details',2),
+			'file'	 => 'include/mtw_application_details.inc',
+			'access arguments' 	=> array('applicant_forms_motor_transport_all_per'),
+			//'type' 	 => MENU_DEFAULT_LOCAL_TASK,
+			'type' 	 => MENU_LOCAL_TASK,
+			 'weight' 	 => 1
+		);
+															
+		/*$items['mtw-registration-details/application-details/%'] = array(
+			'title' 			=> 'Application Details',
+			'page callback'	 	=> 'drupal_get_form',
+			'page arguments'	=> array('mtw_application_details',2),
+			'file'				=> 'include/mtw_application_details.inc',
+			'access arguments' 	=> array('applicant_forms_motor_transport_all_per'),
+			'weight' 			=> 1,
+			'type' 				=> MENU_LOCAL_TASK
+		);
+		/****  Find  ***/
+		$items['mtw-registration-details/addmore/%'] = array(
+			'title' 			=> t('Ownership Details'),
+			'page callback'	 	=> 'drupal_get_form',
+			'page arguments'	=> array('addmore_part',2),
+			'file' 				=> 'include/addmore_part.inc',
+			'access arguments' 	=> array('permission_for_appicant_alc_inspector'),
+			'weight' 			=> 2,
+			'type' 				=> MENU_LOCAL_TASK
+		);
+				
+		$items['mtw-registration-addmore/person/%/%'] = array(
+			'title' 			=> 'Add Details of the Person',
+			'page callback'	 	=> 'drupal_get_form',
+			'page arguments'	=> array('addmore_details', 2,3),
+			'file' 				=> 'include/addmore_details.inc',
+			'access arguments' 	=> array('applicant_forms_motor_transport_all_per'),
+		);
+		
+		$items['mtw-registration-details/upload/%'] = array(
+			'title' 			=> 'Upload Documents',
+			'page callback'	 	=> 'drupal_get_form',
+			'page arguments'	=> array('mtw_application_upload_docs', 2),
+			'file' 				=> 'include/mtw_application_upload_docs.inc',
+			'access arguments' 	=> array('applicant_forms_motor_transport_all_per'),
+			'type' 				=> MENU_LOCAL_TASK,
+			'weight' 			=> 3
+		);											
+															
+		$items['mtw-registration-details/preview/%'] = array(
+			'title' 			=> 'Preview Application',
+			'page callback'	 	=> 'drupal_get_form',
+			'page arguments'	=> array('mtw_application_preview', 2), 
+			'file' 				=> 'include/mtw_application_preview.inc',
+			'access arguments' 	=> array('applicant_forms_motor_transport_all_per'),
+			'type' 				=> MENU_LOCAL_TASK,
+			'weight' 			=> 4
+		);
+		$items['mtw-registration-details/view/%'] = array(
+			'title' 			=> 'Preview Application',
+			'page callback'	 	=> 'drupal_get_form',
+			'page arguments'	=> array('mtw_application_preview', 2),
+			'file' 				=> 'include/mtw_application_preview.inc',
+			'access arguments' 	=> array('applicant_forms_motor_transport_all_per'),
+			//'type' 				=> MENU_DEFAULT_LOCAL_TASK,
+			//'weight' 			=> 3
+		);
+																											
+		$items['mtw-registration-addmore/edit/%/%/%'] = array(
+			'title' 			=> 'Add/Modify Owner Details',
+			'page callback'	 	=> 'drupal_get_form',
+			'page arguments'	=> array('addmore_details', 2,3,4),
+			'file' 				=> 'include/addmore_details.inc',
+			'access arguments' 	=> array('applicant_forms_motor_transport_all_per'),
+			// 'type' 				=> MENU_LOCAL_TASK,
+			// 'weight' 			=> 3
+		);
+															
+		$items['mtw-upload-signed-application/%'] = array(
+			'title' 			=> 'Upload Signed Application',
+			'page callback' 	=> 'drupal_get_form',
+			'page arguments' 	=> array('mtw_upload_signed_application_form',1),
+			'file' 				=> 'include/mtw_upload_signed_application_form.inc',
+			'access arguments' 	=> array('applicant_forms_motor_transport_all_per'),
+		);
+		
+		$items['mtw-generate-pdf/%/%'] = array( 
+			'page callback' 	=> 'mtw_common_pdf_generator', 
+			'page arguments' 	=> array(1,2),
+			'file' 				=> 'include/mtw_application_pdf.inc',
+			'access arguments' 	=> array('common_pdf_generator_per')
+		);
+		
+		$items['mtw-renewgenerate-pdf/%/%/%'] = array( 
+			'page callback' 	=> 'mtw_common_pdf_generator', 
+			'page arguments' 	=> array(1, 2, 3),
+			'file' 				=> 'include/mtw_application_renewal_pdf.inc',
+			'access arguments' 	=> array('common_pdf_generator_per')
+		);
+		$items['mtw-renewgenerate-pdf/%/%'] = array( 
+			'page callback' 	=> 'mtw_common_pdf_generator', 
+			'page arguments' 	=> array(1,2),
+			'file' 				=> 'include/mtw_application_renewal_pdf.inc',
+			'access arguments' 	=> array('common_pdf_generator_per')
+		);
+		
+		$items['mtw-acknowledge-pdf/%'] = array( 
+			'page callback' 	=> 'mtw_acknowledge_pdf_generator', 
+			'page arguments' 	=> array(1),
+			'file' 				=> 'include/mtw_acknowledge_pdf.inc',
+			'access arguments' 	=> array('common_pdf_generator_per')
+		);
+		
+		$items['mtw-already-registered'] = array(
+			'title'				=> t('Already Registered Information'),
+			'page callback' 	=> 'drupal_get_form', 
+			'page arguments' 	=> array('mtw_already_registered',1),
+			'file' 				=> 'include/mtw_already_registered.inc',
+			'access arguments' 	=> array('applicant_forms_motor_transport_all_per')
+		);
+		
+		/****** mtw registration section end *******/
+		
+		/****** mtw renewal section start *******/
+		$items['mtw-reg-checking'] = array( 
+			'title'				=> t('Check for Previous Registered Information'),
+			'page callback' 	=> 'drupal_get_form', 
+			'page arguments' 	=> array('mtw_reg_checking'),
+			'file' 				=> 'include/mtw-reg-checking.inc',
+			'access arguments' 	=> array('applicant_forms_motor_transport_all_per')
+		);
+		
+		
+		$items['mtw-renewal/%'] = array(
+			'title'				=> t('Renewal of Registration Certificate under Motor Transport Worker Act, 1961'),
+			'page callback' 	=> 'drupal_get_form', 
+			'page arguments' 	=> array('mtw_renewal',1),
+			'file' 				=> 'include/mtw-renewal.inc',
+			'access arguments' 	=> array('applicant_forms_motor_transport_all_per')
+		);
+		
+		$items['mtw-backlog-renewal/%'] = array(
+			'title'				=> t('Renewal of Registration Certificate under Motor Transport Worker Act, 1961'), 
+			'page callback' 	=> 'drupal_get_form', 
+			'page arguments' 	=> array('mtw_renewal',1),
+			'file' 				=> 'include/mtw-backlog-renewal.inc',
+			'access arguments' 	=> array('applicant_forms_motor_transport_all_per')
+		);
+		
+		$items['fix-error-mtw'] = array(
+			'page callback' 	=> 'fix_error_mtw', 
+			'file' 				=> 'include/fix_error_mtw.inc',
+			'access arguments' 	=> array('access content')
+		);
+		
+		
+		
+		return $items;
+	}
+	
+	
+	

@@ -1,0 +1,4 @@
+name = Admin Advance Search
+description =  Admin Advance Search Module.
+package = Super Admin Modules
+core = 7.x

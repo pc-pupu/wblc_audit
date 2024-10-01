@@ -1,0 +1,131 @@
+<?php
+function gmap_menu() {
+  $items = array();
+  
+    // define parent item
+	$items['contactinfo'] = array(
+						'page callback' => 'gmap_contact',
+						'access arguments' => array('access content'),
+					);
+
+	$items['feedback'] = array(						
+						'title'			 => 'Enquiry',						
+						'page callback'	 => 'drupal_get_form',
+						'page arguments' => array('get_feedback_form'),
+						'file'			 => 'includes/feedback_form.inc',
+						'access callback'=> TRUE
+					);
+	$items['rlo-details/%/%'] = array(							
+					// 'title' 			=> 'Office Information',
+					'title callback'    => 'orl_name_title_callback',
+    				'title arguments'   => array(1, 2),							
+					'page callback'		=> 'get_rlo_information',
+					'page arguments'	=> array(2),
+					'file'				=> 'includes/rlo_information.inc',
+					'access callback'	=> TRUE	
+					);
+	$items['labour-commissionerate-contact-details'] = array(							
+					'title' 			=> 'Contact Us',
+					'page callback'		=> 'heade_office_contact_details',
+					'file'				=> 'includes/rlo_information.inc',
+					'access callback'	=> TRUE	
+					);
+	
+	$items['office-details/%/%'] = array(							
+					'title' 			=> 'Office Information',							
+					'page callback'		=> 'get_office_information',
+					'page arguments'	=> array(2),
+					'file'				=> 'includes/rlo_information.inc',
+					'access callback'	=> TRUE	
+					);
+   
+   $items['applicant-feedback'] = array(						
+						'title'			 	=> 'Enquiry / Grievance',						
+						'page callback'	 	=> 'drupal_get_form',
+						'page arguments' 	=> array('applicant_feedback_form'),
+						'file'			 	=> 'includes/applicant_feedback_form.inc',	
+						'access arguments' 	=> array('access content'),					
+					);
+  $items['applicant-feedback/details/%'] = array(						
+						'title'			 	=> 'Enquiry / Grievance Details',						
+						'page callback'	 	=> 'applicant_feedback_details_form',
+						'page arguments' 	=> array(2),
+						'file'			 	=> 'includes/applicant_feedback_form.inc',	
+						'access arguments' 	=> array('access content'),					
+					);
+  $items['tracking-grievance'] = array(						
+						'title'			 	=> 'Tracking of Grievance',						
+						'page callback'	 	=> 'drupal_get_form',
+						'page arguments' 	=> array('tracking_of_grievance'),
+						'file'			 	=> 'includes/tracking_of_grievance.inc',	
+						'access arguments' 	=> array('access content'),					
+					);
+   $items['office-contact-info'] = array(						
+						// 'title'	=> 'Tracking of Grievance',						
+						'page callback'	=> 'office_wise_contact_info',
+						// 'page arguments' => array('tracking_of_grievance'),
+						'file' => 'includes/rlo_information.inc',	
+						'access arguments' => array('access content'),					
+					);
+   $items['office-contact-details/%'] = array( 
+					// 'title callback' => 'office_title_callback',
+					// 'title arguments' => array(1),
+					'page callback' => 'office_contact_view',
+					'page arguments' => array(1),
+					'file' => 'includes/rlo_information.inc',
+					'access arguments' => array('access content'),
+				); 
+   return $items;
+}
+
+function gmap_contact(){	
+	return theme('gmap_template');	
+}
+
+function orl_name_title_callback($arg = '', $sub_div_code = ''){
+	$rlo_info_query = db_select('l_rlo_additional_info', 'lrai');	
+	$rlo_info_query->fields('lrai', array('office_name'));
+	$rlo_info_query->condition('lrai.sub_div_code', encryption_decryption_fun('decrypt', $sub_div_code),'=');		
+	$rlo_info_result = $rlo_info_query->execute()->fetchObject();
+	
+	if ($rlo_info_result->office_name=='DLC'){
+		$office_name = 'OFFICE OF THE DEPUTY LABOUR COMMISSIONER';
+	}elseif($rlo_info_result->office_name=='ALC'){
+		$office_name = 'OFFICE OF THE ASSISTANT LABOUR COMMISSIONER';
+	}elseif($rlo_info_result->office_name=='JLC'){
+		$office_name = 'OFFICE OF THE JOINT LABOUR COMMISSIONER';
+	}elseif($rlo_info_result->office_name=='KLC'){
+		$office_name = 'OFFICE OF THE LABOUR COMMISSIONER EL & MW SECTION';
+	}
+	
+	if(!empty($arg)){
+		$arg = str_replace("-"," ", $arg);
+		$title = strtoupper(t($office_name.', '.$arg));
+	}else{
+		$title = strtoupper(t('Regional Labour Office, Govt. Of West Bengal.'));	 
+	}
+ 	return $title;
+}
+
+function gmap_theme(){
+	
+	  return array(
+        	'gmap_template' => array(
+            'template' => 'templates/gmap',
+   			//'variables' => array('var1' => NULL, 'var2' => NULL),
+        ),
+    );
+}
+
+function get_feedback_form_alter(&$type){
+	if (isset($type['captcha'])) {
+		$type['captcha']['#after_build'][] = 'myModule_after_build_process';
+	}
+}
+
+function myModule_after_build_process($element, $form_state) {
+  $element['captcha_widgets']['recaptcha_widget']['#suffix'] = '<div><label class="hide" for="g-recaptcha-response">Recaptcha response</label></div>';
+  return $element;
+}
+
+

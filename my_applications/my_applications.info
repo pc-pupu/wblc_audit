@@ -1,0 +1,6 @@
+name = Applications For Applicants
+description = Applications For Applicants Module
+package = Labour Module
+version = "7.x"
+core = 7.x
+stylesheets[all][] = css/my_application.css

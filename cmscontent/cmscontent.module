@@ -1,0 +1,1927 @@
+<?php
+function cmscontent_permission() {
+  return array(
+    'cmscontent_per' => array(
+      'title' => t(' cms content permission'),
+    )
+  );
+}
+
+
+function cmscontent_menu(){
+    
+	 $items = array();
+	
+	 $items['cmscontent'] = array(
+     				'title' => 'Content Add/Edit Section',            
+					'page callback' => 'cmscontent_list', //'em1status_table',
+	 				'access callback' => 'user_access',
+	 				'access arguments' => array('cmscontent_per'),
+	 				'type' => MENU_NORMAL_ITEM, 
+    				 );
+	$items['under-development'] = array(     				         
+					'page callback' => 'under_development',	 				
+	 				'access arguments' => array('access content')	 				
+    				 );
+					 
+	$items['minimumwages/list'] = array(
+     				'title' => 'Minimum Rates of Wages in Scheduled Employments',            
+					'page callback' => 'minimumwages_list', //'em1status_table',
+	 				'access callback' => 'user_access',
+	 				'access arguments' => array('cmscontent_per'),
+	 				'type' => MENU_NORMAL_ITEM, 
+    				 );
+	 
+	 
+	 $items['cmscontent/%/cmscontentedit'] = array(   
+					'page callback' => 'cmscontent_edit', 
+					'page arguments' => array(1),
+					
+					'title' => 'Information Add/Modify',
+					'access callback' => 'user_access',
+	 				'access arguments' => array('cmscontent_per'),
+    				'type' => MENU_CALLBACK,
+ 					);
+	/*				
+	$items['scheduled_list/%/%'] = array(   
+					'page callback' => 'scheduled_emp_list', 
+					'page arguments' => array(1,2),
+					'title callback'    => 'scheduled_list_title_callback',
+					'title arguments'   => array(1, 2),
+					'access callback' => 'user_access',
+	 				'access arguments' => array('cmscontent_per'),
+    				'type' => MENU_CALLBACK,
+ 					);*/
+					
+	$items['scheduled_list/%/%'] = array(
+			'title callback'    => 'scheduled_list_title_callback',
+			'title arguments'   => array(1, 2), 
+			'page callback'     => 'scheduled_emp_list',
+			'page arguments' 	=> array(1,2),
+			'access callback' => 'user_access',
+			'access arguments' => array('cmscontent_per'),
+			'type' => MENU_CALLBACK,
+ 			);
+			
+	$items['scheduled_list/%/%/%'] = array( 
+			'title callback'   => 'scheduled_list_title_callback',
+			'title arguments'  => array(1,2),
+			'page callback'    => 'scheduled_emp_list',
+			'page arguments' 	=> array(1,2,3),
+			'access callback' => 'user_access',
+			'access arguments' => array('cmscontent_per'),
+	);
+	
+    $items['cmscontent/addcmscontent'] = array(
+				'title' => 'Add New Content',          
+				'page callback' => 'drupal_get_form',
+				'page arguments' => array('add_cmscontent'),
+				'access callback' => 'user_access',
+				'access arguments' => array('cmscontent_per'),
+				'type' => MENU_CALLBACK,
+				);
+				
+    $items['minimumwages/addminimumwages/%'] = array(
+				'title' => 'Add Minimum Wages Documents',          
+				'page callback' => 'drupal_get_form',
+				'page arguments' => array('addminimumwages',2),
+				// 'access callback' => 'user_access',
+				'access arguments' => array('cmscontent_per'),
+				// 'type' => MENU_CALLBACK,
+				);
+    $items['minimumwages/editminimumwages/%'] = array(
+				'title' => 'Modify Minimum Wages Documents',          
+				'page callback' => 'drupal_get_form',
+				'page arguments' => array('addminimumwages',2),
+				'access callback' => 'user_access',
+				'access arguments' => array('cmscontent_per'),
+				'type' => MENU_CALLBACK,
+				);
+	$items['page-content/%/%/%'] = array(
+	 				'title callback' => 'cmscontent_title_callback',
+    				'title arguments' => array(1, 2, 3),
+	 				'page callback' => 'drupal_get_form',
+	 				// 'page callback' => 'get_content_details',
+					'page arguments' => array('get_content_details', 1, 2, 3), 
+					'file' => 'inc/get_content_details.inc',
+					'access arguments' => array('access content'),		
+					);
+  
+      $items['cmscontent/%/cmscontentinactive'] = array(   
+					'page callback' => 'cmscontent_inactive', 
+					'page arguments' => array(1),
+					'access callback' => 'user_access',
+					 'access arguments' => array('cmscontent_per'),
+					'type' => MENU_CALLBACK,
+				  );
+	  $items['e-services'] = array(
+	 				'title'				=> 'E-SERVICES',
+					'page callback' 	=> 'e_service_list',					
+	 				'access callback' 	=> 'user_access',
+					'file' 				=> 'inc/get_content_details.inc',
+					'access arguments' 	=> array('access content'),		
+				  );
+	  $items['nature-of-work'] = array(
+	 				'title'				=> 'CONTRACTOR NATURE OF WORK',
+					'page callback' 	=> 'nature_of_work',	 				
+					'file' 				=> 'inc/nature_of_work.inc',
+					'access arguments' 	=> array('access content'),		
+				 );		  	
+	 $items['help'] = array(
+					'title'				=> 'HELP',
+					'page callback' 	=> 'get_help_authorized_user_content',	 				
+					'file' 				=> 'inc/help_authorized_user.inc',
+					'access arguments' 	=> array('access content'),		
+					);
+	$items['cmscontent/actandrules'] = array(
+					'title'				=> 'ACT & RULES',
+					'page callback' 	=> 'get_actandrules',	 				
+					'file' 				=> 'inc/actandrules.inc',
+					'access arguments' 	=> array('access content'),		
+					);
+	$items['cmscontent/add-actandrules'] = array(
+					'title'				=> 'ADD NEW ACT & RULES',
+					'page callback' 	=> 'drupal_get_form',
+					'page arguments' 	=> array('add_actandrules'),	 				
+					'file' 				=> 'inc/actandrules.inc',
+					'access arguments' 	=> array('access content'),		
+				   );
+	$items['cmscontent/actandrules/%'] = array(
+					'title'				=> 'ACT & RULES',
+					'page callback' 	=> 'drupal_get_form',
+					'page arguments' 	=> array('get_actandrules'),					 				
+					'file' 				=> 'inc/actandrules.inc',
+					'access arguments' 	=> array('access content'),		
+					);
+	$items['cmscontent/more-actandrules/%/%'] = array(
+					'title'				=> 'ACT & RULES',
+					'page callback' 	=> 'more_rules',
+					'page arguments' 	=> array(2, 3),					 				
+					'file' 				=> 'inc/actandrules.inc',
+					'access arguments' 	=> array('access content'),		
+					);
+	$items['cmscontent/edit-actandrules/%'] = array(
+					'title'			=> 'Edit ACT & RULES',
+					'page callback' 	=> 'drupal_get_form',
+					'page arguments' 	=> array('edit_actandrules',2),
+					'file' 			=> 'inc/actandrules.inc',
+					'access arguments' 	=> array('access content'),		
+				 	); 
+	$items['tender'] = array(
+					'title'				=> 'Notice Inviting Quotation',
+					'page callback' 	=> 'get_tender_row',	 				
+					'file' 				=> 'inc/tender_row.inc',
+					'access arguments' 	=> array('access content'),		
+					 );
+	
+	 $items['cms-dashboard']  =  array(
+					'title'				=> 'Welcome content management system',
+					'page callback' 	=> 'cms_dash_board',						
+					'file' 				=> 'inc/view_dashboard.inc',
+					'access arguments' 	=> array('cmscontent_per')                     
+					);
+    $items['important-notification/general-timelines-deatils']  =  array(
+					'title'				=> 'General Timelines for Registration, Renewal, Amendment and Grant of License',
+					'page callback' 	=> 'general_timelines_deatils',					 				
+					'file' 				=> 'inc/general_timelines_deatils.inc',
+					'access arguments' 	=> array('access content')                     
+					);
+	$items['important-notification/general-timelines-details']  =  array(
+					'title'				=> 'General Timelines for Registration, Renewal, Amendment and Grant of License',
+					'page callback' 	=> 'general_timelines_deatils',					 				
+					'file' 				=> 'inc/general_timelines_deatils.inc',
+					'access arguments' 	=> array('access content')                     
+					);
+  
+  $items['shramik-barta']  =  array(
+					'title'				=> 'Shramik Barta and others information',
+					'page callback' 	=> 'shramik_mela',					 				
+					'file' 				=> 'inc/shramik-barta.inc',
+					'access arguments' 	=> array('access content')                     
+					);
+	$items['venues-of-shramik-mela-2020']  =  array(
+					'title'				=> 'Tentative Venue, Date and Time as fixed by RLOs for Shramik Mela, 2020',
+					'page callback' 	=> 'shramik_mela_venues',					 				
+					'file' 				=> 'inc/shramik-barta.inc',
+					'access arguments' 	=> array('access content')                     
+					);				
+	$items['cmscontent/inspectionmasteract'] = array(
+					'title'				=> 'Act wise Infringement add and modified',
+					'page callback' 	=> 'inspection_master_act_list', 				
+					'file' 				=> 'inc/inspectionmaster.inc',
+				    'access callback' 	=> 'user_access',
+	 		        'access arguments' 	=> array('cmscontent_per'),
+				   );				
+	$items['cmscontent/editinspectioninfringements/%'] = array(
+				   'title callback'   => 'editinspectioninfringements_title_callback',
+				   'title arguments'  => array(2),
+				   'page callback' 		=> 'drupal_get_form', 
+				   'page arguments' 	=> array('edit_inspection_master_infrigement',2),
+				   'file' 				=> 'inc/inspectionmaster.inc',
+				   'access callback' 	=> 'user_access',
+				   'access arguments' 	=> array('cmscontent_per'),				
+				   );	
+	   
+	$items['cmscontent/addinsinfrigement/%'] = array(
+   					'page callback' 	=> 'drupal_get_form',
+					'page arguments' 	=> array('add_other_inspection_infrigement',2),
+					'file' 				=> 'inc/inspectionmaster.inc',
+					'title'				=> 'Add New Infrigment',
+					'access callback' 	=> 'user_access',
+	 				'access arguments'  => array('cmscontent_per'),
+    				'type' 			    => MENU_CALLBACK,
+ 					); 
+					
+	$items['cmscontent/addnewinspectionact'] = array( 
+					'title' 			=> 'ADD INSPECTION ACT AND INFRINGEMENT',
+					'page callback' 	=> 'drupal_get_form',
+					'page arguments' 	=> array('add_new_inspection_act'),
+					'file' 				=> 'inc/inspectionmaster.inc',
+					'access callback' 	=> 'user_access',
+					'access arguments'	=> array('cmscontent_per'),
+				);
+		
+	$items['samajik-suraksha-yojana'] = array(
+					'title'				=> 'Samajik Suraksha Yojana',
+					'page callback' 	=> 'samajik_surahsha_yojana_notice',	 				
+					'file' 				=> 'inc/samajik_surahsha_yojana.inc',
+					'access arguments' 	=> array('access content'),		
+					 );	
+	$items['proceedings-bocw-board-meetings'] = array(
+					'title'				=> 'Proceedings of BOCW Board Meetings',
+					'page callback' 	=> 'proceedings_bocw_board_meetings_func',	 				
+					'file' 				=> 'inc/proceedings-bocw-board-meetings.inc',
+					'access arguments' 	=> array('access content'),		
+					 );	
+
+	$items['cmscontent/add_what_is_new'] = array(
+   					'title' => 'Add What Is New Content',          
+					'page callback' => 'drupal_get_form',
+					'page arguments' => array('add_whatisnew'),
+					'file' => 'inc/whatisnew.inc',
+	 				'access arguments' => array('cmscontent_per'),
+    				//'type' => MENU_CALLBACK,
+ 					);
+
+ 	$items['cmscontent/what_is_new_list'] = array(
+     				'title' => 'What Is New List',            
+					'page callback' => 'whatisnew_list', //'em1status_table',
+	 				'file' => 'inc/whatisnew.inc',
+	 				'access arguments' => array('cmscontent_per'),
+	 				'type' => MENU_NORMAL_ITEM, 
+    				 );
+
+    $items['cmscontent/%/what_is_new_active'] = array(   
+					'page callback' => 'what_is_new_inactive', 
+					'page arguments' => array(1),
+					'file' => 'inc/whatisnew.inc',
+					 'access arguments' => array('cmscontent_per'),
+					// 'type' => MENU_CALLBACK,
+				  );
+	$items['cmscontent/%/what_is_new_edit'] = array(   
+					'page callback' => 'whatisnew_edit_fun', 
+					'page arguments' => array(1),					
+					'title' => 'What Is New Edit',
+					'file' => 'inc/whatisnew.inc',
+	 				'access arguments' => array('cmscontent_per'),
+    				// 'type' => MENU_CALLBACK,
+ 					);
+
+		/*----------  Notification ---------*/
+
+		$items['cmscontent/add_notification'] = array(
+   					'title' => 'Add Notification',          
+					'page callback' => 'drupal_get_form',
+					'page arguments' => array('add_notification'),
+					'file' => 'inc/notofication.inc',
+	 				'access arguments' => array('cmscontent_per'),
+    				//'type' => MENU_CALLBACK,
+ 					);
+
+ 	$items['cmscontent/notification_list'] = array(
+     				'title' => 'Notification List',            
+					'page callback' => 'notification_list', //'em1status_table',
+	 				'file' => 'inc/notofication.inc',
+	 				'access arguments' => array('cmscontent_per'),
+	 				// 'type' => MENU_NORMAL_ITEM, 
+    				 );
+
+    $items['cmscontent/%/notification_active'] = array(   
+					'page callback' => 'notification_inactive', 
+					'page arguments' => array(1),
+					'file' => 'inc/notofication.inc',
+					 'access arguments' => array('cmscontent_per'),
+					// 'type' => MENU_CALLBACK,
+				  );
+	$items['cmscontent/%/notification_edit'] = array(   
+					'page callback' => 'notification_edit_fun', 
+					'page arguments' => array(1),
+					
+					'title' => 'Notification Edit',
+					'file' => 'inc/notofication.inc',
+	 				'access arguments' => array('cmscontent_per'),
+    				// 'type' => MENU_CALLBACK,
+ 					);
+
+	/*----------  Publication ---------*/
+
+		$items['cmscontent/add_publication'] = array(
+   					'title' => 'Add Publication',          
+					'page callback' => 'drupal_get_form',
+					'page arguments' => array('add_publication'),
+					'file' => 'inc/publication.inc',
+	 				'access arguments' => array('access content'),
+    				//'type' => MENU_CALLBACK,
+ 					);
+
+ 	$items['cmscontent/publication_list'] = array(
+     				'title' => 'Publication List',            
+					'page callback' => 'publication_list', //'em1status_table',
+	 				'file' => 'inc/publication.inc',
+	 				'access arguments' => array('access content'),
+	 				'type' => MENU_NORMAL_ITEM, 
+    				 );
+
+    $items['cmscontent/%/publication_active'] = array(   
+					'page callback' => 'publication_inactive', 
+					'page arguments' => array(1),
+					'file' => 'inc/publication.inc',
+					 'access arguments' => array('access content'),
+					// 'type' => MENU_CALLBACK,
+				  );
+	$items['cmscontent/%/publication_edit'] = array(   
+					'page callback' => 'publication_edit_fun', 
+					'page arguments' => array(1),
+					
+					'title' => 'Publication Edit',
+					'file' => 'inc/publication.inc',
+	 				'access arguments' => array('access content'),
+    				// 'type' => MENU_CALLBACK,
+ 					);
+
+	/*----------  Other Activities ---------*/
+
+		$items['cmscontent/add_otheract'] = array(
+   					'title' => 'Add Other Activities',          
+					'page callback' => 'drupal_get_form',
+					'page arguments' => array('add_otheract'),
+					'file' => 'inc/otheract.inc',
+	 				'access arguments' => array('cmscontent_per'),
+    				//'type' => MENU_CALLBACK,
+ 					);
+
+ 	$items['cmscontent/otheract_list'] = array(
+     				'title' => 'Other Activities List',            
+					'page callback' => 'otheract_list', //'em1status_table',
+	 				'file' => 'inc/otheract.inc',
+	 				'access arguments' => array('cmscontent_per'),
+	 				// 'type' => MENU_NORMAL_ITEM, 
+    				 );
+
+    $items['cmscontent/%/otheract_active'] = array(   
+					'page callback' => 'otheract_inactive', 
+					'page arguments' => array(1),
+					'file' => 'inc/otheract.inc',
+					 'access arguments' => array('cmscontent_per'),
+					// 'type' => MENU_CALLBACK,
+				  );
+	$items['cmscontent/%/otheract_edit'] = array(   
+					'page callback' => 'otheract_edit_fun', 
+					'page arguments' => array(1),
+					
+					'title' => 'Other Activities Edit',
+					'file' => 'inc/otheract.inc',
+	 				'access arguments' => array('cmscontent_per'),
+    				// 'type' => MENU_CALLBACK,
+ 					);
+					
+	$items['screen-reader-access'] = array(   
+					'page callback' => 'screen_reader_access', 
+					'title' => 'Screen Reader Access',
+					'file' => 'inc/screen_reader_access.inc',
+	 				'access arguments' => array('access content'),
+    				
+ 					); 
+	
+	$items['office-contact-admin-list/%'] = array( 
+					'title' => 'Office Contact Details',
+					'page callback' => 'office_contact_add_list',
+					'page arguments' => array(1),
+					'file' => 'inc/get_content_details.inc',
+					'access arguments' => array('cmscontent_per'),
+				);  
+	$items['office-contact-admin-details/%'] = array( 
+					'title callback' => 'office_title_callback',
+					'title arguments' => array(1),
+					'page callback' => 'office_contact_add_view',
+					'page arguments' => array(1),
+					'file' => 'inc/get_content_details.inc',
+					'access arguments' => array('cmscontent_per'),
+				);  	
+    $items['download-excel-reg-est'] = array(
+					'title' => 'List of Establishment',
+					'page callback' => 'get_download_excel_reg_est',
+					'file' => 'inc/get_download_excel_reg_est.inc',
+					'access arguments' => array('access content'),
+					);
+	$items['add-edit-contact-number-submit'] = array(
+					'page callback' => 'add_edit_contact_number_save',
+					'access arguments' => array('access content'),
+					);	
+	$items['add-edit-email-submit'] = array(
+					'page callback' => 'add_edit_email_save',
+					'access arguments' => array('access content'),
+					);				
+	$items['add-officer-detail/%/%'] = array(
+   					'title callback' => 'office_title_callback',
+					'title arguments' => array(1),       
+					'page callback' => 'drupal_get_form',
+					'page arguments' => array('add_officer_detail',1,2),
+					'file' => 'inc/add_officer_detail.inc',
+	 				'access arguments' => array('cmscontent_per'),
+ 					);
+	$items['conatact-update/%/%'] = array(
+   					'title callback' => 'office_place_callback',
+					'title arguments' => array(1), 
+					// 'title' => 'Update Information',     
+					'page callback' => 'drupal_get_form',
+					'page arguments' => array('update_officer_conatact',1,2),
+					'file' => 'inc/add_officer_detail.inc',
+	 				'access arguments' => array('cmscontent_per'),
+ 					);
+	$items['autocomplete_emp_id'] = array(
+				 'title' => t('AutoCompomplete'),
+				 'page callback' => 'get_emp_details_auto',
+				 'access arguments' => array('cmscontent_per'),
+				 'type' => MENU_CALLBACK
+				);
+	$items['autocomplete_fname'] = array(
+				 'title' => t('AutoCompomplete'),
+				 'page callback' => 'get_fname_details_auto',
+				 'access arguments' => array('cmscontent_per'),
+				 'type' => MENU_CALLBACK
+				);
+				
+	$items['cmscontent/feedback_list/%'] = array(
+     				'title' => 'Feedback List',            
+					'page callback' => 'feedback_list',
+					'page arguments' => array(2),
+	 				'file' => 'inc/whatisnew.inc',
+	 				'access arguments' => array('access content'),
+    				 );	
+	$items['cmscontent/what_is_new_publish/%'] = array(   
+					'page callback' => 'what_is_new_publish', 
+					'page arguments' => array(2),
+					'file' => 'inc/whatisnew.inc',
+					'access arguments' => array('cmscontent_per'),
+				  );
+				  
+	$items['board-info/%'] = array( 
+		'title' => t('Proceedings of Board Meetings'),  
+		'page callback' => 'board_info', 
+		'page arguments' => array(1),
+		'file' => 'inc/board_info.inc',
+		'access arguments' => array('access content'),
+	);				 		
+	return $items; 
+}
+
+function cmscontent_title_callback($param1 = '', $param2 = '',  $param3 = ''){  	
+			
+	return $param3;
+}
+function get_fname_details_auto($string){
+	$sql = "select name from l_office_emp_details where name ILIKE :name";	
+	$result = db_query($sql,array(':name' => "".db_like($string)."%"));
+	
+	$matches = array();
+	
+	if( $result->rowCount()>0 ){
+		foreach($result as $item) {
+			$matches[$item->name] = check_plain($item->name);
+		}
+	}else{
+		$matches[] = "";
+	}
+	drupal_json_output($matches);
+	exit;
+}
+function get_emp_details_auto($string){
+	$sql = db_select ('l_office_emp_details', 'oe');
+    $sql->fields('oe', array('id', 'emp_id', 'name', 'lname')); 
+    $sql->condition('emp_id', '%' . trim($string) . '%', 'LIKE');	
+	$result = $sql->execute();	
+	$matches = array();
+	
+	if( $result->rowCount()>0 ){
+		foreach($result as $item) {
+			$matches[$item->emp_id] = check_plain($item->emp_id.'-'.$item->name.' '.$item->lname);
+		}
+	}else{
+		$matches[] = "";
+	}
+	drupal_json_output($matches);
+	exit;
+}
+function office_place_callback($id){
+	$query1 = db_select('l_custom_user_detail', 'cud');
+	// $query1->leftJoin('l_rlo_additional_info', 'rai', 'rai.user_id = cud.usr_id');
+	$query1->fields('cud', array('degisnation', 'user_place'));
+	// $query1->fields('rai', array('office_name'));
+	$query1->condition('cud.srlno', encryption_decryption_fun('decrypt', $id), '=');
+	$obj = $query1->execute()->fetchObject();
+	
+	return $obj->degisnation.', '.$obj->user_place;
+}
+function office_title_callback($sub_div_code = ''){
+	$query = db_select('l_rlo_additional_info', 'rai');
+	$query->leftJoin('sub_division', 'sd', 'sd.sub_div_code = rai.sub_div_code');
+	$query->fields('rai', array('id', 'office_name'));
+	$query->fields('sd', array('sub_div_name'));
+	$query->condition('rai.sub_div_code', encryption_decryption_fun('decrypt', $sub_div_code), '=');
+	$obj = $query->execute()->fetchObject();
+	
+	if ($obj->office_name == 'JLC'){
+		$office_name = 'OFFICE OF THE JOINT LABOUR COMMISSIONER';
+	}elseif ($obj->office_name == 'DLC'){
+		$office_name = 'OFFICE OF THE DEPUTY LABOUR COMMISSIONER';
+	}elseif($obj->office_name == 'ALC'){
+		$office_name = 'OFFICE OF THE ASSISTANT LABOUR COMMISSIONER';
+	}elseif($obj->office_name == 'KLC'){
+		$office_name = 'OFFICE OF THE LABOUR COMMISSIONER EL & MW SECTION';
+	}elseif($obj->office_name == 'INSPECTOR'){
+		// $office_name = strtoupper($data->block_mun_name).', LABOUR WELFARE FACILITATION CENTRE';
+	}
+	
+	return $office_name.', '.strtoupper($obj->sub_div_name);
+}
+function editinspectioninfringements_title_callback($typ_infg = ''){
+	$query = db_select('l_inspection_master', 'im');
+	$query->fields('im', array('inspection_name'));
+	$query->condition('im.inspection_txt_type', encryption_decryption_fun('decrypt', trim($typ_infg)),'=');
+	$inspection_name = $query->execute()->fetchObject()->inspection_name;
+	return 'Act: '.$inspection_name;
+}
+
+function under_development(){
+	return 'Under Development';
+}
+
+function scheduled_list_title_callback($yr, $month){ 				
+	return 'Minimum Rates of Wages in Scheduled Employments in West Bengal as on '.$month.', '.$yr;
+}
+
+
+
+ function cmscontent_inactive($contentid){
+	  global $base_root, $base_path;
+	  
+	 
+	    $cms_content_query = db_select('l_cms_content', 't');
+        $cms_content_query->fields('t', array('content_id','is_active'));
+		$cms_content_query->condition('t.content_id',trim($contentid),'=');
+		$cms_content_query_result = $cms_content_query->execute();
+
+
+          $result=$cms_content_query_result->fetchAssoc();
+	      
+			$is_active = trim($result['is_active']); 
+			if($is_active=='Y'){
+			$txt='N';
+			$inactive="Inactive";
+			}
+			elseif($is_active=='N'){
+			$txt='Y';
+			$inactive="Active";
+			}
+	   $query = db_update('l_cms_content');
+         $query->fields(array(
+       
+		'is_active' =>$txt,
+		));
+       $query->condition('content_id',$contentid);
+       $query->execute(); 
+	   	 $message="Content are successfully ".$inactive;
+	   
+	 $full_base = $base_root . $base_path.'cmscontent';
+
+		
+       drupal_set_message(t($message));
+	  
+	  
+	 
+	  drupal_goto($full_base);
+   }
+
+ function cmscontent_edit($id){
+	  return  drupal_get_form('update_edit_cms_content',$id); 
+   }  
+	  
+	 
+
+
+function cmscontent_list(){
+	 global $base_root, $base_path, $user;
+	 drupal_add_css(drupal_get_path('module', 'applicant_forms') . '/css/clra_applications.css');
+	
+	   $sort = 'ASC';
+	   $order = 'ord';
+       $cms_circular_query = db_select('l_cms_content', 't');
+       $cms_circular_query->fields('t', array('content_id','content_title','content_dt','content_desc', 'content_typ', 'ord','is_active'));
+	   $cms_circular_query->orderBy($order, $sort);
+	   $cms_circular_query_result = $cms_circular_query->execute();
+		  
+		  
+		    
+		  
+		  
+	
+	$rows = array();
+    $header = array();
+  
+   $c_type_value = array(
+   				'actrule' => t('ACTS & RULES'),
+				'eodb' => t('EODB'), 
+				'fawloi' =>t('FAWLOI'),
+				'tender' =>	t('Tender'),
+				'whatisnew' => t('What is new'),
+				'notification' => t('Notification'),
+				'publication' => t('PUBLICATION'),
+				'otheract' => t('Other Activites'),
+				'wbuswwb' => t('WBUSWW Board'),
+				'wbbocwwb' => t('WBB & OCWW Board'),
+				'wbsssb' => t('WBSSS Board')
+		    );
+   $header = array(
+          		array('data'=> 'Sl.No'),
+		  		array('data'=> 'Title'),
+          		array('data' => 'Content Type','width' => '10%'),
+				array('data' => 'Order By' ,'width' => '8%'),
+		   		array('data' => 'Status'),		    
+		   		array('data' => 'Action'),		
+        );
+   $i=0;
+   foreach($cms_circular_query_result as $data){
+		$i++;
+		global $base_root, $base_path;
+		$aa = $base_root.$base_path.'cmscontent/'.encryption_decryption_fun('encrypt',$data->content_id).'/cmscontentedit';
+		$link_s=l(t('<span class="badge bg-blue"><i class="fa fa-edit"></i> Edit Details</span>'), $aa, array('html' => TRUE)) ;
+		
+		$aalink = '';
+		$link_k = '';
+		$order_by = $data->ord;
+			
+	   if($data->is_active=='Y'){
+	        
+			$aalink=$base_root.$base_path.'cmscontent/'.$data->content_id.'/cmscontentinactive';
+		    $link_k=l('<span class="badge bg-green">&nbsp;Active&nbsp;</span>', $aalink,array('html'=>TRUE)) ;
+		}elseif($data->is_active=='N'){
+	        
+			$aalink=$base_root.$base_path.'cmscontent/'.$data->content_id.'/cmscontentinactive';
+		    $link_k=l('<span class="badge bg-red">&nbsp;Inactive&nbsp;</span>', $aalink,array('html'=>TRUE)) ;	
+		}		
+				
+		$rows[] = array(
+      				$i,
+					$data->content_title,
+					$c_type_value[$data->content_typ],
+					$order_by,					
+					$link_k,
+					$link_s
+		);   
+   }
+   
+   // $output = theme('table', array('header' => $header, 'rows'=> $rows,'empty' => t("<font color='red'><b>Table has no circular!</b></font>"))).theme("pager");
+   $variables = array(
+	  		'attributes' 		=> array('class' => array('table table-striped table-responsive admin-custom-table')),
+	  		'header' 			=> $header,
+	  		'rows'				=> $rows,
+    );
+	
+	$output = theme('datatable', $variables);
+
+  
+   $jj =l(t('Add new'), 'cmscontent/addcmscontent', array('attributes' => array('class' => 'btn btn-primary pull-left')));
+  
+   $dic_detail_hlep_element = array(
+                      
+                       '#title'          => t('<b></b>'),
+                      
+                      '#children'    => $jj,
+                     
+                      '#collapsible' => true,  
+                     
+                      '#collapsed'  => true,
+                     
+                      );
+
+    $fieldset_dic_help_link = theme('fieldset', array('element' => $dic_detail_hlep_element));
+	return $fieldset_dic_help_link.$output;
+ }
+
+ 
+   
+   
+function update_edit_cms_content($form,$form_state,$id){
+
+drupal_add_library('system','ui.datepicker');
+drupal_add_js('jQuery(document).ready(function(){
+	jQuery("#show_date_id").datepicker({
+	dateFormat: "dd-mm-yy",
+	minDate: new Date(1999, 01, 01),
+	// maxDate: 0,
+	changeMonth: true,
+	changeYear: true,
+	});
+});', 'inline');
+
+	global $base_root, $base_path, $user;
+ 
+
+	$cms_content_query = db_select('l_cms_content', 't');
+	$cms_content_query->fields('t', array('is_new','is_active','content_id','content_title','content_desc','meta_title','meta_desc','fid','content_typ','ord','link_title','show_date'));
+	$cms_content_query->condition('t.content_id',trim(encryption_decryption_fun('decrypt',$id)),'=');
+	$cms_content_query_result = $cms_content_query->execute();
+
+
+	$result=$cms_content_query_result->fetchAssoc();
+
+	$content_id = $result['content_id'];
+	
+	$content_title = $result['content_title'];
+	$content_desc = decode_entities(trim($result['content_desc']));
+	$meta_title = $result['meta_title'];
+	$meta_desc = $result['meta_desc'];
+	$fid = $result['fid'];
+	$content_typ = $result['content_typ'];
+	$is_active = $result['is_active'];
+	$is_new = $result['is_new'];
+	$ord = $result['ord'];
+	$link_title = $result['link_title'];
+	$show_date = date('d-m-Y',strtotime($result['show_date']));
+
+
+
+	$form['circularaddrfields']['cont_head'] = array(
+		'#type' 	=> 'markup',
+		'#markup' => '<div class="row"><section class="col-lg-12 connectedSortable ui-sortable"><div class="box box-solid #box-warning collapsed-box">',
+	);
+	
+	$option_list = array('actrule' =>t('ACTS & RULES'),'eodb' =>t('EODB'),'fawloi'=>t('FAWLOI'),'fawloi_sc_com'=>t('Screening Committee Decision'), 'tender' =>t('Tender'),'whatisnew' =>t('What is new'),'notification' =>t('Notification'),'publication' =>t('PUBLICATION'),'otheract' =>t('Other Activites'),'wbuswwb' => t('WBUSWW Board'),
+		'wbbocwwb' => t('WBB & OCWW Board'),'wbsssb' => t('WBSSS Board'));
+	
+	$form['l_content_type_option'] = array(	         
+		'#type' 	=> 'value',
+		'#value' 	=> $option_list
+	);
+	
+	$form['l_content_type_option']['contentid'] = array(	         
+		'#type' 	=> 'hidden',
+		'#value' 	=> $content_id,
+	);
+	
+	$form['circularaddrfields']['content_typ'] = array(
+		'#type' => 'select',
+		'#title' => 'Content Type',
+		'#options' => $form['l_content_type_option']['#value'],
+		'#default_value' =>trim($content_typ),
+		'#prefix' => '<div class="form-custom col-md-4"><label class="input">',
+		'#suffix' =>  '</label></div>',
+		'#required' => TRUE,
+		'#attributes' => array('class' => array('form-control')),	
+	); 
+	
+	$form['circularaddrfields']['ltitle'] = array(
+		'#title'=>'Link title',
+		'#prefix'	=> '<div class="form-custom col-md-4"><label class="input">',
+		'#suffix'	=>  '</label></div>',
+		'#type' => 'textfield',
+		'#default_value' =>trim($link_title),
+		'#required' => TRUE,
+		'#element_validate' => array('lcontent_textfield_validate'),
+		'#attributes' 		=> array('class' => array('form-control')),
+	);
+	
+	$form['circularaddrfields']['ctitle'] = array(
+		'#title' =>'Content title',
+		'#prefix' => '<div class="form-custom col-md-4"><label class="input">',
+		'#suffix' =>  '</label></div>',
+		'#type' => 'textfield',
+		'#default_value' => trim($content_title),
+		'#required' => TRUE,
+		'#element_validate' => array('lcontent_textfield_validate'),
+		'#attributes' => array('class' => array('form-control')),	
+	);
+	 
+	$form['circularaddrfields']['add_content_desc'] = array(
+		'#title'=>'Content Description',
+		'#cols' => 20, 
+		'#rows' => 2,
+		'#type' => 'text_format',
+		'#default_value' =>$content_desc,
+		'#format'=>'full_html',
+		'#base_type' => 'textarea',
+		'#attributes' => array('class' => array('form-control')),	
+		'#prefix' => '<div class="form-custom col-md-12"><label class="input">',
+		'#suffix' =>  '</label></div>',
+	);
+	 
+	$form['circularaddrfields']['meta_title'] = array(
+		'#title'=> 'Meta keyword',
+		'#type' => 'textfield',
+		'#default_value' => $meta_title,
+		'#element_validate' => array('lcontent_textfield_validate'),
+		'#prefix' => '<div class="form-custom col-md-6"><label class="input">',
+		'#suffix' =>  '</label></div>',
+	);
+	 
+	$form['circularaddrfields']['show_date'] = array(
+		'#title'=>'Notification Date',
+		'#type' => 'textfield',
+		'#default_value' => $show_date,
+		'#prefix'=> '<div class="form-custom col-md-6"><label class="input">',
+		'#suffix'=>  '</label></div>',
+		'#attributes'=> array('id' => 'show_date_id','class' => array('form-control'),'readonly' => 'readonly'),
+	);	 
+	 
+	$form['circularaddrfields']['meta_content_desc'] = array(
+		'#title'=>'Meta Description',
+		'#cols' => 20, 
+		'#rows' => 2,
+		'#type' => 'textarea',
+		'#default_value' => $meta_desc,
+		'#element_validate' => array('lcontent_textfield_validate'),
+		'#prefix' => '<div class="form-custom col-md-12"><label class="input">',
+		'#suffix' =>  '</label></div>',
+		'#attributes' => array('class' => array('form-control')),	
+	);	 
+	 
+	$form['l_is_new'] = array(	         
+		'#type' 	=> 'value',
+		'#value' 	=> array('Y' =>t('Is New')),
+	);
+	  
+	$form['circularaddrfields']['order_no'] = array(
+		'#title'=>'Order No',
+		'#size'=>t('7'),
+		'#type' => 'textfield',
+		'#maxlength' => 4,
+		'#default_value' =>trim($ord),
+		'#element_validate' => array('ORDER_MANDATORY_NUMERIC_CHECKING_validate'),
+		'#attributes' => array('title' => 'order no  should be numeric '),
+		'#attributes' => array('class' => array('form-control')),	
+		'#prefix' => '<div class="form-custom col-md-3"><label class="input">',
+		'#suffix' =>  '</label></div>',
+	);
+	 
+	$form['l_status'] = array(	         
+		'#type' => 'value',
+		'#value' => array('Y' =>t('Active'),'N' =>t('Inactive')),
+	);
+
+	$form['circularaddrfields']['is_active'] = array(
+		'#type' => 'select',
+		'#title' => 'Status',
+		'#options' => $form['l_status']['#value'],
+		'#default_value' =>trim($is_active),
+		'#prefix' => '<div class="form-custom col-md-3"><label class="input">',
+		'#suffix' =>  '</label></div>',
+		'#required' => TRUE,
+		'#attributes' => array('class' => array('form-control')),
+	); 
+		
+	$form['circularaddrfields']['is_new'] = array(
+		'#type' => 'checkbox',
+		'#title' => ' Is New',
+		'#default_value' =>trim($is_new),
+		'#prefix' => '<div class="form-custom col-md-3 cus-checkbox-pad"><label class="">',
+		'#suffix' =>  '</label></div>',
+		'#attributes' => $is_new=='Y'?array('checked' => 'checked'):array()
+	); 
+	 
+	$form['circularaddrfields']['edit_content_pdf'] = array(
+		'#type' => 'file',
+		'#title' => t('Upload an Content file (JPG, PDF only)'),
+		'#attributes' => array('class' => array('')),	
+		'#prefix' => '<div class="row"><div class="col-md-12"><div class="col-md-9">',
+		'#suffix' =>  '</div>',
+	);
+	 
+	$form['circularaddrfields']['submit'] = array (
+		'#type' 	=> 'submit',
+		'#value' 	=> 'Update',			
+		'#attributes' => array('class' => array('btn btn-primary pull-left')),
+		'#prefix'	  => '<div class="col-md-6">',
+		'#suffix'	  =>  '</div></div></div></section></div>',	 
+	); 
+  
+	return  $form;
+}
+
+
+
+function update_edit_cms_content_submit($form_id , $form_state) {
+	global $base_root, $base_path,$full_base;
+	
+	$val = $form_state['values']; //echo '<pre>'; print_r($val); exit(777);
+	$contentid = $val['contentid'];
+	
+	$cfid = $val['cfid'];
+	$is_active = $val['is_active'];
+	$ctitle = trim($val['ctitle']);
+	$is_new = trim($val['is_new']);
+	if (isset($is_new)){
+		$is_new='Y';	
+	}else{
+		$is_new='N';	
+	}
+	
+	$contentdesc = trim(check_plain(decode_entities($form_states['values']['contentdesc']['value'])));
+	$meta_title = trim($val['meta_title']);
+	$meta_content_desc = trim($val['meta_content_desc']);
+	$content_typ = trim($val['content_typ']);
+	$order_no = trim($val['order_no']);
+	$ltitle = check_plain(trim($val['ltitle']));	
+	$message = "";
+	$show_date = date('Y-m-d',strtotime($val['show_date']));
+	
+	
+    $txn = db_transaction();
+	$dest_dir = file_default_scheme() . '://contentpdf/';
+	$validators = array('file_validate_extensions' => array('jpg  pdf'));
+	
+	
+	$file_name1 = str_replace(' ','_',trim($_FILES['files']['name']['edit_content_pdf']));
+	$file_name = preg_replace("/[^\w\-\.]/",'',$file_name1);
+		   
+	try { 
+		if(!$file_name){	
+			$query = db_update('l_cms_content');
+			$query->fields(array(
+				'content_title' => $ctitle,
+				'content_desc' => $contentdesc,
+				'meta_title' => $meta_title,
+				'meta_desc' => $meta_content_desc,
+				'content_typ' =>$content_typ,
+				'ord' =>$order_no,
+				'is_new' =>$is_new,
+				'is_active'=>$is_active,
+				'link_title' =>$ltitle,
+				'show_date' => $show_date
+			));
+			$query->condition('content_id',$contentid);
+			$query->execute();
+			$message = 'Update content Successfully.';
+		}else{
+			$_FILES['files']['name']['edit_content_pdf'] = time().$file_name; 
+			if($cfid && $file_name){
+				$query_ent2=db_query('select a.fid,filename from l_cms_content a, file_managed b where a.fid=b.fid and  a.fid = :cid', array(':cid'=>$cfid));
+			
+				if($query_ent2->rowCount()> 0){ 
+					foreach ($query_ent2 as $obj) {
+						$fid = $obj->fid;
+						$docfilename = $obj->filename;
+					}
+					$doc_deleted = db_delete('file_managed')->condition('fid',trim($cfid),'=')->execute();
+					$new_path = $dest_dir.$docfilename;
+					unlink($new_path);
+				}
+			}
+			if($file_name){
+				if ($file = file_save_upload('edit_content_pdf', $validators, $dest_dir,$replace = FILE_EXISTS_RENAME)){
+					
+					$finfo =@finfo_open(FILEINFO_MIME_TYPE);
+					$mime = @finfo_file( $finfo, $file->uri);
+					finfo_close($finfo);
+					
+					if ($file && $mime == 'application/pdf' || $file && $mime == 'application/jpg'){
+						
+						$uri = trim($file->uri); 
+						$file->status = 1;
+						file_save($file);
+						
+						$fid = $file->fid;
+						$file_name = $file->filename;
+						
+						$query = db_update('l_cms_content');
+						$query->fields(array(
+							'content_title' => $ctitle,
+							'content_desc' => $contentdesc,
+							'meta_title' => $meta_title,
+							'meta_desc' => $meta_content_desc,
+							'content_typ' =>$content_typ,
+							'fid' => $fid,
+							'is_new' =>$is_new,
+							'is_active'=>$is_active,
+							'ord' =>$order_no,
+							'link_title' =>$ltitle,
+						));
+						$query->condition('content_id',$contentid);
+						$query->execute(); 
+						$message = 'Update content Successfully.';
+					}
+				}
+			}
+		}
+	}catch (Exception $e){
+    	$txn->rollback();
+		watchdog_exception('type', $e);
+		$message =  ' content Not Update';
+	}
+	drupal_set_message(t($message));
+}
+ 
+
+
+function add_cmscontent($form, &$form_state) {
+	
+drupal_add_library('system','ui.datepicker');
+drupal_add_js('jQuery(document).ready(function(){
+	jQuery("#show_date_id").datepicker({
+	dateFormat: "dd-mm-yy",
+	minDate: new Date(1999, 01, 01),
+	// maxDate: 0,
+	changeMonth: true,
+	changeYear: true,
+	});
+});', 'inline');	
+	global $base_root, $base_path, $user;
+
+	$form['circularaddrfields']['cont_head'] = array(
+		'#type' 	=> 'markup',
+		'#markup' => '<div class="row">
+						<div class="col-md-12">
+							<div class="box box-primary">
+								<div class="box-body">',
+	);
+	
+	$options_list = array(
+		'actrule' =>t('ACTS & RULES'),
+		'eodb' =>t('EODB'),
+		'fawloi'=>t('FAWLOI'),
+		'fawloi_sc_com'=>t('Screening Committee Decision'),
+		'tender' =>t('Tender'),
+		'whatisnew' =>t('What is new'),
+		'notification' =>t('Notification'),
+		'publication' =>t('PUBLICATION'),
+		'otheract' =>t('Other Activites'),
+		'wbuswwb' => t('WBUSWW Board'),
+		'wbbocwwb' => t('WBB & OCWW Board'),
+		'wbsssb' => t('WBSSS Board')
+	);
+	
+	$form['l_content_type_option'] = array(	         
+		'#type' 	=> 'value',
+		'#value' 	=> $options_list
+	);
+
+	$form['circularaddrfields']['content_typ'] = array(
+		'#type' => 'select',
+		'#title' => 'Content Type',
+		'#options' => $form['l_content_type_option']['#value'],
+		'#prefix'				=> '<div class="form-custom col-md-4"><label class="input">',
+		'#suffix'				=>  '</label></div>',
+		'#required' => TRUE,
+		'#attributes' 		=> array('class' => array('form-control')),	
+	); 
+
+
+	$form['circularaddrfields']['ltitle'] = array(
+		'#title'=>'Link title',
+		'#prefix'	=> '<div class="form-custom col-md-4"><label class="input">',
+		'#suffix'	=>  '</label></div>',
+		'#type' => 'textfield',
+		'#required' => TRUE,
+		'#element_validate' => array('lcontent_textfield_validate'),
+		'#attributes' 		=> array('class' => array('form-control')),	
+	);
+
+	$form['circularaddrfields']['ctitle'] = array(
+		'#title'=>'Content title',
+		'#prefix'				=> '<div class="form-custom col-md-4"><label class="input">',
+		'#suffix'				=>  '</label></div>',
+		'#type' => 'textfield',
+		'#required' => TRUE,
+		'#element_validate' => array('lcontent_textfield_validate'),
+		'#attributes' 		=> array('class' => array('form-control')),	
+	);
+
+	$form['circularaddrfields']['add_content_desc'] = array(
+		'#title'=>'Content Description',
+		'#cols' => 20, 
+		'#rows' => 2,
+		'#type' => 'text_format',
+		
+		'#format'=>'full_html',
+		'#base_type' => 'textarea',
+		
+		'#attributes' 		=> array('class' => array('form-control')),	
+		'#prefix'				=> '<div class="form-custom col-md-12"><label class="input">',
+		'#suffix'				=>  '</label></div>',
+	
+	);
+
+	$form['circularaddrfields']['meta_title'] = array(
+		'#title'=>'Meta keyword',
+		'#type' => 'textfield',
+		'#element_validate' => array('lcontent_textfield_validate'),
+		'#prefix'				=> '<div class="form-custom col-md-4"><label class="input">',
+		'#suffix'				=>  '</label></div>',
+	);
+	
+	$form['circularaddrfields']['show_date'] = array(
+		'#title'=>'Notification Date',
+		'#type' => 'textfield',
+		'#required' => TRUE,
+		'#prefix'=> '<div class="form-custom col-md-4"><label class="input">',
+		'#suffix'=>  '</label></div>',
+		'#attributes'=> array('id' => 'show_date_id','class' => array('form-control'),'readonly' => 'readonly'),
+	);
+	
+	$form['circularaddrfields']['order_no'] = array(
+		'#title'=>'Order No',
+		'#size'=>t('7'),
+		'#type' => 'textfield',
+		'#maxlength' => 4,
+		'#element_validate' => array('ORDER_MANDATORY_NUMERIC_CHECKING_validate'),
+		'#attributes' => array('title' => 'order no  should be numeric '),
+		'#attributes' 		=> array('class' => array('form-control')),	
+		'#prefix'				=> '<div class="form-custom col-md-4"><label class="input">',
+		'#suffix'				=>  '</label></div>',
+	);
+	
+	
+	$form['circularaddrfields']['meta_content_desc'] = array(
+		'#title'=>'Meta Description',
+		'#cols' => 20, 
+		'#rows' => 2,
+		'#type' => 'textarea',
+		'#element_validate' => array('lcontent_textfield_validate'),
+		'#prefix'				=> '<div class="form-custom col-md-12"><label class="input">',
+		'#suffix'				=>  '</label></div>',
+		'#attributes' 		=> array('class' => array('form-control')),	
+	);	 
+
+
+	
+
+	$form['circularaddrfields']['is_new'] = array(
+		'#type' => 'checkbox',
+		'#title' => 'Is New',
+		'#prefix'=> '<div class="form-custom col-md-3 cus-checkbox-pad"><label class="input">',
+		'#suffix'=>  '</label></div>',
+		'#attributes'=> array('class' => array('form-control')),	
+	); 
+
+
+	$form['circularaddrfields']['add_content_pdf'] = array(
+		'#type' => 'file',
+		'#title' => t(' Upload an Content  file (JPG,PDF only)'),
+		'#attributes' 		=> array('class' => array('')),	
+		'#prefix'			=> '<br class="clear"><div class="col-md-12">',
+		'#suffix'			=>  '</div>',
+	);
+	
+	$form['circularaddrfields']['submit'] = array(
+		'#type' 	=> 'submit',
+		'#value' 	=> 'Save',			
+		'#attributes' => array('class' => array('btn btn-primary pull-left')),
+		'#prefix'	  => '<div class="col-md-6">',
+		'#suffix'	  =>  '</div></div></div></div>',	 
+	); 
+	
+	return  $form;
+}
+ 
+function ORDER_MANDATORY_NUMERIC_CHECKING_validate($element,&$form_state){
+	$value=trim($element['#value']);
+	if(trim($element['#value'])){
+		if(!is_numeric(trim($element['#value']))){
+			form_error($element, t($element['#title'].' SHOULD BE NUMERIC'));
+		}elseif(!preg_match('/^[0-9]+$/', $value)) {
+			form_error($element, t($element['#title'].' SHOULD BE INTEGER'));
+		}
+	}
+}
+
+function add_cmscontent_submit($form_id , $form_states) {
+	global $base_root, $base_path,$full_base;
+	$val=$form_states['values'];
+	
+	if (isset($val['submit'])){
+	
+		$ctitle = check_plain($val['ctitle']);
+		$add_content_desc = trim(check_plain(decode_entities($form_states['values']['add_content_desc']['value'])));
+		$meta_title = check_plain($val['meta_title']);
+		$meta_content_desc = check_plain($val['meta_content_desc']);
+		$content_typ = trim($val['content_typ']);
+		$order_no = (trim($val['order_no']))?trim($val['order_no']):0;
+		$is_new = trim($val['is_new']);
+		$show_date = date('Y-m-d',strtotime($val['show_date']));
+		
+		
+		if (isset($is_new)){
+			$is_new = 'Y';	
+		}else{
+			$is_new = 'N';	
+		}
+		$ltitle = check_plain(trim($val['ltitle']));
+		$message = "";
+
+		$txn = db_transaction();
+		$dest_dir= file_default_scheme() . '://contentpdf/';
+		$validators = array('file_validate_extensions' => array('jpg  pdf'));
+		
+		$file_name1 = str_replace(' ','_',trim($_FILES['files']['name']['add_content_pdf']));
+		$file_name = preg_replace("/[^\w\-\.]/",'',$file_name1);
+	   
+	   	try { 
+			if($file_name){   
+				$_FILES['files']['name']['add_content_pdf'] = time().$file_name; 
+				if ($file = file_save_upload('add_content_pdf', $validators, $dest_dir,$replace = FILE_EXISTS_RENAME)){
+					$finfo =@finfo_open(FILEINFO_MIME_TYPE);
+					$mime = @finfo_file( $finfo, $file->uri); 	
+					finfo_close($finfo);
+					if ($file && $mime == 'application/pdf' || $file && $mime == 'application/jpg') {	
+						$uri =trim($file->uri); 
+						$file->status = 1;
+						file_save($file);
+						$fid=$file->fid;
+						$file_name=$file->filename;
+					}
+				}
+			}
+			
+			$result_contentid=db_query("select  max(content_id) content_id from l_cms_content");
+			$result=$result_contentid->fetchAssoc();
+			$ownermax = $result['content_id']; 
+		
+			if($result_contentid->rowCount() == 0){ 
+				$count_id=1;
+			}else{
+				$count_id = $ownermax+1;
+			}
+			if(!$fid)
+				$fid = 0;
+			
+			$fieldsE = array( 
+				'content_title' => $ctitle,
+				'content_desc' => $add_content_desc,
+				'meta_title' => $meta_title,
+				'meta_desc' => $meta_content_desc,
+				'content_dt' => date("Y-m-d"),
+				'fid' => $fid,
+				'content_id' => $count_id,
+				'content_typ' => $content_typ,
+				'is_active' => 'Y',
+				'ord' => $order_no,
+				'link_title' => $ltitle,
+				'is_new'=> $is_new,
+				'show_date' => $show_date
+			);
+			db_insert('l_cms_content')->fields($fieldsE)->execute();
+			$message = 'Content Add Successfully';	
+		
+		}catch (Exception $e) {
+			$txn->rollback();
+			watchdog_exception('type', $e);
+			$message = 'content Not Added ';
+		}
+			
+		$full_base = $base_root . $base_path.'cmscontent';		
+		drupal_set_message(t($message));
+		drupal_goto($full_base);
+			
+	}
+}
+ 
+function lcontent_textfield_validate($element, &$form_state) {
+   if(trim($element['#value']))
+   {
+        $val="a".trim($element['#value']);
+		if(stripos($val,"~") >0  || stripos($val,"!") >0 || stripos($val,"@")>0 || stripos($val,"<")>0 || stripos($val,">")>0 || stripos($val,"'")>0 || stripos($val,"$")>0 || stripos($val,"#")>0 || stripos($val,"%")>0 || stripos($val,"^")>0  || stripos($val,"*")>0){
+		
+		
+       form_error($element, t($element['#title'].'  contain illegal character .'));
+	       
+           
+       
+		    
+	   }
+	
+   }
+  
+}
+
+
+function addminimumwages($form, &$form_state, $id = '') {
+	 global $base_root, $base_path, $user;	 
+	 $id = encryption_decryption_fun('decrypt',$id);
+	 if ($id){
+		$min_wages_documents = '';
+		
+	 	$cms_content_query = db_select('l_min_wages_documents', 't');
+        $cms_content_query->fields('t', array('node_master_id','year','month','file','id','employment_id'));
+		$cms_content_query->condition('t.id', $id,'=');
+		$cms_content_query_result = $cms_content_query->execute();
+		$result = $cms_content_query_result->fetchAssoc(); 
+		
+		$min_wage_info = db_select('l_min_wages_schedule_employment_master','l');
+		$min_wage_info->fields('l', array('table_category'));
+		$min_wage_info->condition('l.id', $result['employment_id']);
+		$masterData = $min_wage_info->execute()->fetchAssoc();
+		
+		
+		if(!empty($result['min_wages_documents'])){
+			$min_wages_documents = $result['min_wages_documents'];
+		}
+		
+		$pdf_link = $GLOBALS['base_url'].'/sites/default/files/upload/min_wages/'.strtolower($result['month']).'-'.$result['year'].'/'.$result['file'];
+		$pdf_image = $GLOBALS['base_url'].'/sites/all/modules/cmscontent/images/pdf.png';
+	}
+	
+	$form['#attributes'] = array('enctype' => 'multipart/form-data');
+	
+	$form['circularaddrfields']['cont_head'] = array(
+          '#type' 	=> 'markup',
+		  '#markup' => '<div class="box box-primary"><div class="box-body">'          
+          );
+	
+  	$form['circularaddrfields']['node_master_id'] = array(
+				'#type' 		=> 'select',
+				'#title' 		=> 'Scheduled Employments'.$result['node_master_id'],
+				'#options' 		=> node_titile(),
+				'#prefix'		=> '<div class="row"><div class="form-custom col-md-6"><label class="input">',
+				'#suffix'		=>  '</label></div></div>',
+				'#required' 	=> TRUE,
+				'#default_value'=> !empty($result['node_master_id']) ? $result['node_master_id']: '',
+				'#attributes' 	=> array('disabled' => 'disabled', 'class' => array('form-control'))
+			); 
+	
+	 $form['circularaddrfields']['id'] = array(
+        		'#type' 	=> 'hidden',
+        		'#value'	=> (!empty($id))? $id:''
+				); 
+				
+	$form['circularaddrfields']['table_category'] = array(
+        		'#type' 	=> 'hidden',
+        		'#value'	=> (!empty($masterData['table_category']))? $masterData['table_category']:''
+				); 
+				
+	$records = array();
+	
+	//for($i = date('Y'); $i >= 2015; $i--){
+	for($i = date('Y', strtotime('+1 year')); $i >= 2015; $i--){
+		$records[$i] = t('@title', array('@title' => $i));
+	}
+	
+	$form['l_year'] = array(	         
+			'#type' 	=> 'value',
+            '#value' 	=> $records,				            
+			);
+	
+  	$form['circularaddrfields']['year'] = array(
+				'#type' 		=> 'select',
+				'#title' 		=> 'Year',
+				'#options' 		=> $form['l_year']['#value'],
+				'#prefix'		=> '<div class="row"><div class="form-custom col-md-4"><label class="input">',
+				'#suffix'		=>  '</label></div></div>',
+				'#required' 	=> TRUE,
+				'#default_value' =>(!empty($result['year']))?(int) $result['year']:'',
+				'#attributes' 	=> array('disabled' => 'disabled', 'class' => array('form-control'))
+			);  	 
+	 $form['l_month'] = array(	         
+				'#type' 	=> 'value',
+            	'#value' 	=> array('January' =>t('January'),'July' =>t('July'))
+        	 );
+	
+	if (!empty($id)){
+  		if (trim($result['month']) == 'January'){
+	  		$form['circularaddrfields']['month'] = array(
+					'#type' 		=> 'select',
+					'#title' 		=> 'Month',
+					'#options' 		=> $form['l_month']['#value'],
+					'#prefix'		=> '<div class="row"><div class="form-custom col-md-4"><label class="input">',
+					'#suffix'		=> '</label></div></div>',
+					'#required' 	=> TRUE,
+					'#default_value' =>'January',
+					'#attributes' 	=> array('disabled' => 'disabled', 'class' => array('form-control'))
+				);
+	  	}else{
+	  		$form['circularaddrfields']['month'] = array(
+					'#type' 		=> 'select',
+					'#title' 		=> 'Month',
+					'#options' 		=> $form['l_month']['#value'],
+					'#prefix'		=> '<div class="row"><div class="form-custom col-md-4"><label class="input">',
+					'#suffix'		=> '</label></div></div>',
+					'#required' 	=> TRUE,
+					'#default_value' =>'July',
+					'#attributes' 	=> array('disabled' => 'disabled', 'class' => array('form-control'))
+				);
+		}	
+	}else{	
+		$form['circularaddrfields']['month'] = array(
+					'#type' 		=> 'select',
+					'#title' 		=> 'Month',
+					'#options' 		=> $form['l_month']['#value'],
+					'#prefix'		=> '<div class="row"><div class="form-custom col-md-4"><label class="input">',
+					'#suffix'		=>  '</label></div></div>',
+					'#required' 	=> TRUE,					
+					'#attributes' 	=> array('disabled' => 'disabled', 'class' => array('form-control'))
+				);
+	}	
+	if (!empty($id)){
+		$form['circularaddrfields']['pdf'] = array(
+							 '#type' 		=> 'markup',
+							 '#markup'		=> l('<img src='.$pdf_image.' title="Click here to view file"/>', $pdf_link, array('html'=> TRUE, 'attributes' => array('target' => '_blank'))),
+							 '#prefix'		=> '<div class="row"><div class="col-md-1 pull-left"><br>',
+							 '#suffix'		=> '</div></div>',
+							 );	 
+	}
+		$form['circularaddrfields']['add_content_pdf'] = array(		
+							 '#type' 				=> 'managed_file',
+							 '#title' 				=> t('Select file(PDF only)'),
+							 '#upload_validators' 	=> array('file_validate_extensions' => array('pdf'), 'file_validate_size' => array(50*1024*1024)),
+							 '#required' 			=> TRUE,
+							 '#upload_location' 	=> 'public://upload/min_wages/'.strtolower($result['month']).'-'.$result['year'],
+							 // '#upload_location' 	=> 'public://upload/min_wages/january-2018/',
+							 '#process' 			=> array('import_my_file_element_process'),
+							 '#prefix'				=> '<div class="row"><div class="col-md-2">',
+							 '#suffix'				=> '</div></div>',		
+							 );
+							 
+		 
+	$form['circularaddrfields']['submit'] = array (
+					'#type' 		=> 'submit',
+					'#value' 		=> empty($id) ? 'Save' : 'Update',			
+					'#attributes' 	=> array('class' => array('btn btn-primary pull-left')),
+					'#prefix'	  	=> '<div class="row"><div class="col-md-4">',
+					'#suffix'	  	=> '</div></div></div></div>',	 
+					); 
+	  
+	return  $form;	 
+} 
+
+
+function addminimumwages_submit($form, &$form_states) {
+	global $user;
+		
+	$val = $form_states['values'];
+		
+	$arr = array();
+	
+	$content_pdf = file_load($val['add_content_pdf']);
+		
+	if( $content_pdf != "" ){
+		$arr = explode("/", $content_pdf->uri);
+		$content_pdf->status = FILE_STATUS_PERMANENT;
+		file_save($content_pdf);
+		$content_pdf_filename = $arr[5];
+	}	
+	
+	$dataArray = array(					
+				'year' 				=> $val['year'],
+				'month' 			=> $val['month'],
+				'node_master_id' 	=> $val['node_master_id'],
+				'file'				=> $content_pdf_filename,					
+				'modified_date'		=> time()
+			);
+	$query = db_update('l_min_wages_documents');
+	$query->fields($dataArray);
+	$query->condition('year', $val['year']);
+	$query->condition('month', $val['month']);
+	$query->condition('id', $val['id']);
+	$query->execute(); 
+	
+	$message = 'Update content Successfully.';
+	drupal_set_message(t($message));
+	drupal_goto('scheduled_list/'.$val['year'].'/'.$val['month'].'/'.$val['table_category']);													
+	
+}
+ 
+
+function node_titile(){
+	$records = array();
+	
+	$query = db_select('node', 'v');
+	$query->fields('v',array('title','nid'));
+	$query->condition('v.type', 'wages_contents', '=');
+	$query->orderby('v.title', 'asc');	
+	$result = $query->execute();
+	
+	while($record = $result->fetchAssoc()){
+		$records[$record['nid']] = t('@title', array(
+			'@title' => htmlspecialchars($record['title'], ENT_QUOTES),
+		));
+	}
+
+	return $records;
+}
+
+function node_titile_name($id){
+	$records=array();
+	$query = db_select('node', 'v');
+	$query->fields('v',array('title'));
+	$query->condition('nid',$id,'=');
+	$result = $query->execute();
+	$record = $result->fetchAssoc();
+
+	return $record['title'];
+
+	
+}
+
+
+function minimumwages_list(){
+	 global $base_root, $base_path, $user;
+	 // drupal_add_css(drupal_get_path('module', 'applicant_forms') . '/css/clra_applications.css');
+	
+     $header = array();
+  
+   
+    $header = array(          		
+		  		array('data'=> 'Sl. No.', 'width' => '10%'),
+				array('data'=> 'Year', 'width' => ''),
+          		array('data' => 'Month', 'width' => '25%'),
+				array('data' => 'Action', 'width' => '25%'),
+			);
+   
+    $i = 1;
+
+	$check_date = date('Y-m-d');
+
+	$year_arr = range('2015',date('Y',strtotime($check_date))); 
+	
+
+	if( ($check_date >= date('Y-12-01',strtotime($check_date))) && ($check_date <= date('Y-12-31',strtotime($check_date)))){
+		$year_arr[] .= date('Y', strtotime('+1 year',strtotime($check_date)));
+	}
+	
+	foreach(array_reverse($year_arr) as $y){
+		if($check_date <= date($y.'-06-01')){
+			$month_arr = array('January');
+		}else{
+			$month_arr = array(0=>'July',1=>'January');
+		}
+		foreach($month_arr as $m=>$month){
+			$aalink = $base_root.$base_path.'scheduled_list/'.$y.'/'.$month.'/1';
+			$link_k = l('<span class="fa fa-eye">&nbsp;View Scheduled Empolyment</span>', $aalink, array('html'=>TRUE)) ;	
+			
+			$rows[] = array(      				
+				$i++,
+				$y,
+				$month,
+				$link_k
+			);
+		}		
+	}
+
+
+/*
+    for($y = date('Y', strtotime('+1 year')), $m = date('Y'); $y >= 2015; $y--, $m--){		
+		$i++;
+		/*
+		//if($y != 2023){
+		$months = 'July';
+		$aalink = $base_root.$base_path.'scheduled_list/'.$y.'/'.$months.'/1';
+		$link_k = l('<span class="fa fa-eye">&nbsp;View Scheduled Empolyment</span>', $aalink, array('html'=>TRUE)) ;	
+		
+		$rows[] = array(      				
+						$i,
+						$y,
+						$months,
+						$link_k
+						);
+		//}
+		$i++;		
+		$months = 'January';
+		$aalink = $base_root.$base_path.'scheduled_list/'.$y.'/'.$months.'/1';
+		$link_k = l('<span class="fa fa-eye">&nbsp;View Scheduled Empolyment</span>', $aalink, array('html'=>TRUE)) ;	
+		$rows[] = array(      				
+						$i,
+						$y,
+						$months,
+						$link_k
+						);	
+						
+		*/
+		
+		/*
+		if(date('Y-06-01')<date('Y-m-d')){
+			$months = 'July';
+			$aalink = $base_root.$base_path.'scheduled_list/'.$m.'/'.$months.'/1';
+			$link_k = l('<span class="fa fa-eye">&nbsp;View Scheduled Empolyment</span>', $aalink, array('html'=>TRUE)) ;	
+			
+			$rows[] = array(      				
+				$i,
+				$m,
+				$months,
+				$link_k
+			);
+		}
+			$months = 'January';
+			$aalink = $base_root.$base_path.'scheduled_list/'.$m.'/'.$months.'/1';
+			$link_k = l('<span class="fa fa-eye">&nbsp;View Scheduled Empolyment</span>', $aalink, array('html'=>TRUE)) ;	
+			$rows[] = array(      				
+				$i,
+				$m,
+				$months,
+				$link_k
+			);
+		
+
+	}*/
+  
+   
+   
+   $variables = array(
+	  		'attributes' 		=> array('class' => array('table table-striped table-responsive admin-custom-table')),
+	  		'header' 			=> $header,
+	  		'rows'				=> $rows,
+			'empty' 			=> t("No data found!")
+    );
+	
+	$output = theme('datatable', $variables);
+	return '<div class="box box-primary"><div class="box-body">'.$output.'</div></div>';
+ }
+
+	 
+
+function scheduled_emp_list($year='', $month= '',$status=''){
+	/** Payal **/
+	global $base_root, $base_path, $user;
+	
+	$active = $activetable1 = $activetable2 = $activetable3 = '';
+	
+	if($status == '' ){
+		$active = 'active';
+	}else if($status == '1'){
+		$activetable1 = 'active';
+	}else if($status == '2'){
+		$activetable2 = 'active';
+	}else if($status == '3'){
+		$activetable3 = 'active';
+	}
+		
+	
+	if($status == '1'){
+		$calling_function = min_wages_employment_list($year,$month,$status);
+	}else if($status == '2'){
+		$calling_function = min_wages_employment_list($year,$month,$status);
+	}else if($status == '3'){
+		$calling_function = min_wages_employment_list($year,$month,$status);
+	}else{
+		$calling_function = min_wages_employment_list($year,$month);
+	}
+	if($year!='' && $month!=''){
+		
+		$output .='<div class="nav-tabs-custom">
+							<ul class="nav nav-tabs">
+								<li class="'.$active.'">'.l('All', 'scheduled_list/'.$year.'/'.$month).'</li>
+								<li class="'.$activetable1.'">'.l('TABLE 1', 'scheduled_list/'.$year.'/'.$month.'/1').'</li>
+								<li class="'.$activetable2.'">'.l('TABLE 2', 'scheduled_list/'.$year.'/'.$month.'/2').'</li>
+								<li class="'.$activetable3.'">'.l('TABLE 3', 'scheduled_list/'.$year.'/'.$month.'/3').'</li>												
+							</ul>
+							<div class="tab-content">
+								<div class="tab-pane active" id="fa-icons">
+									<section id="new"><div class="feedback-scroll">'.$calling_function.'</div></section></div>';
+
+	}else{
+		drupal_set_message('Invalid Response',error);
+	}
+	
+	
+	return $output;  
+	
+	/** Payal **/
+	
+	/* global $base_root, $base_path, $user;
+	 		
+   	// $rows = array();
+   	$header = array();
+  
+	$query = db_select('node', 'v');
+	$query->leftJoin('l_min_wages_documents', 't', 't.node_master_id = v.nid');
+	$query->fields('v',array('title'));
+	$query->fields('t',array('id', 'file'));
+	
+	$query->condition('v.type', 'wages_contents', '=');	
+	$query->condition('t.year', $year, '=');
+	$query->condition('t.month', $month, '=');
+	
+	$query->orderby('v.title', 'asc');	
+	$result = $query->execute();
+  
+   	$header = array(
+          		array('data'=> 'Sl.No.', 'width' => '10%'),
+		  		array('data'=> 'Scheduled Employments'),
+				//array('data' => 'Generate', 'width' => '10%'),
+          		array('data' => 'Uploaded Document', 'width' => '10%'),
+				array('data' => 'Action', 'width' => '10%'),
+					
+        );
+   $i=0;
+   foreach($result as $data){
+		$i++;
+		global $base_root, $base_path;		
+		
+		$foldername = strtolower($month).'-'.$year;		
+			
+		$download_file_path = '/sites/default/files/upload/min_wages/'.$foldername.'/'.trim($data->file);		
+		
+		if(file_exists($_SERVER['DOCUMENT_ROOT'].$download_file_path)){
+								
+			$bb = $GLOBALS['base_url'].'/sites/default/files/upload/min_wages/'.$foldername.'/'.$data->file;
+			
+	    	$pdf_image=$GLOBALS['base_url'].'/sites/all/modules/cmscontent/images/pdf.png';
+			
+			$link_s =l("<img src='$pdf_image'/>", $bb, array('html'=>TRUE,'attributes' => array('target'=> '_blank')));
+			
+			$link= $GLOBALS['base_url'].'/minimumwages/editminimumwages/'.encryption_decryption_fun('encrypt', $data->id);
+			
+			$action=l(t('<span class="badge bg-blue"><i class="fa fa-edit"></i> Edit</span>'), $link , array('html' => TRUE));
+			
+			
+		}else{		
+			
+			$link_s = 'N/A';			
+			
+			$action = l(t('<span class="badge bg-blue"><i class="fa fa-edit"></i> Edit</span>'), 'minimumwages/addminimumwages/'.encryption_decryption_fun('encrypt', $data->id), array('html' => TRUE));			
+		}*/
+		//$gLink = $GLOBALS['base_url'].'/minimum-wage-pdf-dev/'.encryption_decryption_fun('encrypt', $data->id);
+		//$generateLink = l(t('<span class="badge bg-blue"><i class="fa fa-edit"></i> GenerateTest</span>'), $gLink , array('html' => TRUE));
+	  
+				
+		/*$rows[] = array(
+      				$i,
+					$data->title,
+					$link_s,
+					$action,
+					
+		);   
+   }
+   
+   
+   $variables = array(
+	  		'attributes' 		=> array('class' => array('table table-striped table-responsive admin-custom-table')),
+	  		'header' 			=> $header,
+	  		'rows'				=> $rows,
+			'empty' 			=> t("No data found!")
+    );
+	
+	$output = theme('datatable', $variables);
+	
+	return '<div class="box box-primary"><div class="box-body">'.$output.'</div></div>';*/
+}
+
+function min_wages_employment_list($year='',$month='',$table_category=''){
+	
+	global $base_root, $base_path, $user;
+   	//$current_month = date('n',time());
+	
+	if($table_category==''){
+		$tableCategory = 0;
+	}else{
+		$tableCategory = $table_category;
+	}
+	
+	
+	if($month == 'July'){
+		$session = 2;
+	}elseif($month == 'January'){
+		$session = 1;
+	}
+	
+   	$header = array();
+	
+	$min_wage_info = db_select('l_min_wages_schedule_employment_master','l');
+	$min_wage_info->fields('l', array('id','node_type_name'));
+	$min_wage_info->condition('l.is_active', 1);
+	if($table_category != ''  && $table_category != '1'){
+		$min_wage_info->condition('l.table_category', $tableCategory);
+	}elseif($table_category != ''  && $table_category == '1' ){
+		$min_wage_info->condition('l.table_category', array(1,4), 'IN');
+	}
+	$min_wage_info->orderBy('l.node_type_name', 'ASC');
+	$result = $min_wage_info->execute();
+	
+	// print_r($result); die;
+  
+ 
+   	$header = array(
+          		array('data'=> 'Sl.No.', 'width' => '10%'),
+		  		array('data'=> 'Scheduled Employments'),
+				array('data' => 'Generate', 'width' => '10%'),
+          		array('data' => 'Uploaded Document', 'width' => '10%'),
+				array('data' => 'Action', 'width' => '10%'),
+					
+        );
+   $i=0;
+   foreach($result as $data){
+		$i++;
+		global $base_root, $base_path;
+		
+		$min_wage_info1 = db_select('l_min_wages_documents','ma');
+		$min_wage_info1->fields('ma', array('file', 'status','id'));
+		$min_wage_info1->condition('ma.year', $year);
+		$min_wage_info1->condition('ma.session', $session);
+		$min_wage_info1->condition('ma.employment_id', $data->id);		
+		$doc_result = $min_wage_info1->execute()->fetchObject();
+		
+		
+		if($data->id!=''){
+			$employment_id= $data->id;
+		}else{
+			$employment_id= 0;
+		}
+		$foldername = strtolower($month).'-'.$year;	
+		
+		if($doc_result->id !='' && $doc_result->id !='0'){	
+		
+			if($doc_result->file!='' && !empty($doc_result->file)){		
+				$download_file_path = '/sites/default/files/upload/min_wages/'.$foldername.'/'.trim($doc_result->file);		
+		
+				if(file_exists($_SERVER['DOCUMENT_ROOT'].$download_file_path)){								
+					$bb = $GLOBALS['base_url'].'/sites/default/files/upload/min_wages/'.$foldername.'/'.$doc_result->file;				
+					$pdf_image=$GLOBALS['base_url'].'/sites/all/modules/cmscontent/images/pdf.png';				
+					$link_s =l("<img src='$pdf_image'/>", $bb, array('html'=>TRUE,'attributes' => array('target'=> '_blank')));
+								
+					$link= $GLOBALS['base_url'].'/minimumwages/editminimumwages/'.encryption_decryption_fun('encrypt',$doc_result->id);				
+					$action=l(t('<span class="badge bg-blue"><i class="fa fa-edit"></i> Edit PDF</span>'), $link , array('html' => TRUE));		
+				}/*else{			
+					$link_s = 'N/A';				
+					$action = l(t('<span class="badge bg-blue"><i class="fa fa-edit"></i> Add </span>'), 'minimumwages/addminimumwages/'.$data->id.'/'.$year.'/'.$session, array('html' => TRUE));			
+				}*/
+   			}else{
+				$link_s = 'N/A';				
+				$action = l(t('<span class="badge bg-blue"><i class="fa fa-edit"></i> Upload PDF</span>'), 'minimumwages/addminimumwages/'.encryption_decryption_fun('encrypt',$doc_result->id), array('html' => TRUE));			
+			}
+		}else{
+			$link_s = 'N/A';
+			$action = 'Not Generated';
+		}
+		
+		if($doc_result->status == 'A'){
+			$generate = 'Generated';
+		}else{		
+			$generate = l("<i class='fa fa-download' aria-hidden='true' title='Generate & Download'></i>", 'generate-minimum-wage-pdf/'.trim($employment_id).'/'.trim($year).'/'.trim($session), array('html' => TRUE,'attributes'=>array('target'=>'_blank')));
+		}
+				
+		$rows[] = array(
+      				$i,
+					$data->node_type_name,
+					$generate,
+					$link_s,
+					$action,
+					
+		);   
+   }
+   
+   
+   $variables = array(
+	  		'attributes' 		=> array('class' => array('table table-striped table-responsive admin-custom-table')),
+	  		'header' 			=> $header,
+	  		'rows'				=> $rows,
+			'empty' 			=> t("No data found!")
+    );
+	
+	$output = theme('datatable', $variables);
+	
+	return '<div class="box box-primary"><div class="box-body">'.$output.'</div></div>';
+
+}
+
+function add_edit_contact_number_save(){
+	$sub_div_code = $_POST['sub_div_code'];
+	$contact_number = $_POST['contact_number'];
+	$office_contact_details = db_select('l_rlo_additional_info','l')->fields('l',array('office_mobile_number'))->condition('sub_div_code',encryption_decryption_fun('decrypt', $sub_div_code), '=')->execute(); 
+	
+	$fieldsArray = array( 													
+					'office_mobile_number' => $contact_number,
+					);
+		
+	db_update('l_rlo_additional_info')->fields($fieldsArray)->condition('sub_div_code',encryption_decryption_fun('decrypt', $sub_div_code), '=')->execute();
+		if($office_contact_details->rowCount() > 0){
+			echo 'Contact Number Updated'; 
+		}else{
+			echo 'Contact Number Inserted'; 
+		}
+}
+function add_edit_email_save(){
+	$sub_div_code = $_POST['sub_div_code'];
+	$office_email_address = $_POST['email'];
+	$office_contact_details = db_select('l_rlo_additional_info','l')->fields('l',array('office_email_address'))->condition('sub_div_code',encryption_decryption_fun('decrypt', $sub_div_code), '=')->execute(); 
+	
+	$fieldsArray = array( 													
+					'office_email_address' => $office_email_address,
+					);
+		
+	db_update('l_rlo_additional_info')->fields($fieldsArray)->condition('sub_div_code',encryption_decryption_fun('decrypt', $sub_div_code), '=')->execute();
+		if($office_contact_details->rowCount() > 0){
+			echo 'Email Id Updated'; exit;
+		}else{
+			echo 'Email Id Inserted'; exit;
+		}
+
+}
+?>

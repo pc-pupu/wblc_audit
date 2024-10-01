@@ -1,0 +1,463 @@
+<?php
+function amendment_license_renewal_init(){
+	
+}
+
+function amendment_license_renewal_menu(){
+		
+	$items 	= array();
+											   
+
+	$items['amendment_license_renewal/check_for_amendment/%']	= array(
+			'title'				=> 'Application for Ammendment of License under the Contract Labour (R&A) Act, 1970',
+			'page callback'		=>	'drupal_get_form',
+			'page arguments'	=>	array('check_amendment',2),
+			'file' 				=> 	'includes/check-amendment.inc',
+			'access arguments' 	=> 	array('apply_license'),
+			
+		);
+		
+	$items['amendment_license_renewal/ammendment-contractor-information/%/%/%']	= array(
+			'title'				=> 'Application for Ammendment of License under the Contract Labour (R&A) Act, 1970',
+			'page callback'		=>	'drupal_get_form',
+			'page arguments'	=>	array('ammendment_contractor_information',2,3,4),
+			'file' 				=> 	'includes/ammendment_contractor_information.inc',
+			'access arguments' 	=> 	array('apply_license'),
+			
+		);
+		
+	$items['amendment_license_renewal/ammendment-particular-info/%/%/%']	= array(
+			'title'				=> 'Application for Ammendment of License under the Contract Labour (R&A) Act, 1970',
+			'page callback'		=>	'drupal_get_form',
+			'page arguments'	=>	array('ammendment_particular_info',2,3,4),
+			'file' 				=> 	'includes/ammendment_particular_info.inc',
+			'access arguments' 	=> 	array('apply_license'),
+			
+		);	
+	// $items['amendment_license_renewal/labour-worksite-info/%/%/%']	= array(
+	// 		'title'				=> 'Application for Ammendment of License under the Contract Labour (R&A) Act, 1970',
+	// 		'page callback'		=>	'drupal_get_form',
+	// 		'page arguments'	=>	array('labour_worksite_info',2,3,4),
+	// 		'file' 				=> 	'includes/labour_worksite_info.inc',
+	// 		'access arguments' 	=> 	array('apply_license'),
+			
+	// 	);
+	$items['amendment_license_renewal/labour-worksite-info/%/%/%']	= array(
+			'title'				=> 'Application for Ammendment of License under the Contract Labour (R&A) Act, 1970',
+			'page callback'		=>	'drupal_get_form',
+			'page arguments'	=>	array('labour_worksite_info_dev',2,3,4),
+			'file' 				=> 	'includes/labour_worksite_info.inc',
+			'access arguments' 	=> 	array('apply_license'),
+			
+		);	
+		
+		
+	$items['amendment_license_renewal/apply_amendment/%/%/%']	= array(
+			'title'				=> 'Application for Ammendment of License under the Contract Labour (R&A) Act, 1970',
+			
+			'page callback'		=>	'drupal_get_form',
+			'page arguments'	=>	array('apply_amendment',2,3,4),
+			'file' 				=> 	'includes/apply-amendment.inc',
+			'access arguments' 	=> 	array('apply_license'),
+			
+	);
+	$items['amendment_license_renewal/check_no_labour']		= array(
+			'page callback' => 'checkLabourNumber',
+			'access arguments' => array('apply_license'),
+			
+		);
+$items['amendment_license_renewal/amendment-perview/%/%']	= array(
+			'title' 			=> 	'APPLICATION FOR AMENDMENT OF LICENSE UNDER CONTRACT LABOUR (R&A) ACT,1970',
+			'page callback'		=>	'drupal_get_form',
+			'page arguments'	=>	array('amendment_preview',2,3),
+			'file' 				=> 	'includes/amendment_preview.inc',
+			'access arguments' 	=> 	array('apply_license'),
+			
+	);
+$items['amendment_license_renewal/create_formiv_vii/%/%/%']	= array(
+			'title' 			=> 	'Upload Form IV or VII ',
+			'page callback'		=>	'create_formiv_vii',
+			'page arguments'	=>	array(2,3),
+			'file' 				=>  'includes/create_formiv_vii.inc',
+			'access arguments' 	=> 	array('apply_license'),
+			
+	);
+$items['amendment_license_renewal/upload_formiv_vii/%/%']	= array(
+			'title' 			=> 	'APPLICATION FOR AMENDMENT OF LICENSE UNDER CONTRACT LABOUR (R&A) ACT,1970',
+			'page callback'		=>	'drupal_get_form',
+			'page arguments'	=>	array('upload_signed_form',2,3),
+			'file' 				=>  'includes/upload_signed_form.inc',
+			'access arguments' 	=> 	array('apply_license'),
+			
+	);
+$items['amendment_license_renewal/view_pe_details/%/%']	= array(
+			'title' 			=> 	'Details of the principal employer',
+			'page callback'		=>	'pe_regmaster_details',
+			'page arguments'	=>	array(2,3),
+			'file' 				=>  'includes/apply-amendment.inc',
+			'access arguments' 	=> 	array('access content'),
+			
+	);
+	
+	$items['amendment_license_renewal/security_fees']	= array(
+			
+			'page callback'		=>	'security_calculation',
+			
+			'access arguments' 	=> 	array('apply_license'),
+			
+	);
+	
+$items['amendment_license_renewal/create_formiv_vii_log/%/%/%/%']	= array(
+			'title' 			=> 	'Upload Form IV or VII ',
+			'page callback'		=>	'create_formiv_vii_log',
+			'page arguments'	=>	array(2,3,4),
+			'file' 				=>  'includes/create_formiv_vii_log.inc',
+			'access arguments' 	=> 	array('apply_license'),
+			
+	);
+	
+	return $items;
+}
+
+function checkLabourNumber(){
+	$serial_no							=  encryption_decryption_fun('decrypt', $_POST['serialno_id']);
+	$labour_no  						=  $_POST['nolabour']; 
+	$flag								=  encryption_decryption_fun('decrypt',$_POST['application_flag_id']);
+	$currecnt_deposit_fees				=  encryption_decryption_fun('decrypt',$_POST['currecnt_deposit_fees']);
+	$max_no_of_labours_license_renewal	=  encryption_decryption_fun('decrypt',$_POST['max_no_of_labours_license_renewal_id']);
+	$record	   							=  contractor_regmaster_details($serial_no);
+	$max_labour_pe						=  $record['contractor_max_no_of_labours_on_any_day'];
+	$max_labour_previous				=	encryption_decryption_fun('decrypt',$_POST['max_labour_previous']);
+	$ammendent_fees						=   applicable_ammendment_fees_calculation($labour_no);
+	$co_oparative_yes					=	$_POST['co_oparative_yes'];
+	$due_security_fees					=   $_POST['due_security_fees'];
+
+	
+	if($co_oparative_yes == 'true')
+		$co_oparative = 1;
+	if($co_oparative_yes == 'false')
+		$co_oparative = 0;
+   
+     $previous_deposit_fees 		 =   encryption_decryption_fun('decrypt',$_POST['previous_deposit_fees']);
+ 
+	$ammendent_security_fees	 	=   applicable_ammendment_security_fees_calculation($labour_no,$co_oparative);
+	
+	if($ammendent_security_fees>$previous_deposit_fees){
+		$paymantable_sucurity_ammenedent_fees = $ammendent_security_fees-$previous_deposit_fees;
+		if(!empty($due_security_fees) || $due_security_fees!=0){
+			
+			$paymantable_sucurity_ammenedent_fees 		= $paymantable_sucurity_ammenedent_fees+$due_security_fees;
+			$deposited_security_fees					= $ammendent_security_fees;
+		}else{
+			$deposited_security_fees					= $ammendent_security_fees;
+		}
+	}if($ammendent_security_fees<$previous_deposit_fees){
+		$paymantable_sucurity_ammenedent_fees = 0.00;
+		if(!empty($due_security_fees) || $due_security_fees!=0){
+			
+			$paymantable_sucurity_ammenedent_fees 		= $due_security_fees;
+			$deposited_security_fees					= $previous_deposit_fees;
+		}else{
+			
+			$deposited_security_fees					= $previous_deposit_fees;
+		}
+	}if($ammendent_security_fees==$previous_deposit_fees){
+		$paymantable_sucurity_ammenedent_fees = 0.00;
+		if(!empty($due_security_fees) || $due_security_fees!=0){
+			
+			$paymantable_sucurity_ammenedent_fees 		= $due_security_fees;
+			$deposited_security_fees					= $previous_deposit_fees;
+		}else{
+			
+			$deposited_security_fees					= $previous_deposit_fees;
+		}
+	}
+	
+	
+	
+	
+	if($max_labour_pe>$labour_no){
+		
+		if($max_no_of_labours_license_renewal > $labour_no){ 
+			
+			if($max_labour_previous > 400){
+				$payble 				= 0.00;
+				$deposit_fees_value		= $currecnt_deposit_fees;
+				$ammendent_fees 		= $ammendent_fees;
+		
+			}
+			if($max_labour_previous <=400){
+				if($currecnt_deposit_fees>$ammendent_fees){
+					$payble 				= 0.00;
+					$deposit_fees_value		= $currecnt_deposit_fees;
+					$ammendent_fees 		= $ammendent_fees;
+				}if($currecnt_deposit_fees<$ammendent_fees){
+			  		$payble 					= $ammendent_fees-$currecnt_deposit_fees;
+			  		$deposit_fees_value			= $ammendent_fees;
+				    $ammendent_fees 			= $ammendent_fees;
+				}if($currecnt_deposit_fees==$ammendent_fees){
+			  		$payble 					= 0.00;
+			  		$deposit_fees_value			= $ammendent_fees;
+				    $ammendent_fees 			= $ammendent_fees;
+				}
+			}
+		
+		
+			$output =  'Your are eligible for increasing contract labour to :'.$labour_no.'.Since maximum number of labour to be engaged by you as specified by your Principal Employer is '.$max_labour_pe;
+		
+		}
+		
+		if($max_no_of_labours_license_renewal < $labour_no){ 
+					$payble 								= NULL;
+			  		$deposit_fees_value						= NULL;
+				    $ammendent_fees 						= NULL;
+					$paymantable_sucurity_ammenedent_fees 	= NULL;
+			  		$deposited_security_fees				= NULL;
+				    $ammendent_security_fees 				= NULL;
+		
+			$output =  'Please contact your Principal Employer';
+				
+		}
+		if($max_no_of_labours_license_renewal==$labour_no){ 
+			
+		
+			if($max_labour_previous > 400){
+					$payble 				= 0.00;
+					$deposit_fees_value		= $currecnt_deposit_fees;
+					$ammendent_fees 		= $ammendent_fees;
+			
+				}if($max_labour_previous <=400){
+					if($currecnt_deposit_fees>$ammendent_fees){
+						$payble 				= 0.00;
+						$deposit_fees_value		= $currecnt_deposit_fees;
+						$ammendent_fees 		= $ammendent_fees;
+					}if($currecnt_deposit_fees<$ammendent_fees){
+						$payble 					= $ammendent_fees-$currecnt_deposit_fees;
+						$deposit_fees_value			= $ammendent_fees;
+						$ammendent_fees 			= $ammendent_fees;
+					}if($currecnt_deposit_fees==$ammendent_fees){
+						$payble 					= 0.00;
+						$deposit_fees_value			= $ammendent_fees;
+						$ammendent_fees 			= $ammendent_fees;
+					}
+				}
+			$output =  'Your request for increasing contract labour is declined since the number is specified by your Principal Employer is '.$max_labour_pe.'.Please contact your Principal Employer' ;	
+		}
+	}
+	if($max_labour_pe == $labour_no){ 
+		
+		if($max_labour_previous > 400){
+				$payble 				= 0.00;
+				$deposit_fees_value		= $currecnt_deposit_fees;
+				$ammendent_fees 		= $ammendent_fees;
+		
+			}if($max_labour_previous <=400){
+				if($currecnt_deposit_fees>$ammendent_fees){
+					$payble 				= 0.00;
+					$deposit_fees_value		= $currecnt_deposit_fees;
+					$ammendent_fees 		= $ammendent_fees;
+				}if($currecnt_deposit_fees<$ammendent_fees){
+			  		$payble 					= $ammendent_fees-$currecnt_deposit_fees;
+			  		$deposit_fees_value			= $ammendent_fees;
+				    $ammendent_fees 			= $ammendent_fees;
+				}if($currecnt_deposit_fees==$ammendent_fees){
+			  		$payble 					= 0.00;
+			  		$deposit_fees_value			= $ammendent_fees;
+				    $ammendent_fees 			= $ammendent_fees;
+				}
+			}
+		$output =  'Your request for increasing contract labour is:'.$labour_no.'.You have number of labour(s) is(are)'.$max_no_of_labours_license_renewal.'.Rest number of labour'.$rest_labour.'.Assigned labour by PE'.$max_labour_pe.'.You are eligible for increasing number of labour is'.$max_labour_pe;	
+		
+	
+	}
+	if($max_labour_pe<$labour_no){
+		
+			$payble 								= NULL;
+			$deposit_fees_value						= NULL;
+			$ammendent_fees 						= NULL;
+			$paymantable_sucurity_ammenedent_fees 	= NULL;
+			$deposited_security_fees				= NULL;
+			$ammendent_security_fees 				= NULL;
+			$output 					= 'Your request for increasing contract labour is declined since the number is specified by your Principal Employer is '.$max_labour_pe.'.Please contact your Principal Employer' ;	
+		
+	}
+
+	$arr = array('message' => $output, 'applicable_ammount' => $ammendent_fees ,'payble' =>$payble,'currecnt_deposit_fees' => $currecnt_deposit_fees,'deposit_fees_value' =>encryption_decryption_fun('encrypt',$deposit_fees_value),'paymantable_sucurity_ammenedent_fees'=>$paymantable_sucurity_ammenedent_fees,'deposited_security_fees' => encryption_decryption_fun('encrypt',$deposited_security_fees),'ammendent_security_fees'=>$ammendent_security_fees);	
+
+	return drupal_json_output($arr);
+
+	
+}
+function security_calculation (){
+	$serial_no						=  encryption_decryption_fun('decrypt', $_POST['serialno_id']);
+	$labour_no  					=  $_POST['nolabour']; 
+	$flag							=  encryption_decryption_fun('decrypt',$_POST['application_flag_id']);
+	$currecnt_deposit_fees			=  encryption_decryption_fun('decrypt',$_POST['currecnt_deposit_fees']);
+	$max_no_of_labours_license_renewal	=  encryption_decryption_fun('decrypt',$_POST['max_no_of_labours_license_renewal_id']);
+	$record	   						=  contractor_regmaster_details($serial_no);
+	$max_labour_pe					=  $record['contractor_max_no_of_labours_on_any_day'];
+	$max_labour_previous			=	encryption_decryption_fun('decrypt',$_POST['max_labour_previous']);
+	$ammendent_fees					=   applicable_ammendment_fees_calculation($labour_no);
+	$co_oparative_yes				=	$_POST['co_oparative_yes'];
+	$due_security_fees				=   $_POST['due_security_fees'];
+	if($co_oparative_yes == 'true')
+		$co_oparative = 1;
+	if($co_oparative_yes == 'false')
+		$co_oparative = 0;
+   
+     $previous_deposit_fees 		 =   encryption_decryption_fun('decrypt',$_POST['previous_deposit_fees']);
+ 
+	$ammendent_security_fees	 	=   applicable_ammendment_security_fees_calculation($labour_no,$co_oparative);
+	
+	if($ammendent_security_fees>$previous_deposit_fees){
+		$paymantable_sucurity_ammenedent_fees = $ammendent_security_fees-$previous_deposit_fees;
+		if(!empty($due_security_fees) || $due_security_fees!=0){
+			
+			$paymantable_sucurity_ammenedent_fees 		= $paymantable_sucurity_ammenedent_fees+$due_security_fees;
+			$deposited_security_fees					= $ammendent_security_fees;
+		}else{
+			$deposited_security_fees					= $ammendent_security_fees;
+		}
+	}if($ammendent_security_fees<$previous_deposit_fees){
+		$paymantable_sucurity_ammenedent_fees = 0.00;
+		if(!empty($due_security_fees) || $due_security_fees!=0){
+			
+			$paymantable_sucurity_ammenedent_fees 		= $due_security_fees;
+			$deposited_security_fees					= $previous_deposit_fees;
+		}else{
+			
+			$deposited_security_fees					= $previous_deposit_fees;
+		}
+	}if($ammendent_security_fees==$previous_deposit_fees){
+		$paymantable_sucurity_ammenedent_fees = 0.00;
+		if(!empty($due_security_fees) || $due_security_fees!=0){
+			
+			$paymantable_sucurity_ammenedent_fees 		= $due_security_fees;
+			$deposited_security_fees					= $previous_deposit_fees;
+		}else{
+			
+			$deposited_security_fees					= $previous_deposit_fees;
+		}
+	}
+	
+	
+	
+	
+
+	// $arr1 = array('paymantable_sucurity_ammenedent_fees'=>$paymantable_sucurity_ammenedent_fees,'deposited_security_fees' => $deposited_security_fees,'ammendent_security_fees'=>$ammendent_security_fees);	
+	//echo $arr1 = $paymantable_sucurity_ammenedent_fees.'||'.$deposited_security_fees.'||'.$ammendent_security_fees; die();
+	//ech//r$arr1;die();
+	//return drupal_json_output($arr1);die();
+
+	
+	
+}
+function fetch_last_flag($license_id){
+	
+	$last_flag 			= 	db_select('form_data_certificates_data', 'data');
+  	$last_flag			->	fields('data',array('is_flag','id'));
+  	$last_flag			->	condition('data.license_id',$license_id,'=');
+	$last_flag			->	condition('data.ammendment_status','I','=');
+	$last_flag			->	condition('data.is_flag','A','!=');
+	$last_flag			->	orderBy('data.id','DESC');
+	$last_flag			->	range(0,1);
+	
+	$fetch_last_flag 	=	$last_flag->execute()->fetchAssoc();
+   
+	if(!empty($fetch_last_flag)){
+		$fetch_last_flag = $fetch_last_flag['is_flag'];
+		//$fetch_last_flag = $fetch_last_flag['id'];
+		if($fetch_last_flag == 'R'){
+			$is_frm = 'Form-VII';
+		}if($fetch_last_flag == 'L'){
+			$is_frm = 'Form-IV';
+		}
+	}
+
+	
+return $is_frm;
+}
+		// by jyoti 23/02/2023
+function get_amd_license_id($renewallicenseammendment_id){
+
+	$query = db_query("SELECT license_id FROM l_amendment_of_contract_labour_license  where id ='".$renewallicenseammendment_id."'")->fetchField();	
+		if(empty($query) || $query == ''){
+			$license_id = db_query("SELECT license_id FROM l_amendment_of_contract_labour_license  where license_renewal_ammendment_id= '".$renewallicenseammendment_id."'")->fetchField();
+		}else{
+			$license_id = $query;
+		}
+		return $license_id; 
+}
+
+function check_ammendment_table_new($license_renewal_ammendment_id,$serial_no){ 
+	
+	$license_id = db_query("SELECT id FROM l_contractor_license_application  where serial_no_from_v ='".$serial_no."'")->fetchField();	
+	
+	$amendment_rows_check = db_select('l_amendment_of_contract_labour_license', 'amd')->fields('amd',array('id'))->condition('license_id',$license_id)->execute();
+
+	if($amendment_rows_check->rowCount() > 1){
+
+		$applicant_mailto  = 'wblc.nic@gmail.com';
+		$subject = 'Amendment Issue';
+		$msg = 'Multiple row for amendment for License Id -'.$license_id.' Form-V-No -'.$serial_no;
+		if($applicant_mailto){
+			send_mail_for_user_alert($applicant_mailto, $subject, $msg);
+		}
+		form_set_error('reference_no' ,t('Contractor have been suspended/deactivated or your work period has been end or your license has been expired '));
+
+	}else{
+		if($amendment_rows_check->rowCount() > 0){
+			
+			return $query	=	db_query('select  * from l_amendment_of_contract_labour_license where  license_id=:license_id', array(':license_id' =>$license_id))->fetchAssoc();
+
+		}else{
+			
+			$fetchTagTable  =  db_select('l_contractor_activity_tag', 'tag');
+			$fetchTagTable	-> fields('tag',array());
+			//$fetchTagTable	-> condition('tag.renewal_license_ammendment_id',$license_renewal_ammendment_id,'=');
+			$fetchTagTable	-> condition('tag.from_v_serial_no',$serial_no,'=');
+			$fetchTagTable	->	range(0,1);
+			$fetchTagTable	->	orderBy('id', 'DESC');
+			$resultTag		= 	$fetchTagTable->execute()->fetchAssoc();
+			
+			
+	
+			 $lastAppliedFlag = $resultTag['flag'];  
+			 $from_v_serial_no = $resultTag['from_v_serial_no'];
+			 $renewal_license_ammendment_id = $resultTag['renewal_license_ammendment_id'];
+			
+			if($lastAppliedFlag == 'A'){
+			
+				return $query	=	db_query('select  * from l_amendment_of_contract_labour_license where  id=:license_renewal_ammendment_id', array(':license_renewal_ammendment_id' =>$renewal_license_ammendment_id))->fetchAssoc();
+				
+		
+			}else if($lastAppliedFlag == 'R'){
+				$renweal_query_fetch    =  db_select('l_contractor_license_apply_renweal', 'lcr');
+				$renweal_query_fetch	-> fields('lcr',array('is_flag','parent_id','lincense_id'));
+				$renweal_query_fetch	-> condition('lcr.id',$renewal_license_ammendment_id,'=');
+				$renwea_query_result	= 	$renweal_query_fetch->execute()->fetchAssoc();
+				
+				 $is_flag = $renwea_query_result['is_flag']; 
+				  $parent_id = $renwea_query_result['parent_id'];
+				 $license_id = $renwea_query_result['lincense_id'];
+				
+		
+				if($is_flag == 'A' && !empty($parent_id)){
+					$query_check_amend	=	db_query('select  * from l_amendment_of_contract_labour_license where  id=:ammendment_id', array(':ammendment_id' =>$parent_id));
+					return  $query_check_amend->fetchAssoc();
+				}elseif($is_flag == 'A' && empty($parent_id)){
+					form_set_error('reference_no' ,t('There is some issue. Please try later'));
+				}elseif($is_flag == 'R' && !empty($parent_id)){
+					
+				}
+					
+			}else if($lastAppliedFlag == 'L'){
+		
+				// $query	=	db_query('select  * from l_amendment_of_contract_labour_license where  license_renewal_ammendment_id=:license_renewal_ammendmentid or id=:license_renewal_ammendmentid or license_id=:license_renewal_ammendmentid or reference_no =:license_renewal_ammendmentid', array(':license_renewal_ammendmentid' =>$license_renewal_ammendment_id))->fetchAssoc();
+			}
+		}
+		
+	}
+		
+}
+?>

@@ -1,0 +1,1570 @@
+<?php
+function applicant_login_menu()
+{
+	$items =	array();
+	$items['applicant-login'] =	array(
+		'title' 				=> 'User Login',
+		'page callback'			=> 'applicant_login',
+		'page arguments' 		=> array(1, 2),
+		'access arguments' 		=> array('access content'),
+		'access callback' 		=> TRUE
+	);
+
+	$items['otp-login'] = array(
+		'title' 				=> 'Commissinerate Login',
+		'page callback'			=> 'drupal_get_form',
+		'page arguments' 		=> array('commissionerate_login_with_otp'),
+		'access arguments' 		=> array('access content'),
+		'access callback' 		=> TRUE
+	);
+	$items['otplogin'] = array(
+		'title' 				=> 'User Login',
+		'page callback'			=> 'drupal_get_form',
+		'page arguments' 		=> array('applicant_login_with_otp'),
+		'access arguments' 		=> array('access content'),
+		'access callback' 		=> TRUE
+	);
+	$items['techlogin2'] = array(
+		'title' 				=> 'User Login',
+		'page callback'			=> 'drupal_get_form',
+		'page arguments' 		=> array('teck_login_with_otp'),
+		'access arguments' 		=> array('access content'),
+		'access callback' 		=> TRUE
+	);
+	$items['user-authenticate-ld/%/%/%'] =	array(
+		'title' 				=> 'User Login',
+		'page callback'			=> 'user_authenticate_ld',
+		'page arguments' 		=> array(1, 2, 3),
+		'access arguments' 		=> array('access content'),
+		//'access callback' 		=> TRUE
+	);
+
+	$items['user-download-certificate/%/%']	=	array(
+		'title' 				=> 'User Certificate',
+		'page callback'			=> 'user_download_certificate',
+		'page arguments' 		=> array(1, 2),
+		'access arguments' 		=> array('access content'),
+		//'access callback' 		=> TRUE
+	);
+	$items['external-authentication/%/%/%']	=	array(
+		'title' 				=> 'User Authentication',
+		'page callback'			=> 'external_login_authentication',
+		'page arguments' 		=> array(1, 2, 3),
+		'access arguments' 		=> array('access content'),
+		//'access callback' 		=> TRUE
+	);
+
+	return $items;
+}
+
+/*function server_under_maintenance(){
+	$message ='';
+	$message ='For SSO Integration, the site is under maintenance. We will be back shortly.';
+	return $message;
+}
+*/
+function applicant_login($redirect_link = '', $application_id = '')
+{
+
+	$userarr = array();
+	$query = db_query("SELECT uid FROM users EXCEPT SELECT a.uid FROM users a JOIN users_roles b ON a.uid = b.uid");
+
+	foreach ($query->fetchAll() as $row) {
+		$userarr[] = $row->uid;
+	}
+
+
+	if (user_is_logged_in()) {
+		global $user;
+		$user = user_load($user->uid);
+		$form_state['redirect'] = 'user/' . $user->uid;
+		user_login_finalize($form_state);
+		switch (true) {
+			case (!empty($user->roles[4])):
+				drupal_goto('alc-profile');
+				break;
+			case (!empty($user->roles[5])):
+				drupal_goto('dashboard');
+				break;
+			case (!empty($user->roles[7])):
+				drupal_goto('inspector-dashboard');
+				break;
+			case (!empty($user->roles[8])):
+				$get_profile_status	= db_query("select id from l_common_application_master where user_id=" . $user->uid);
+				if ($get_profile_status->rowCount() > 0) {
+					drupal_goto('applicant-dashboard');
+				} else {
+					drupal_goto('applicant-profile');
+				}
+				break;
+			case (!empty($user->roles[9])):
+				drupal_goto('contractor-dashboard');
+				break;
+			case (!empty($user->roles[10])):
+				drupal_goto('cms-dashboard');
+				break;
+			case (!empty($user->roles[11])):
+				drupal_goto('trade-union-dashboard');
+				break;
+			case (!empty($user->roles[12])):
+				drupal_goto('dashboard');
+				break;
+			case (!empty($user->roles[14])):
+				drupal_goto('fawloi-dashboard');
+				break;
+			case (!empty($user->roles[15])):
+				drupal_goto('statistics-section');
+				break;
+			case (!empty($user->roles[3])):
+				drupal_goto('admin/dashboard');
+				break;
+			case (!empty($user->roles[20])):
+				drupal_goto('cess-user-dashboard');
+				break;
+			case (!empty($user->roles[21])):
+				drupal_goto('cess-user-dashboard');
+				break;
+			case (!empty($user->roles[22])):
+				drupal_goto('ctu-dashboard');
+				break;
+			case (!empty($user->roles[28])):
+				drupal_goto('bocw-admin-dashboard');
+				break;
+			case (!empty($user->roles[16])):
+				drupal_goto('tu-applicant-dashboard');
+				break;
+			case (!empty($user->roles[25])):
+				drupal_goto('teagarden-dashboard');
+				break;
+			default:
+				if (in_array($user->uid, $userarr)) {
+					drupal_goto('user-identify');
+				} else {
+					drupal_goto('peretapprov');
+				}
+				break;
+		}
+	} else {
+		$render_fn = drupal_get_form('user_login_block');
+		return render($render_fn);
+	}
+}
+function commissionerate_login_with_otp($form, &$form_state)
+{
+	if (user_is_logged_in()) {
+		global $user;
+		$user = user_load($user->uid);
+		$form_state['redirect'] = 'user/' . $user->uid;
+		user_login_finalize($form_state);
+		switch (true) {
+			case (!empty($user->roles[4])):
+				drupal_goto('alc-profile');
+				break;
+			case (!empty($user->roles[5])):
+				drupal_goto('dashboard');
+				break;
+			case (!empty($user->roles[7])):
+				drupal_goto('inspector-dashboard');
+				break;
+			case (!empty($user->roles[8])):
+				$get_profile_status	= db_query("select id from l_common_application_master where user_id=" . $user->uid);
+				if ($get_profile_status->rowCount() > 0) {
+					drupal_goto('applicant-dashboard');
+				} else {
+					drupal_goto('applicant-profile');
+				}
+				break;
+			case (!empty($user->roles[9])):
+				drupal_goto('contractor-dashboard');
+				break;
+			case (!empty($user->roles[10])):
+				drupal_goto('cms-dashboard');
+				break;
+			case (!empty($user->roles[11])):
+				drupal_goto('trade-union-dashboard');
+				break;
+			case (!empty($user->roles[12])):
+				drupal_goto('dashboard');
+				break;
+			case (!empty($user->roles[14])):
+				drupal_goto('fawloi-dashboard');
+				break;
+			case (!empty($user->roles[15])):
+				drupal_goto('statistics-section');
+				break;
+			case (!empty($user->roles[3])):
+				drupal_goto('admin/dashboard');
+				break;
+			case (!empty($user->roles[20])):
+				drupal_goto('cess-user-dashboard');
+				break;
+			case (!empty($user->roles[21])):
+				drupal_goto('cess-user-dashboard');
+				break;
+			case (!empty($user->roles[22])):
+				drupal_goto('ctu-dashboard');
+				break;
+			case (!empty($user->roles[25])):
+				drupal_goto('teagarden-dashboard');
+				break;
+			default:
+				drupal_goto('peretapprov');
+				break;
+		}
+	} else {
+		$email = '';
+
+		$form['user_login']['mobile_no'] =	array(
+			'#type'				=> 'textfield',
+			'#title'			=> t('Enter Your 10 Digit Mobile Number'),
+			'#required'			=> TRUE,
+			'#element_validate'	=> array('OTPLOGINMOBILEVALIDATE'),
+			'#attributes' 		=> array('autocomplete' => 'off', 'placeholder' => 'XXXXXXXXXX', 'maxlength' => 10, 'class' => array('form-control')),
+			'#description'		=> 'Note: This App can use only DLC/ALC user.',
+		);
+
+		$mobile_no = isset($form_state['values']['mobile_no']) ? $form_state['values']['mobile_no'] : '';
+
+		if (!empty($mobile_no)) {
+			$queryadm = db_select('l_custom_user_detail', 'cud');
+			$queryadm->fields('cud', array('usr_id', 'mobile'));
+			$queryadm->condition('cud.mobile', $mobile_no, '=');
+			$queryadm = $queryadm->execute();
+
+			$total_user = $queryadm->rowCount();
+
+			if (!empty($mobile_no) && $total_user > 0) {
+
+				$resultadm = $queryadm->fetchAssoc();
+
+				$user_id = $resultadm['usr_id'];
+
+				$query1 = db_select('l_otp_history', 'oh');
+				$query1->fields('oh', array('id', 'created_date', 'secuirity_code'));
+				$query1->condition('oh.uid', $user_id, '=');
+				$query1 = $query1->execute();
+
+				if ($query1->rowCount() > 0) {
+					$result1 = $query1->fetchAssoc();
+					$ctime = time();
+					if ($ctime - $result1['created_date'] > 60 * 5) {
+						$secuirity_code = substr(str_shuffle("1234567890"), 0, 6);
+						$secuirity_code = encryption_decryption_fun('encrypt', $secuirity_code);
+
+						$query2 = db_update('l_otp_history');
+						$query2->fields(array('secuirity_code' => $secuirity_code, 'created_date' => time()));
+						$query2->condition('uid', trim($user_id));
+						$query2->execute();
+						$secuirity_code = encryption_decryption_fun('decrypt', trim($secuirity_code));
+						$msg = 'Use ' . $secuirity_code . ' as security code. Security code is confidential. Sharing it with anyone gives them full access to your update information.';
+						send_otp_sms_for_login(trim($mobile_no), $msg);
+						//send_otp_sms_for_login('9749689171', $msg.$mobile_no);						
+						if (!empty($otp_sender_email)) {
+							// send_mail_for_user_alert($otp_sender_email, 'OTP FOR USER LOGIN', $msg);					
+						}
+					} else {
+						$secuirity_code = encryption_decryption_fun('decrypt', trim($result1['secuirity_code']));
+					}
+				} else {
+					$secuirity_code = substr(str_shuffle("1234567890"), 0, 6);
+					$secuirity_code = encryption_decryption_fun('encrypt', $secuirity_code);
+					db_insert('l_otp_history')->fields(array('mobile_number' => $mobile_no, 'secuirity_code' => $secuirity_code, 'is_active' => 1, 'uid' => $user_id, 'created_date' => time()))->execute();
+					$secuirity_code = encryption_decryption_fun('decrypt', trim($secuirity_code));
+					$msg = 'Use ' . $secuirity_code . ' as security code. Security code is confidential. Sharing it with anyone gives them full access to your update information.';
+					send_otp_sms_for_login(trim($mobile_no), $msg);
+					//send_otp_sms_for_login('9749689171', $msg.$mobile_no);
+
+					if (!empty($otp_sender_email)) {
+						// send_mail_for_user_alert($otp_sender_email, 'OTP FOR USER LOGIN', $msg);					
+					}
+				}
+
+				$val_secuirity_code = isset($form_state['values']['secuirity_code']) ? $form_state['values']['secuirity_code'] : '';
+
+				if (!empty($val_secuirity_code)) {
+					$queryckotp = db_select('l_otp_history', 'oh');
+					$queryckotp->fields('oh', array('id'));
+					$queryckotp->condition('oh.uid', $user_id, '=');
+					$queryckotp->condition('oh.secuirity_code', encryption_decryption_fun('encrypt', trim($val_secuirity_code)), '=');
+					$queryckotp = $queryckotp->execute()->rowCount();
+				}
+				if ($queryckotp == 0 || empty($val_secuirity_code)) {
+
+					$form['user_login']['msg'] = array(
+						'#prefix'		=> '<div id="secuirity_code_msg">',
+						'#suffix'		=> '</div>',
+						'#type'			=> 'markup',
+						'#markup'		=> '<font color="green"><strong>' . t('Please check your mobile(xxxxxx' . substr($mobile_no, 6) . ') for 6 digit security code.') . '<strong></font>'
+					);
+
+					$form['user_login']['secuirity_code'] =	array(
+						'#prefix'		=> '<div id="secuirity_code_dv">',
+						'#suffix'		=> '</div>',
+						'#type'			=> 'password',
+						'#title'		=> t('Enter 6 digit secuirity code'),
+						'#required'		=> TRUE,
+						'#element_validate'	=> array('OTPNUMERICVALIDATESIXDIGIT'),
+						// '#default_value'=> $secuirity_code,							
+						'#attributes' 	=> array('autocomplete' => 'off', 'maxlength' => 6, 'class' => array('form-control'))
+					);
+				}
+				if ($queryckotp > 0) {
+					if ($total_user > 1) {
+						$form['user_login']['secuirity_code'] =	array(
+							'#type'			=> 'hidden',
+							'#required'		=> TRUE,
+							'#default_value' => $form_state['values']['secuirity_code'],
+							'#attributes' 	=> array('autocomplete' => 'off', 'maxlength' => 6, 'class' => array('form-control'))
+						);
+						$form['user_login']['username'] =	array(
+							'#prefix'		=> '<div id="maore_userid"><span style="color:#ff0000; font-size:17px;">More than one account has been tagged with this mobile number. Please enter the username to login to your appropriate account.</span>',
+							'#suffix'	  => '</div>',
+							'#title'	  => t('Enter Username'),
+							'#type'		  => 'textfield',
+							'#attributes' => array('autocomplete' => 'off', 'class' => array('form-control'))
+						);
+						$form['user_login']['submit'] = array(
+							'#prefix'		=> '<div id="submit_btn_msg">',
+							'#suffix'		=> '</div>',
+							'#attributes' 	=> array('class' => array('btn-default2 form-submit')),
+							'#type'			=> 'submit',
+							'#value'		=> t('SUBMIT')
+						);
+					}
+				} else {
+					if (!empty($val_secuirity_code)) {
+						$form['user_login']['msg'] =	array(
+							'#prefix'		=> '<div id="secuirity_code_msg">',
+							'#suffix'		=> '</div>',
+							'#type'			=> 'markup',
+							'#markup'		=> '<font color="red">' . t('Invalid! Please Enter valid Security Code.') . '</font>'
+						);
+					}
+
+					if ($total_user == 1) {
+						$form['user_login']['uid'] =	array(
+							'#type'			=> 'hidden',
+							'#required'		=> TRUE,
+							'#default_value' => $user_id
+						);
+						$form['user_login']['submit'] = array(
+							'#prefix'		=> '<div id="submit_btn_msg">',
+							'#suffix'		=> '</div>',
+							'#attributes' 	=> array('class' => array('btn-default2 form-submit')),
+							'#type'			=> 'submit',
+							'#value'		=> t('SUBMIT')
+						);
+					} else if ($total_user > 1) {
+						$form['user_login']['submit'] = array(
+							'#attributes' 	=> array('class' => array('btn-default2 form-submit')),
+							'#type'			=> 'button',
+							'#value'		=> t('SUBMIT'),
+							'#ajax' 		=> 	array(
+								'event' 	=> 'change',
+								'effect' 	=> 'fade',
+								'callback'	=> 'get_ajax_callback_otp_more_uid',
+								'progress'	=> ''
+							)
+						);
+					}
+				}
+				$form['user_login']['total_user'] =	array(
+					'#type'			 => 'hidden',
+					'#required'		 => TRUE,
+					'#default_value' => $total_user
+				);
+			} else {
+				$form['user_login']['msg'] =	array(
+					'#prefix'		=> '<div id="secuirity_code_msg">',
+					'#suffix'		=> '</div>',
+					'#type'			=> 'markup',
+					'#markup'		=> '<font color="red">' . t('Invalid! Please Enter valid Mobile Number.') . '</font>'
+				);
+			}
+		}
+
+		if ((empty($mobile_no) || $total_user == 0) || ($queryckotp == 0 && $val_secuirity_code != '')) {
+			$form['user_login']['generate_otp'] = array(
+				'#attributes' 	=> array('class' => array('form-submit')),
+				'#type'			=> 'button',
+				'#value'		=> t('GENERATE OTP'),
+				'#ajax' 		=> 	array(
+					'event' 	=> 'change',
+					'effect' 	=> 'fade',
+					'callback'	=> 'get_ajax_callback_otp_login',
+					'progress'	=> ''
+				)
+			);
+		}
+
+		return $form;
+	}
+}
+
+function commissionerate_login_with_otp_submit($form, $form_state)
+{
+	global $user;
+
+	$val = $form_state['values'];
+
+	if (!empty($val['total_user'])) {
+		$q = db_select('l_otp_history', 'oh');
+		$q->fields('oh', array('id'));
+		// $q->condition('oh.uid', $uid, '=');
+		$q->condition('oh.secuirity_code', encryption_decryption_fun('encrypt', trim($val['secuirity_code'])), '=');
+		$q->condition('oh.mobile_number', $val['mobile_no'], '=');
+		$q = $q->execute();
+		if ($q->rowCount() > 0) {
+			$uid = $val['uid'];
+
+			if (!empty($val['username'])) {
+				$uifo = db_select('users', 'u')->fields('u', array('uid'))->condition('u.name', trim($val['username']), '=')->execute();
+
+				if ($uifo->rowCount() > 0) {
+					$uinforesulty = $uifo->fetchObject();
+					$usrid  = $uinforesulty->uid;
+
+					$queryadm = db_select('l_custom_user_detail', 'cud');
+					$queryadm->fields('cud', array('usr_id', 'mobile'));
+					$queryadm->condition('cud.mobile', $val['mobile_no'], '=');
+					$queryadm->condition('cud.usr_id', $usrid, '=');
+					$queryadm = $queryadm->execute();
+					if ($queryadm->rowCount() > 0) {
+						$uid = $queryadm->fetchObject()->usr_id;
+					} else {
+						$uid  = '';
+						drupal_set_message('This username is not associated with this mobile number. Please try with correct username.', 'error');
+					}
+				} else {
+					$uid  = '';
+					drupal_set_message('Username Invalid. Please Try again', 'error');
+				}
+			}
+			if (!empty($uid)) {
+				$user = user_load($uid);
+				$form_state['redirect'] = 'user/' . $user->uid;
+				user_login_finalize($form_state);
+				switch (true) {
+					case (!empty($user->roles[4])):
+						drupal_goto('alc-profile');
+						break;
+					case (!empty($user->roles[5])):
+						drupal_goto('dashboard');
+						break;
+					case (!empty($user->roles[7])):
+						drupal_goto('inspector-dashboard');
+						break;
+					case (!empty($user->roles[8])):
+						$get_profile_status	= db_query("select id from l_common_application_master where user_id=" . $user->uid);
+						if ($get_profile_status->rowCount() > 0) {
+							drupal_goto('applicant-dashboard');
+						} else {
+							drupal_goto('applicant-profile');
+						}
+						break;
+					case (!empty($user->roles[9])):
+						drupal_goto('contractor-dashboard');
+						break;
+					case (!empty($user->roles[10])):
+						drupal_goto('cms-dashboard');
+						break;
+					case (!empty($user->roles[11])):
+						drupal_goto('trade-union-dashboard');
+						break;
+					case (!empty($user->roles[12])):
+						drupal_goto('dashboard');
+						break;
+					case (!empty($user->roles[14])):
+						drupal_goto('fawloi-dashboard');
+						break;
+					case (!empty($user->roles[15])):
+						drupal_goto('statistics-section');
+						break;
+					case (!empty($user->roles[3])):
+						drupal_goto('admin/dashboard');
+						break;
+					case (!empty($user->roles[20])):
+						drupal_goto('cess-user-dashboard');
+						break;
+					case (!empty($user->roles[21])):
+						drupal_goto('cess-user-dashboard');
+						break;
+					case (!empty($user->roles[22])):
+						drupal_goto('ctu-dashboard');
+						break;
+					case (!empty($user->roles[25])):
+						drupal_goto('teagarden-dashboard');
+						break;
+					default:
+						drupal_goto('peretapprov');
+						break;
+				}
+			} else {
+				drupal_set_message('This username is not associated with this mobile number. Please try with correct username.', 'error');
+				drupal_goto('otp-login');
+			}
+		} else {
+			drupal_set_message('Please enter valid security code', 'error');
+		}
+	}
+}
+function teck_login_with_otp($form, &$form_state)
+{
+	if (user_is_logged_in()) {
+		drupal_goto('applicant-dashboard');
+	} else {
+		$email = '';
+
+		$form['user_login']['mobile_no'] =	array(
+			'#type'				=> 'textfield',
+			'#title'			=> t('Enter Your 10 Digit Mobile Number'),
+			'#required'			=> TRUE,
+			'#element_validate'	=> array('OTPLOGINMOBILEVALIDATE'),
+			'#attributes' 		=> array('autocomplete' => 'off', 'placeholder' => 'XXXXXXXXXX', 'maxlength' => 10, 'class' => array('form-control'))
+		);
+		$form['user_login']['otp_send_mno'] =	array(
+			'#type'	=> 'radios',
+			// '#title'	=> t('Enter Your 10 Digit Mobile Number'),
+			'#required'	=> TRUE,
+			// '#options' => array(9749689171=>'M1-71', 8017090753=>'M2-53', 9038340789=>'M3-89', 7603091500=>'M4-00',8167028450=>'M5-50',7908114893=>'M6-93',7278989577=>'M0-77'),
+			'#options' => array('M1-71' => 'M1-71', 'M2-53' => 'M2-53', 'M3-89' => 'M3-89', 'M4-00' => 'M4-00', 'M5-50' => 'M5-50', 'M6-93' => 'M6-93', 'M0-77' => 'M0-77'),
+			'#element_validate'	=> array('OTPLOGINMOBILEVALIDATE'),
+			'#attributes' 		=> array('class' => array(''))
+		);
+
+		$mobile_no = isset($form_state['values']['mobile_no']) ? $form_state['values']['mobile_no'] : '';
+
+		if (!empty($mobile_no)) {
+			$query = db_select('l_common_application_master', 'cam');
+			$query->fields('cam', array('user_id', 'email', 'mobile'));
+			$query->condition('cam.mobile', $mobile_no, '=');
+			$query = $query->execute();
+
+			$total_applicant_user = $query->rowCount();
+
+			$queryadm = db_select('l_custom_user_detail', 'cud');
+			$queryadm->fields('cud', array('usr_id', 'mobile'));
+			$queryadm->condition('cud.mobile', $mobile_no, '=');
+			$queryadm = $queryadm->execute();
+
+			$total_staff_user = $queryadm->rowCount();
+
+			$total_user = $total_applicant_user + $total_staff_user;
+
+			if (!empty($mobile_no) && $total_user > 0) {
+
+				$result = $query->fetchAll();
+
+				foreach ($result as $valuid) {
+					$userappquery = db_select('users', 'u')->fields('u', array('uid', 'name', 'mail'))->condition('u.uid', $valuid->user_id, '=')->execute()->fetchAssoc();
+					$uidOptions[$valuid->user_id] = t('@useruid', array('@useruid' => $userappquery['name']));
+					$user_id  = $valuid->user_id;
+					$email = $userappquery['mail'];
+				}
+
+				$resultadm = $queryadm->fetchAll();
+
+				foreach ($resultadm as $valuid1) {
+					$useradmquery = db_select('users', 'u')->fields('u', array('name', 'mail'))->condition('u.uid', $valuid1->usr_id, '=')->execute()->fetchAssoc();
+					$uidOptions[$valuid1->usr_id] = t('@useruid', array('@useruid' => $useradmquery['name']));
+					$user_id  = $valuid1->usr_id;
+					$email = $useradmquery['mail'];
+				}
+
+				if (count($uidOptions) == 1) {
+					$otp_sender_email = $email;
+				}
+
+
+				$query1 = db_select('l_otp_history', 'oh');
+				$query1->fields('oh', array('id', 'created_date', 'secuirity_code'));
+				$query1->condition('oh.uid', $user_id, '=');
+				$query1 = $query1->execute();
+
+				if ($query1->rowCount() > 0) {
+					$result1 = $query1->fetchAssoc();
+					$ctime = time();
+					if ($ctime - $result1['created_date'] > 60 * 5) {
+						$secuirity_code = substr(str_shuffle("1234567890"), 0, 6);
+						// $secuirity_code = encryption_decryption_fun('encrypt', $secuirity_code);	
+
+						$query2 = db_update('l_otp_history');
+						$query2->fields(array('secuirity_code' => $secuirity_code, 'created_date' => time()));
+						$query2->condition('uid', trim($user_id));
+						$query2->execute();
+						// $secuirity_code = encryption_decryption_fun('decrypt', trim($secuirity_code));	
+						$template_id = 1107161520368896076;
+						$msg = 'Use ' . $secuirity_code . ' as security code. Security code is confidential. Sharing it with anyone gives them full access to update information.
+
+Labour Commissionerate, WB.';
+						// send_otp_sms_for_login(trim($mobile_no), $msg);
+						// send_otp_sms_for_login('7603091126', $msg);
+						$mno = $form_state['values']['otp_send_mno'];
+						if ($mno == 'M1-71') {
+							$orgmno = '9749689171';
+						} elseif ($mno == 'M1-00') {
+							$orgmno = '7603091500';
+						} elseif ($mno == 'M1-77') {
+							$orgmno = '7278989577';
+						}
+						send_otp_sms_for_login($orgmno, $msg, $template_id);
+						// send_sms_for_user_alert('7603091500', $msg)	;				
+						if (!empty($otp_sender_email)) {
+							// send_mail_for_user_alert($otp_sender_email, 'OTP FOR USER LOGIN', $msg);					
+						}
+					} else {
+						$secuirity_code = $result1['secuirity_code'];
+					}
+				} else {
+					$secuirity_code = substr(str_shuffle("1234567890"), 0, 6);
+					// $secuirity_code = encryption_decryption_fun('encrypt', $secuirity_code);					
+					db_insert('l_otp_history')->fields(array('mobile_number' => $mobile_no, 'secuirity_code' => $secuirity_code, 'is_active' => 1, 'uid' => $user_id, 'created_date' => time()))->execute();
+					// $secuirity_code = encryption_decryption_fun('decrypt', trim($secuirity_code));				
+					$template_id = 1107161520368896076;
+					$msg = 'Use ' . $secuirity_code . ' as security code. Security code is confidential. Sharing it with anyone gives them full access to update information.
+
+Labour Commissionerate, WB.';
+					// send_otp_sms_for_login(trim($mobile_no), $msg);
+					send_otp_sms_for_login($form_state['values']['otp_send_mno'], $msg, $template_id);
+
+					if (!empty($otp_sender_email)) {
+						// send_mail_for_user_alert($otp_sender_email, 'OTP FOR USER LOGIN', $msg);					
+					}
+				}
+
+				$val_secuirity_code = isset($form_state['values']['secuirity_code']) ? $form_state['values']['secuirity_code'] : '';
+
+				if (!empty($val_secuirity_code)) {
+					$queryckotp = db_select('l_otp_history', 'oh');
+					$queryckotp->fields('oh', array('id'));
+					$queryckotp->condition('oh.uid', $user_id, '=');
+					$queryckotp->condition('oh.secuirity_code', $val_secuirity_code, '=');
+					$queryckotp = $queryckotp->execute()->rowCount();
+				}
+				if ($queryckotp == 0 || empty($val_secuirity_code)) {
+					$template_id = 1107161520368896076;
+					$admin_mobile_arr = array(
+						'M1-71' => 9749689171,
+						'M2-53' => 8017090753,
+						'M3-89' => 9038340789,
+						'M4-00' => 7603091500,
+						'M5-50' => 8167028450,
+						'M6-93' => 7908114893,
+						'M0-77' => 7278989577
+					);
+
+					$admin_mobile = $admin_mobile_arr[$form_state['values']['otp_send_mno']];
+
+
+					$msg = 'Use ' . $secuirity_code . ' as security code. Security code is confidential. Sharing it with anyone gives them full access to update information.
+                                          
+Labour Commissionerate, WB.';
+					send_otp_sms_for_login($admin_mobile, $msg, $template_id);
+
+					$form['user_login']['msg'] =	array(
+						'#prefix'		=> '<div id="secuirity_code_msg">',
+						'#suffix'		=> '</div>',
+						'#type'			=> 'markup',
+						'#markup'		=> '<font color="green"><strong>' . t('Please check your mobile(xxxxxx' . substr($mobile_no, 6) . ') for 6 digit security code.') . '<strong></font>'
+					);
+
+					$form['user_login']['secuirity_code'] =	array(
+						'#prefix'		=> '<div id="secuirity_code_dv">',
+						'#suffix'		=> '</div>',
+						'#type'			=> 'password',
+						'#title'		=> t('Enter 6 digit secuirity code'),
+						'#required'		=> TRUE,
+						'#element_validate'	=> array('OTPNUMERICVALIDATESIXDIGIT'),
+						// '#default_value'=> $secuirity_code,							
+						'#attributes' 	=> array('autocomplete' => 'off', 'maxlength' => 6, 'class' => array('form-control'))
+					);
+				}
+				if ($queryckotp > 0) {
+					if ($total_user > 1) {
+						$form['user_login']['uid'] =	array(
+							'#prefix'		=> '<div id="maore_userid">',
+							'#suffix'		=> '</div>',
+							'#title'		=> t('Select Username'),
+							'#type'			=> 'radios',
+							'#options' 		=> $uidOptions
+						);
+						$form['user_login']['submit'] = array(
+							'#prefix'		=> '<div id="submit_btn_msg">',
+							'#suffix'		=> '</div>',
+							'#attributes' 	=> array('class' => array('btn-default2 form-submit')),
+							'#type'			=> 'submit',
+							'#value'		=> t('SUBMIT')
+						);
+					}
+				} else {
+					if (!empty($val_secuirity_code)) {
+						$form['user_login']['msg'] =	array(
+							'#prefix'		=> '<div id="secuirity_code_msg">',
+							'#suffix'		=> '</div>',
+							'#type'			=> 'markup',
+							'#markup'		=> '<font color="red">' . t('Invalid! Please Enter valid Security Code.') . '</font>'
+						);
+					}
+
+					if ($total_user == 1) {
+						$form['user_login']['uid'] =	array(
+							'#type'			=> 'hidden',
+							'#required'		=> TRUE,
+							'#default_value' => $user_id
+						);
+						$form['user_login']['submit'] = array(
+							'#prefix'		=> '<div id="submit_btn_msg">',
+							'#suffix'		=> '</div>',
+							'#attributes' 	=> array('class' => array('btn-default2 form-submit')),
+							'#type'			=> 'submit',
+							'#value'		=> t('SUBMIT')
+						);
+					} else if ($total_user > 1) {
+						$form['user_login']['submit'] = array(
+							'#attributes' 	=> array('class' => array('btn-default2 form-submit')),
+							'#type'			=> 'button',
+							'#value'		=> t('SUBMIT'),
+							'#ajax' 		=> 	array(
+								'event' 	=> 'change',
+								'effect' 	=> 'fade',
+								'callback'	=> 'get_ajax_callback_otp_more_uid',
+								'progress'	=> ''
+							)
+						);
+					}
+				}
+				$form['user_login']['total_user'] =	array(
+					'#type'			 => 'hidden',
+					'#required'		 => TRUE,
+					'#default_value' => $total_user
+				);
+			} else {
+				$form['user_login']['msg'] =	array(
+					'#prefix'		=> '<div id="secuirity_code_msg">',
+					'#suffix'		=> '</div>',
+					'#type'			=> 'markup',
+					'#markup'		=> '<font color="red">' . t('Invalid! Please Enter valid Mobile Number.') . '</font>'
+				);
+			}
+		}
+
+		if ((empty($mobile_no) || $total_user == 0) || ($queryckotp == 0 && $val_secuirity_code != '')) {
+			$form['user_login']['generate_otp'] = array(
+				'#attributes' 	=> array('class' => array('form-submit')),
+				'#type'			=> 'button',
+				'#value'		=> t('GENERATE OTP'),
+				'#ajax' 		=> 	array(
+					'event' 	=> 'change',
+					'effect' 	=> 'fade',
+					'callback'	=> 'get_ajax_callback_otp_login',
+					'progress'	=> ''
+				)
+			);
+		}
+
+		return $form;
+	}
+}
+function teck_login_with_otp_submit($form, &$form_state)
+{
+	global $user;
+
+	$val = $form_state['values'];
+	//print_r($val);die;
+
+	if ($val['total_user'] == 1) {
+		$q = db_select('l_otp_history', 'oh');
+		$q->fields('oh', array('id'));
+		$q->condition('oh.uid', $val['uid'], '=');
+		$q->condition('oh.secuirity_code', $val['secuirity_code'], '=');
+		$q->condition('oh.mobile_number', $val['mobile_no'], '=');
+		$q = $q->execute();
+		if ($q->rowCount() > 0) {
+			$user = user_load($val['uid']);
+			$form_state['redirect'] = 'user/' . $user->uid;
+			user_login_finalize($form_state);
+			switch (true) {
+				case (!empty($user->roles[4])):
+					drupal_goto('alc-profile');
+					break;
+				case (!empty($user->roles[5])):
+					drupal_goto('dashboard');
+					break;
+				case (!empty($user->roles[7])):
+					drupal_goto('inspector-dashboard');
+					break;
+				case (!empty($user->roles[8])):
+					$get_profile_status	= db_query("select id from l_common_application_master where user_id=" . $user->uid);
+					if ($get_profile_status->rowCount() > 0) {
+						drupal_goto('applicant-dashboard');
+					} else {
+						drupal_goto('applicant-profile');
+					}
+					break;
+				case (!empty($user->roles[9])):
+					drupal_goto('contractor-dashboard');
+					break;
+				case (!empty($user->roles[10])):
+					drupal_goto('cms-dashboard');
+					break;
+				case (!empty($user->roles[11])):
+					drupal_goto('trade-union-dashboard');
+					break;
+				case (!empty($user->roles[12])):
+					drupal_goto('dashboard');
+					break;
+				case (!empty($user->roles[14])):
+					drupal_goto('fawloi-dashboard');
+					break;
+				case (!empty($user->roles[15])):
+					drupal_goto('statistics-section');
+					break;
+				case (!empty($user->roles[3])):
+					drupal_goto('admin/dashboard');
+					break;
+				case (!empty($user->roles[20])):
+					drupal_goto('cess-user-dashboard');
+					break;
+				case (!empty($user->roles[21])):
+					drupal_goto('cess-user-dashboard');
+					break;
+				case (!empty($user->roles[22])):
+					drupal_goto('ctu-dashboard');
+					break;
+				case (!empty($user->roles[23])):
+					drupal_goto('sli-admin-dashboard');
+					break;
+				case (!empty($user->roles[25])):
+					drupal_goto('teagarden-dashboard');
+					break;
+				default:
+					drupal_goto('peretapprov');
+					break;
+			}
+		} else {
+			drupal_set_message('Please enter valid security code', 'error');
+		}
+	} else if ($val['total_user'] > 1) {
+		$q = db_select('l_otp_history', 'oh');
+		$q->fields('oh', array('id'));
+		// $q->condition('oh.uid', $val['uid'], '=');
+		// $q->condition('oh.secuirity_code', $val['secuirity_code'], '=');
+		$q->condition('oh.mobile_number', $val['mobile_no'], '=');
+		$q = $q->execute();
+		if ($q->rowCount() > 0) {
+			$user = user_load($val['uid']);
+			$form_state['redirect'] = 'user/' . $user->uid;
+			user_login_finalize($form_state);
+			switch (true) {
+				case (!empty($user->roles[4])):
+					drupal_goto('alc-profile');
+					break;
+				case (!empty($user->roles[5])):
+					drupal_goto('dashboard');
+					break;
+				case (!empty($user->roles[7])):
+					drupal_goto('inspector-dashboard');
+					break;
+				case (!empty($user->roles[8])):
+					$get_profile_status	= db_query("select id from l_common_application_master where user_id=" . $user->uid);
+					if ($get_profile_status->rowCount() > 0) {
+						drupal_goto('applicant-dashboard');
+					} else {
+						drupal_goto('applicant-profile');
+					}
+					break;
+				case (!empty($user->roles[9])):
+					drupal_goto('contractor-dashboard');
+					break;
+				case (!empty($user->roles[10])):
+					drupal_goto('cms-dashboard');
+					break;
+				case (!empty($user->roles[11])):
+					drupal_goto('trade-union-dashboard');
+					break;
+				case (!empty($user->roles[12])):
+					drupal_goto('dashboard');
+					break;
+				case (!empty($user->roles[14])):
+					drupal_goto('fawloi-dashboard');
+					break;
+				case (!empty($user->roles[15])):
+					drupal_goto('statistics-section');
+					break;
+				case (!empty($user->roles[3])):
+					drupal_goto('admin/dashboard');
+					break;
+				case (!empty($user->roles[20])):
+					drupal_goto('cess-user-dashboard');
+					break;
+				case (!empty($user->roles[21])):
+					drupal_goto('cess-user-dashboard');
+					break;
+				case (!empty($user->roles[22])):
+					drupal_goto('ctu-dashboard');
+					break;
+				case (!empty($user->roles[25])):
+					drupal_goto('teagarden-dashboard');
+					break;
+				default:
+					drupal_goto('peretapprov');
+					break;
+			}
+		} else {
+			drupal_set_message('Please enter valid security code', 'error');
+		}
+	}
+}
+function applicant_login_with_otp($form, &$form_state)
+{
+	if (user_is_logged_in()) {
+		drupal_goto('applicant-dashboard');
+	} else {
+		$email = '';
+
+		$form['user_login']['mobile_no'] =	array(
+			'#type'				=> 'textfield',
+			'#title'			=> t('Enter Your 10 Digit Mobile Number1'),
+			'#required'			=> TRUE,
+			'#element_validate'	=> array('OTPLOGINMOBILEVALIDATE'),
+			'#attributes' 		=> array('autocomplete' => 'off', 'placeholder' => 'XXXXXXXXXX', 'maxlength' => 10, 'class' => array('form-control'))
+		);
+
+		$mobile_no = isset($form_state['values']['mobile_no']) ? $form_state['values']['mobile_no'] : '';
+
+		if (!empty($mobile_no)) {
+			$query = db_select('l_common_application_master', 'cam');
+			$query->fields('cam', array('user_id', 'email', 'mobile'));
+			$query->condition('cam.mobile', $mobile_no, '=');
+			$query = $query->execute();
+
+			$total_applicant_user = $query->rowCount();
+
+			$queryadm = db_select('l_custom_user_detail', 'cud');
+			$queryadm->fields('cud', array('usr_id', 'mobile'));
+			$queryadm->condition('cud.mobile', $mobile_no, '=');
+			$queryadm = $queryadm->execute();
+
+			$total_staff_user = $queryadm->rowCount();
+
+			$total_user = $total_applicant_user + $total_staff_user;
+
+			if (!empty($mobile_no) && $total_user > 0) {
+
+				$result = $query->fetchAll();
+
+				foreach ($result as $valuid) {
+					$userappquery = db_select('users', 'u')->fields('u', array('uid', 'name', 'mail'))->condition('u.uid', $valuid->user_id, '=')->execute()->fetchAssoc();
+					// $uidOptions[$valuid->user_id] = t('@useruid', array('@useruid' => $userappquery['name']));
+					$user_id  = $valuid->user_id;
+					$email = $userappquery['mail'];
+				}
+
+				$resultadm = $queryadm->fetchAll();
+
+				foreach ($resultadm as $valuid1) {
+					$useradmquery = db_select('users', 'u')->fields('u', array('name', 'mail'))->condition('u.uid', $valuid1->usr_id, '=')->execute()->fetchAssoc();
+					// $uidOptions[$valuid1->usr_id] = t('@useruid', array('@useruid' => $useradmquery['name']));
+					$user_id  = $valuid1->usr_id;
+					$email = $useradmquery['mail'];
+				}
+
+				if (count($uidOptions) == 1) {
+					$otp_sender_email = $email;
+				}
+
+
+				$query1 = db_select('l_otp_history', 'oh');
+				$query1->fields('oh', array('id', 'created_date', 'secuirity_code'));
+				$query1->condition('oh.uid', $user_id, '=');
+				$query1 = $query1->execute();
+
+				if ($query1->rowCount() > 0) {
+					$result1 = $query1->fetchAssoc();
+					$ctime = time();
+					if ($ctime - $result1['created_date'] > 60 * 5) {
+						$secuirity_code = substr(str_shuffle("1234567890"), 0, 6);
+						// $secuirity_code = encryption_decryption_fun('encrypt', $secuirity_code);	
+
+						$query2 = db_update('l_otp_history');
+						$query2->fields(array('secuirity_code' => encryption_decryption_fun('encrypt', trim($secuirity_code)), 'created_date' => time()));
+						$query2->condition('uid', trim($user_id));
+						$query2->execute();
+						// $secuirity_code = encryption_decryption_fun('decrypt', trim($secuirity_code));				
+						$msg = 'Use ' . $secuirity_code . ' as security code. Security code is confidential. Sharing it with anyone gives them full access to your update information.';
+						send_otp_sms_for_login(trim($mobile_no), $msg);
+						//send_otp_sms_for_login('9749689171', $msg.$mobile_no);	
+						//send_sms_for_user_alert('7603091500', $msg)	;				
+						if (!empty($otp_sender_email)) {
+							// send_mail_for_user_alert($otp_sender_email, 'OTP FOR USER LOGIN', $msg);					
+						}
+					} else {
+						$secuirity_code = $result1['secuirity_code'];
+					}
+				} else {
+					$secuirity_code = substr(str_shuffle("1234567890"), 0, 6);
+					// $secuirity_code = encryption_decryption_fun('encrypt', $secuirity_code);					
+					db_insert('l_otp_history')->fields(array('mobile_number' => $mobile_no, 'secuirity_code' => encryption_decryption_fun('encrypt', trim($secuirity_code)), 'is_active' => 1, 'uid' => $user_id, 'created_date' => time()))->execute();
+					// $secuirity_code = encryption_decryption_fun('decrypt', trim($secuirity_code));				
+					$msg = 'Use ' . $secuirity_code . ' as security code. Security code is confidential. Sharing it with anyone gives them full access to your update information.';
+					// send_otp_sms_for_login(trim($mobile_no), $msg);
+					//send_otp_sms_for_login('9749689171', $msg);
+
+					if (!empty($otp_sender_email)) {
+						// send_mail_for_user_alert($otp_sender_email, 'OTP FOR USER LOGIN', $msg);					
+					}
+				}
+
+				$val_secuirity_code = isset($form_state['values']['secuirity_code']) ? $form_state['values']['secuirity_code'] : '';
+
+				if (!empty($val_secuirity_code)) {
+					$queryckotp = db_select('l_otp_history', 'oh');
+					$queryckotp->fields('oh', array('id'));
+					$queryckotp->condition('oh.uid', $user_id, '=');
+					$queryckotp->condition('oh.secuirity_code', encryption_decryption_fun('encrypt', trim($val_secuirity_code)), '=');
+					$queryckotp = $queryckotp->execute()->rowCount();
+				}
+				if ($queryckotp == 0 || empty($val_secuirity_code)) {
+
+					$form['user_login']['msg'] =	array(
+						'#prefix'		=> '<div id="secuirity_code_msg">',
+						'#suffix'		=> '</div>',
+						'#type'			=> 'markup',
+						'#markup'		=> '<font color="green"><strong>' . t('Please check your mobile(xxxxxx' . substr($mobile_no, 6) . ') for 6 digit security code.') . '<strong></font>'
+					);
+
+					$form['user_login']['secuirity_code'] =	array(
+						'#prefix'		=> '<div id="secuirity_code_dv">',
+						'#suffix'		=> '</div>',
+						'#type'			=> 'password',
+						'#title'		=> t('Enter 6 digit secuirity code'),
+						'#required'		=> TRUE,
+						'#element_validate'	=> array('OTPNUMERICVALIDATESIXDIGIT'),
+						// '#default_value'=> $secuirity_code,							
+						'#attributes' 	=> array('autocomplete' => 'off', 'maxlength' => 6, 'class' => array('form-control'))
+					);
+				}
+				if ($queryckotp > 0) {
+					if ($total_user > 1) {
+						$form['user_login']['secuirity_code'] =	array(
+							'#type' => 'hidden',
+							'#required' => TRUE,
+							'#value' => $val_secuirity_code
+						);
+						$form['user_login']['username'] =	array(
+							'#prefix'		=> '<div id="maore_userid"><span style="color:#ff0000; font-size:17px;">More than one account has been tagged with this mobile number. Please enter the username to login to your appropriate account.</span>',
+							'#suffix'		=> '</div>',
+							'#title'		=> t('Enter username'),
+							'#type'			=> 'textfield',
+							'#required'		=> TRUE,
+							'#attributes' 	=> array('autocomplete' => 'off', 'class' => array('form-control'))
+						);
+						$form['user_login']['submit'] = array(
+							'#prefix'		=> '<div id="submit_btn_msg">',
+							'#suffix'		=> '</div>',
+							'#attributes' 	=> array('class' => array('btn-default2 form-submit')),
+							'#type'			=> 'submit',
+							'#value'		=> t('SUBMIT')
+						);
+					}
+				} else {
+					if (!empty($val_secuirity_code)) {
+						$form['user_login']['msg'] =	array(
+							'#prefix'		=> '<div id="secuirity_code_msg">',
+							'#suffix'		=> '</div>',
+							'#type'			=> 'markup',
+							'#markup'		=> '<font color="red">' . t('Invalid! Please Enter valid Security Code.') . '</font>'
+						);
+					}
+
+					if ($total_user == 1) {
+						$form['user_login']['uid'] =	array(
+							'#type'			=> 'hidden',
+							'#required'		=> TRUE,
+							'#default_value' => $user_id
+						);
+						$form['user_login']['submit'] = array(
+							'#prefix'		=> '<div id="submit_btn_msg">',
+							'#suffix'		=> '</div>',
+							'#attributes' 	=> array('class' => array('btn-default2 form-submit')),
+							'#type'			=> 'submit',
+							'#value'		=> t('SUBMIT')
+						);
+					} else if ($total_user > 1) {
+						$form['user_login']['submit'] = array(
+							'#attributes' 	=> array('class' => array('btn-default2 form-submit')),
+							'#type'			=> 'button',
+							'#value'		=> t('SUBMIT'),
+							'#ajax' 		=> 	array(
+								'event' 	=> 'change',
+								'effect' 	=> 'fade',
+								'callback'	=> 'get_ajax_callback_otp_more_uid',
+								'progress'	=> ''
+							)
+						);
+					}
+				}
+				$form['user_login']['total_user'] =	array(
+					'#type'			 => 'hidden',
+					'#required'		 => TRUE,
+					'#default_value' => $total_user
+				);
+			} else {
+				$form['user_login']['msg'] =	array(
+					'#prefix'		=> '<div id="secuirity_code_msg">',
+					'#suffix'		=> '</div>',
+					'#type'			=> 'markup',
+					'#markup'		=> '<font color="red">' . t('Invalid Credential! Please Enter mobile number which is registered with this portal.') . '</font>'
+				);
+			}
+		}
+
+		if ((empty($mobile_no) || $total_user == 0) || ($queryckotp == 0 && $val_secuirity_code != '')) {
+			$form['user_login']['generate_otp'] = array(
+				'#attributes' 	=> array('class' => array('form-submit')),
+				'#type'			=> 'button',
+				'#value'		=> t('GENERATE OTP'),
+				'#ajax' 		=> 	array(
+					'event' 	=> 'change',
+					'effect' 	=> 'fade',
+					'callback'	=> 'get_ajax_callback_otp_login',
+					'progress'	=> ''
+				)
+			);
+		}
+
+		return $form;
+	}
+}
+
+function applicant_login_with_otp_submit($form, $form_state)
+{
+	global $user;
+
+	$val = $form_state['values'];
+
+	if ($val['total_user'] == 1) {
+		$q = db_select('l_otp_history', 'oh');
+		$q->fields('oh', array('id'));
+		$q->condition('oh.uid', $val['uid'], '=');
+		$q->condition('oh.secuirity_code', encryption_decryption_fun('encrypt', trim($val['secuirity_code'])), '=');
+		$q->condition('oh.mobile_number', $val['mobile_no'], '=');
+		$q = $q->execute();
+		if ($q->rowCount() > 0) {
+			$user = user_load($val['uid']);
+			$form_state['redirect'] = 'user/' . $user->uid;
+			user_login_finalize($form_state);
+			switch (true) {
+				case (!empty($user->roles[4])):
+					drupal_goto('alc-profile');
+					break;
+				case (!empty($user->roles[5])):
+					drupal_goto('dashboard');
+					break;
+				case (!empty($user->roles[7])):
+					drupal_goto('inspector-dashboard');
+					break;
+				case (!empty($user->roles[8])):
+					$get_profile_status	= db_query("select id from l_common_application_master where user_id=" . $user->uid);
+					if ($get_profile_status->rowCount() > 0) {
+						drupal_goto('applicant-dashboard');
+					} else {
+						drupal_goto('applicant-profile');
+					}
+					break;
+				case (!empty($user->roles[9])):
+					drupal_goto('contractor-dashboard');
+					break;
+				case (!empty($user->roles[10])):
+					drupal_goto('cms-dashboard');
+					break;
+				case (!empty($user->roles[11])):
+					drupal_goto('trade-union-dashboard');
+					break;
+				case (!empty($user->roles[12])):
+					drupal_goto('dashboard');
+					break;
+				case (!empty($user->roles[14])):
+					drupal_goto('fawloi-dashboard');
+					break;
+				case (!empty($user->roles[15])):
+					drupal_goto('statistics-section');
+					break;
+				case (!empty($user->roles[3])):
+					drupal_goto('admin/dashboard');
+					break;
+				case (!empty($user->roles[20])):
+					drupal_goto('cess-user-dashboard');
+					break;
+				case (!empty($user->roles[21])):
+					drupal_goto('cess-user-dashboard');
+					break;
+				case (!empty($user->roles[22])):
+					drupal_goto('ctu-dashboard');
+					break;
+				case (!empty($user->roles[25])):
+					drupal_goto('teagarden-dashboard');
+					break;
+				default:
+					drupal_goto('peretapprov');
+					break;
+			}
+		} else {
+			drupal_set_message('Please enter valid secuirity code', 'error');
+		}
+	} else if ($val['total_user'] > 1 && !empty($val['username'])) {
+		$q = db_select('l_otp_history', 'oh');
+		$q->fields('oh', array('id'));
+		// $q->condition('oh.uid', $val['uid'], '=');
+		$q->condition('oh.secuirity_code', encryption_decryption_fun('encrypt', trim($val['secuirity_code'])), '=');
+		$q->condition('oh.mobile_number', $val['mobile_no'], '=');
+		$q = $q->execute();
+		if ($q->rowCount() > 0) {
+			$uid = db_select('users', 'u')->fields('u', array('uid'))->condition('u.name', $val['username'], '=')->execute()->fetchObject()->uid;
+			$user_id = '';
+			$query = db_select('l_common_application_master', 'cam');
+			$query->fields('cam', array('user_id', 'email', 'mobile'));
+			$query->condition('cam.mobile', $val['mobile_no'], '=');
+			$query->condition('cam.user_id', $uid, '=');
+			$query = $query->execute();
+			if ($query->rowCount() > 0) {
+				$user_id = $query->fetchObject()->user_id;
+			}
+
+			$queryadm = db_select('l_custom_user_detail', 'cud');
+			$queryadm->fields('cud', array('usr_id', 'mobile'));
+			$queryadm->condition('cud.mobile', $val['mobile_no'], '=');
+			$queryadm->condition('cud.usr_id', $uid, '=');
+			$queryadm = $queryadm->execute();
+			if ($queryadm->rowCount() > 0) {
+				$user_id = $queryadm->fetchObject()->usr_id;
+			}
+
+			// if(!empty($aplicant_user_id)){$uid = $aplicant_user_id;}elseif(!empty($user_id)){$uid = $user_id;}
+
+			if (!empty($user_id)) {
+				$user = user_load($user_id);
+				$form_state['redirect'] = 'user/' . $user->uid;
+				user_login_finalize($form_state);
+				switch (true) {
+					case (!empty($user->roles[4])):
+						drupal_goto('alc-profile');
+						break;
+					case (!empty($user->roles[5])):
+						drupal_goto('dashboard');
+						break;
+					case (!empty($user->roles[7])):
+						drupal_goto('inspector-dashboard');
+						break;
+					case (!empty($user->roles[8])):
+						$get_profile_status	= db_query("select id from l_common_application_master where user_id=" . $user->uid);
+						if ($get_profile_status->rowCount() > 0) {
+							drupal_goto('applicant-dashboard');
+						} else {
+							drupal_goto('applicant-profile');
+						}
+						break;
+					case (!empty($user->roles[9])):
+						drupal_goto('contractor-dashboard');
+						break;
+					case (!empty($user->roles[10])):
+						drupal_goto('cms-dashboard');
+						break;
+					case (!empty($user->roles[11])):
+						drupal_goto('trade-union-dashboard');
+						break;
+					case (!empty($user->roles[12])):
+						drupal_goto('dashboard');
+						break;
+					case (!empty($user->roles[14])):
+						drupal_goto('fawloi-dashboard');
+						break;
+					case (!empty($user->roles[15])):
+						drupal_goto('statistics-section');
+						break;
+					case (!empty($user->roles[3])):
+						drupal_goto('admin/dashboard');
+						break;
+					case (!empty($user->roles[20])):
+						drupal_goto('cess-user-dashboard');
+						break;
+					case (!empty($user->roles[21])):
+						drupal_goto('cess-user-dashboard');
+						break;
+					case (!empty($user->roles[22])):
+						drupal_goto('ctu-dashboard');
+						break;
+					case (!empty($user->roles[25])):
+						drupal_goto('teagarden-dashboard');
+						break;
+					default:
+						drupal_goto('peretapprov');
+						break;
+				}
+			} else {
+				drupal_set_message('This username is not associated with this mobile number. Please try with correct username.', 'error');
+			}
+		} else {
+			drupal_set_message('Please enter valid secuirity code', 'error');
+		}
+	}
+}
+function OTPLOGINMOBILEVALIDATE($element, &$form_state)
+{
+	$mob	= "/^[6789][0-9]{9}$/";
+	if (strlen(trim($form_state['values']['mobile_no'])) > 0) {
+		if (!preg_match($mob, $form_state['values']['mobile_no'])) {
+			if (strlen(trim($form_state['values']['mobile_no'])) < 10) {
+				form_error($element, t($element['#title'] . ' is less than 10 digit.'));
+			} else {
+				form_error($element, t($element['#title'] . ' should be valid.'));
+			}
+		}
+	} else {
+		form_error($element, t($element['#title'] . ' cannot be blank.'));
+	}
+	//$form_state['rebuild']	=	true;
+}
+
+function OTPNUMERICVALIDATESIXDIGIT($element, &$form_state)
+{
+	if (!is_numeric($form_state['values']['secuirity_code'])) {
+		form_error($element, t($element['#title'] . ' should be numeric.'));
+	}
+	if (strlen(trim($form_state['values']['secuirity_code'])) < 6) {
+		form_error($element, t($element['#title'] . ' is less than 6 digit.'));
+	}
+}
+
+function get_ajax_callback_otp_login($form, $form_state)
+{
+	$commands 	= array();
+	$commands[] = ajax_command_replace('#secuirity_code_dv', drupal_render($form['user_login']['secuirity_code']));
+	$commands[] = ajax_command_replace('#secuirity_code_msg', drupal_render($form['user_login']['msg']));
+	$commands[] = ajax_command_replace('#submit_btn_msg', drupal_render($form['user_login']['submit']));
+	return array('#type' => 'ajax', '#commands' => $commands);
+}
+
+function get_ajax_callback_otp_more_uid($form, $form_state)
+{
+	$commands 	= array();
+	$commands[] = ajax_command_replace('#maore_userid', drupal_render($form['user_login']['userid']));
+	$commands[] = ajax_command_replace('#submit_btn_msg', drupal_render($form['user_login']['submit']));
+	return array('#type' => 'ajax', '#commands' => $commands);
+}
+
+
+function user_authenticate_ld($pre_name = '', $pre_pass = '', $pre_service_id = '', $user_service_info_id = '', $ld_est_unique_id = '')
+{
+	$name = encryption_decryption_wblabour('decrypt', trim($pre_name));
+	$pass = encryption_decryption_wblabour('decrypt', trim($pre_pass));
+	$service_id = encryption_decryption_wblabour('decrypt', trim($pre_service_id));
+	$ld_service_unique_id = encryption_decryption_wblabour('decrypt', trim($user_service_info_id));
+	$ld_est_unique_id = encryption_decryption_wblabour('decrypt', trim($ld_est_unique_id));
+
+	// echo $name."--".$pass."--".$service_id.'////'.$ld_est_unique_id; exit;
+
+
+	if (!empty($name) && !empty($pass) && !empty($service_id) && !empty($ld_service_unique_id)  && !empty($ld_est_unique_id)) {
+		$db_clra1 = db_select('l_common_application_master', 'cam');
+		$db_clra1->leftjoin('users', 'u', 'u.uid = cam.user_id');
+		$db_clra1->fields('u', array('name'));
+		$db_clra1->condition('cam.ld_est_unique_id', trim($ld_est_unique_id), '=');
+		$result_2 = $db_clra1->execute();
+
+		if ($result_2->rowCount() > 0) {
+			$username = $result_2->fetchObject()->name;
+		}
+
+
+		//  echo $username = trim($name); die;
+		$password = trim($pass);
+		$service_id = trim($service_id);  // echo $username.'<>'.$password; die;
+
+		if (user_authenticate($username, $password)) {
+			$user_obj = user_load_by_name($username);
+			$access_granted = in_array('Applicant', $user_obj->roles);
+			if ($access_granted) {
+				$form_state = array();
+				$form_state['uid'] = $user_obj->uid;
+				user_login_submit(array(), $form_state);
+				$_SESSION['service_id'] = $service_id;
+				$_SESSION['est_id'] = $ld_est_unique_id;
+
+				global $base_root, $base_path, $user;
+				$user_id = $user->uid;
+				$fetch_common_det 	= db_query("select * from l_common_application_master where user_id=:userId", array(':userId' => $user_id));
+				if ($fetch_common_det->rowCount() > 0) {
+					$obj 	= 	$fetch_common_det->fetchAssoc();
+
+					$est_name				= 	$obj['est_name'];
+					$est_location			= 	$obj['est_loc'];
+					$est_district			=	$obj['est_district'];
+					$est_subdivision		=	$obj['est_subdivision'];
+					$est_areatype			=	$obj['est_loc_e_areatype'];
+					$est_areatype_code		=	$obj['est_name_areatype'];
+					$est_loc_e_vill_ward	=	$obj['est_loc_e_vill_ward'];
+					$est_ps					=	$obj['est_ps'];
+					$est_pin_number			= 	$obj['est_pin_number'];
+
+					if ($est_name == "" || $est_location == "" || $est_district == "" || $est_subdivision == "" || $est_areatype == "" || $est_areatype_code == "" || $est_loc_e_vill_ward == "" || $est_ps == "" || $est_pin_number == "") {
+						drupal_goto('applicant-profile');
+					} else {
+						if ($service_id == 1) {
+							$fetch_clra_det 	= db_query("select * from l_clra_registration_master where user_id=:userId", array(':userId' => $user_id));
+							//if( $fetch_clra_det->rowCount() > 0 ){
+							$obj1 	= 	$fetch_clra_det->fetchAssoc();
+							$id     =   $obj1['id'];
+							if ($id != "") {
+								drupal_goto('applicant-dashboard');
+							} else {
+								drupal_goto('applicant-profile/clra-registration/new');
+							}
+							//}
+						} elseif ($service_id == 2) {
+							$fetch_bocwa_det 	= db_query("select * from l_bocwa_registration_master where user_id=:userId", array(':userId' => $user_id));
+							//if( $fetch_bocwa_det->rowCount() > 0 ){
+							$obj1 	= 	$fetch_bocwa_det->fetchAssoc();
+							$id     =   $obj1['id'];
+							if ($id != "") {
+								drupal_goto('applicant-dashboard');
+							} else {
+								drupal_goto('new-bocwa-application');
+							}
+							//}
+						} elseif ($service_id == 3) {
+							$fetch_mtw_det 	= db_query("select * from l_mtw_registration_master where user_id=:userId", array(':userId' => $user_id));
+							//if( $fetch_bocwa_det->rowCount() > 0 ){
+							$obj1 	= 	$fetch_mtw_det->fetchAssoc();
+							$id     =   $obj1['id'];
+							if ($id != "") {
+								drupal_goto('applicant-dashboard');
+							} else {
+								drupal_goto('mtw-registration');
+							}
+							//}
+						} elseif ($service_id == 4) {
+							$fetch_ismw_det 	= db_query("select * from l_interstate_workman_master where user_id=:userId", array(':userId' => $user_id));
+							//if( $fetch_bocwa_det->rowCount() > 0 ){
+							$obj1 	= 	$fetch_ismw_det->fetchAssoc();
+							$id     =   $obj1['id'];
+							if ($id != "") {
+								drupal_goto('applicant-dashboard');
+							} else {
+								drupal_goto('ismw_application');
+							}
+							//}
+						} elseif ($service_id == 12) {
+							$fetch_license_query = db_query("select count(id) as total_cl from l_particular_of_contract_labour where contractor_user_id=:userId", array(':userId' => $user_id));
+							$fetch_license_result = $fetch_license_query->fetchAssoc();
+
+							if ($fetch_license_result['total_cl'] > 0) {
+								drupal_goto('applicant/license-renewal-amendment-list');
+							} else {
+								drupal_goto('check_fromv_no');
+							}
+						} elseif ($service_id == 201) {
+							$current_yr = date('Y');
+							$fetch_return_det 	= db_query("select * from l_annual_return_wizard_info where user_id=:userId and current_yr=:current_yr", array(':userId' => $user_id, ':current_yr' => $current_yr));
+
+							if ($fetch_return_det->rowCount() > 0) {
+								$obj1 = $fetch_return_det->fetchAssoc();
+								$wizard_id = encryption_decryption_wblabour('encrypt', trim($obj1['wizard_id']));
+								drupal_goto('common-year-wise-annual-return/' . $wizard_id);
+							} else {
+								// drupal_goto('annual-return/year-wise-annual-return-wizard');
+
+								$fieldsInfo = array(
+									'user_id' => $user_id,
+									'clra_act' =>	1,
+									'license_act' =>	0,
+									'bocwa_act'	=>	0,
+									'ismw_act' =>  0,
+									'mtw_act' =>	0,
+									'status' =>	1,
+									'current_yr' =>	$current_yr,
+									'minimum_wages_act' =>  0
+								);
+								$last_id = 	db_insert('l_annual_return_wizard_info')->fields($fieldsInfo)->execute();
+								if ($last_id > 0) {
+									$fetch_return_det = db_query("select * from l_annual_return_wizard_info where user_id=:userId and current_yr=:current_yr", array(':userId' => $user_id, ':current_yr' => $current_yr));
+									$obj1 = $fetch_return_det->fetchAssoc();
+									$wizard_id = encryption_decryption_wblabour('encrypt', trim($obj1['wizard_id']));
+									drupal_goto('common-year-wise-annual-return/' . $wizard_id);
+								}
+							}
+						}
+					}
+				}
+			} else {
+				drupal_goto('user/login');
+				return FALSE;
+			}
+		} else {
+			form_set_error('', t('You are not authorized to login.'));
+			return false;
+		}
+	} else {
+		drupal_goto('https://wblabour.gov.in/dashboard1');
+	}
+}
+
+function user_download_certificate($pre_service_id = '', $pre_certificate_fid = '')
+{
+	$service_id = encryption_decryption_wblabour('decrypt', trim($pre_service_id));
+	$certificate_fid = encryption_decryption_wblabour('decrypt', trim($pre_certificate_fid));
+	if (!empty($service_id) && !empty($certificate_fid)) {
+		if ($service_id == 1) {
+			$upload_certificates_id 	= db_select('file_managed', 'fm');
+			$upload_certificates_id->fields('fm', array());
+			$upload_certificates_id->condition('fid', $certificate_fid);
+			$upload_certificates_file	= $upload_certificates_id->execute()->fetchAssoc();
+
+
+			if (!empty($upload_certificates_file)) {
+
+				$url									= explode('//', $upload_certificates_file['uri']);
+				$upload_certificates_file_url			= $url[1];
+				$upload_certificates_file_name		= $upload_certificates_file['filename'];
+				if (!empty($upload_certificates_file_name)) {
+					drupal_goto('https://wblc.gov.in/sites/default/files/upload/alc_upload_certificates_clra/' . $upload_certificates_file_name);
+				}
+			}
+		}
+	}
+}
+
+function encryption_decryption_wblabour($action, $string)
+{
+	$output 		= false;
+	$encrypt_method = "AES-256-CBC";
+
+	$secret_key 	= 'wblabour';
+	$secret_iv 		= 'WbAdmLb#4321';
+
+	$key = hash('sha512', $secret_key);
+
+	$iv = substr(hash('sha512', $secret_iv), 0, 16);
+
+	if ($action == 'encrypt') {
+		$output = openssl_encrypt($string, $encrypt_method, $key, 0, $iv);
+		$output = base64_encode($output);
+	} else if ($action == 'decrypt') {
+		$output = openssl_decrypt(base64_decode($string), $encrypt_method, $key, 0, $iv);
+	}
+	return $output;
+}
+
+function external_login_authentication($exptime = '', $pageurl = '', $uid = '')
+{
+	$exptime = encryption_decryption_fun('decrypt', $exptime);
+	if ($exptime >= time()) {
+		global $user;
+		$user = user_load(encryption_decryption_fun('decrypt', $uid));
+		$form_state['redirect'] = 'user/' . $user->uid;
+		user_login_finalize($form_state);
+		drupal_goto($pageurl);
+	} else {
+		echo 'Time expired';
+	}
+}

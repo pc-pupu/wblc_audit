@@ -1,0 +1,33 @@
+#hint{
+	cursor: pointer;
+    float: right;
+    /*margin: 190px 0 0 498px;*/
+    position: absolute;
+}
+.tooltip{
+	margin:8px;
+	padding:8px;
+	border:1px solid #3D5454;
+	background-color:#4d3834;
+	position: absolute;
+	z-index: 2;
+	border-radius: 4px;
+	box-shadow: 5px 5px 8px #CCC;
+}
+
+#hint_phone{
+	cursor: pointer;
+    float: right;
+    /*margin: -1px 0 0 -239px;*/
+    position: absolute;
+}
+.ptooltip{
+	margin:8px;
+	padding:8px;
+	border:1px solid #3D5454;
+	background-color:#4d3834;
+	position: absolute;
+	z-index: 2;
+	border-radius: 4px;
+	box-shadow: 5px 5px 8px #CCC;
+}

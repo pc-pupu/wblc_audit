@@ -1,0 +1,156 @@
+<?php
+
+
+function amendment_clra_menu() {
+	
+	$items	= array();
+		
+	$items['clra-amendment'] = array(
+							'title'				=>'Amendment of registration certificate for principal employers.',
+							'page callback'		=> 'drupal_get_form',
+							'page arguments'	=> array('amendment_form_step_one'),
+							'file' 				=>'includes/applicant_amendment_clra.inc',
+							'access arguments' 	=> array('Permission only applicant for amendmend'),
+							);
+				
+	$items['apply-clra-reg-amendment/%'] = array(
+							'title'				=> 'Amendment of CLRA registration certificate for principal employers',
+							'page callback'		=> 'drupal_get_form',
+							'page arguments'	=> array('amendment_form_step_two',1),
+							'file' 				=> 'includes/apply_amendment_clra.inc',
+							'access arguments' 	=> array('Permission only applicant for amendmend'),
+							);
+														
+	$items['clra-amendment-submit'] = array(
+							'title'				=>'Amendment of registration certificate for principal employers',
+							'page callback'		=>'drupal_get_form',
+							'page arguments'	=>array('amendment_form'),
+							'file' 				=>'includes/amendment_form.inc',
+							'access arguments' 	=> array('Permission only applicant for amendmend'),
+							);
+																			
+	$items['clra-reg-amendment'] = array(
+							'title'				=> 'Application Details for Amendment',
+							'page callback'		=> 'drupal_get_form',
+							'page arguments'	=> array('amendment_form_clra_registration',2),
+							'file' 				=> 'includes/clra_reg_amendment_form.inc',
+							'access arguments' 	=> array('Permission only applicant for amendmend'),																			
+							// 'weight' 			=> 1,
+							// 'type' 				=> MENU_DEFAULT_LOCAL_TASK
+							);
+																											
+	$items['clra-reg-amendment/view-clra-application/%'] = array(
+							'title'				=>'Application Details for Amendment',
+							'page callback'		=>'drupal_get_form',
+							'page arguments'	=>array('amendment_form_clra_registration',2),
+							'file' 				=>'includes/clra_reg_amendment_form.inc',
+							'access arguments' 	=> array('Permission only applicant for amendmend'),
+							'weight' 			=> 2,
+							'type' 				=> MENU_LOCAL_TASK
+							);
+	
+	$items['clra-reg-amendment/view-trade-union-application/%']	= array(
+							'title' 			=> 'Trade Union Details',
+							'page callback' 	=> 'drupal_get_form', 
+							'page arguments' 	=> array('get_trade_union_info_form',2),
+							'file' 				=> 'includes/get_trade_union_info_form.inc',
+							'access arguments' 	=> array('Permission only applicant for amendmend'),
+							'weight' 			=> 4,
+							'type' 				=> MENU_LOCAL_TASK
+						  );
+																		  
+	$items['clra-reg-amendment/clra-contractor-info/%'] = array(
+							'title' 			=> 'Contractor Information',
+							'page callback' 	=> 'drupal_get_form', 
+							'page arguments' 	=> array('get_clra_contractor_info_form',2),
+							'file' 				=> 'includes/get_clra_contractor_list.inc',
+							'access arguments' 	=> array('Permission only applicant for amendmend'),
+							'weight' 			=> 6,
+							'type' 				=> MENU_LOCAL_TASK
+							);
+																		  
+	
+																			
+	$items['clra-reg-amendment/verify/%'] = array(
+							'title' 			=> 'Application Preview',
+							'page callback' 	=> 'drupal_get_form',
+							'page arguments' 	=> array('clra_amendment_application_preview',2),
+							'file' 				=> 'includes/clra_amendment_application_preview.inc', 
+							'access arguments' 	=> array('Permission only applicant for amendmend'),
+							'weight' 			=> 10,
+							'type' 				=> MENU_LOCAL_TASK
+							);
+																					
+	
+	/**Added In applicant_forms.module **/  																		
+	/*$items['add-contractor/%'] 	= array(
+							'title' 				=> 'Add Contractor',
+							'page callback' 		=> 'drupal_get_form', 
+							'page arguments' 		=> array('add_contractor_info_form', 1),
+							'file' 					=> 'includes/add_contractor_info_form.inc',
+							'access arguments' 		=> array('Permission only applicant for amendmend')
+							);*/
+																			
+	$items['edit-contractor-form/%/%'] = array(
+							'title' 				=> 'Contractors Edit',
+							'page callback' 		=> 'drupal_get_form',
+							'page arguments'		=>array('edit_contractor_form', 1,2),
+							'file' 					=> 'includes/edit_contractor_form.inc',
+							'access arguments' 		=> array('Permission only applicant for amendmend'),
+						   );
+																		
+	$items['add-trade-union/%'] = array(
+							'title' 			=> 'Add Trade Union',
+							'page callback' 	=> 'drupal_get_form', 
+							'page arguments' 	=> array('add_trade_union_info_form', 1),
+							'file' 				=> 'includes/add_trade_union_info_form.inc',
+							'access arguments' 	=> array('Permission only applicant for amendmend'),
+							);
+																						
+	$items['edit-trade-union/%/%'] 	= array(
+							'title' 			=> 'Edit Trade Union Details',
+							'page callback' 	=> 'drupal_get_form', 
+							'page arguments' 	=> array('edit_trade_union_details', 1, 2),
+							'file' 				=> 'includes/edit_trade_union_details.inc',
+							'access arguments' 	=> array('Permission only applicant for amendmend')
+							);	
+																			
+	$items['clra-amendment-request'] = array(
+								'title'				=>'Principal employers certificate amendment request list',
+								'page callback'		=>'amendment_request_list',
+								// 'page arguments'	=>array('amendment_form'),
+								'file' 				=>'includes/amendment_request_list.inc',
+								'access arguments' 	=> array('Permission only alc and dlc for request accept'),
+								);
+	$items['clra-amendment-request/details/%'] = array(
+								'title'				=>'Principal employers certificate amendment request',
+								'page callback'		=>'drupal_get_form',
+								'page arguments'	=>array('amendment_request_details', 2),
+								'file' 				=>'includes/amendment_request_list.inc',
+								'access arguments' 	=> array('Permission only alc and dlc for request accept'),
+								);
+	$items['changeconstatus'] = array(
+								'title'				=>'',
+								'page callback'		=>'changeconstatus',								
+								'file' 				=>'includes/changeStatus.inc',
+								'access arguments' 	=> array('Permission only applicant for amendmend'),
+								);
+	return $items;
+	
+	
+}
+
+
+function amendment_clra_permission() {
+	$permission = array();
+	$permission['Permission only applicant for amendmend'] = array(
+      		   'title' 		 => t('Permission only applicant for amendmend'),
+     		   'description' => t('Permission only applicant for amendmend'),
+   	);
+	$permission['Permission only alc and dlc for request accept'] = array(
+      		   'title' 		 => t('Permission only alc and dlc for request accept'),
+     		   'description' => t('Permission only alc and dlc for request accept'),
+   	);	
+ 
+   return $permission;
+}

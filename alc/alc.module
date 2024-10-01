@@ -1,0 +1,2638 @@
+<?php
+
+function alc_menu()
+{
+    
+    $items = array();
+
+    $items['testajax'] = array(
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('test_ajax'),
+        'file' => 'includes/test_ajax.inc',
+        'access arguments' => array('access content'),
+    );
+    $items['alcdashboard'] = array(
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('alc_form'),
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['alcdashboard/default'] = array(
+        'title' => 'PERSONAL INFO.',
+        'weight' => 2,
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('alc_form'),
+        'type' => MENU_LOCAL_TASK,
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['alcdashboard/rlo-details'] = array(
+        'title' => 'RLO DETAILS',
+        'weight' => 4,
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('rlo_details_form'),
+        'type' => MENU_LOCAL_TASK,
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['alcdashboard/summary'] = array(
+        'title' => 'SUMMARY',
+        'weight' => 4,
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('alc_summary'),
+        'type' => MENU_LOCAL_TASK,
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+
+    $items['alcdashboard/rlo-area'] = array(
+        'title' => 'RLO AREA',
+        'weight' => 6,
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('rlo_area_form'),
+        'type' => MENU_LOCAL_TASK,
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['rlo_block_details'] = array(
+        'title' => 'Block Details of RLO',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('rlo_block_details_form'),
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['rlo_insp_details'] = array(
+        'title' => 'Inspector Details',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('rlo_insp_details_form'),
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    /** FOR ACTS SPECIFIC COMMON APPLICATION LISTS ***/
+
+    $items['receivedapplications/%'] = array(
+        'title callback' => 'receivedapplications_title_callback',
+        'title arguments' => array(1),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('received_applications_list', 1, 2),
+        'file' => 'includes/received_applications_list.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+    $items['receivedapplications/%/%'] = array(
+        'title callback' => 'receivedapplications_title_callback',
+        'title arguments' => array(1, 2),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('received_applications_list', 1, 2),
+        'file' => 'includes/received_applications_list.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['receivedapplications/%/%/%'] = array(
+        'title callback' => 'alc_mtw_renewal_list_title_callback',
+        'title arguments' => array(1, 2),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('received_applications_list', 1, 2, 3),
+        'file' => 'includes/received_applications_list.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+    /*** Menu Lists for CLRA Applications ***/
+
+    $items['alc_receivedapplications'] = array(
+        'title' => 'Application list of principal employer under CLRA',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('alc_received_applications_list_clra'),
+        'file' => 'includes/alc_get_received_applications_list_clra.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+
+    $items['issued-application-list-alc'] = array(
+        'title' => 'Issued application list of principal employer under CLRA',
+        'page callback' => 'issued_application_list_alc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['application-list-alc/%'] = array(
+        'title' => 'Application list of principal employer under CLRA',
+        'page callback' => 'application_list_alc',
+        'page arguments' => array(1),
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['alc-visible-applications/%/%'] = array(
+        'title' => t('CLRA:PRINCIPAL EMPLOYER REGISTRATION DETAILS'),
+        'page callback' => 'applicantview_by_alc_page_content',
+        'page arguments' => array(1, 2),
+        'access arguments' => array('Permission for applications view_alc'),
+    );
+
+    $items['clra-remarks-delete/%/%/%'] = array(
+        'title' => t('Remove Remakes'),
+        'page callback' => 'clra_remarks_delete',
+        'page arguments' => array(1, 2, 3),
+        'access arguments' => array('access content'),
+    );
+
+    /*** Menu Lists for CLRA Amended Applications ***/
+
+    $items['alc-clra-reg-amended-applications'] = array(
+        'title' => 'CLRA AMENDED APPLICATIONS',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('alc_clra_amended_applications'),
+        'file' => 'includes/alc_clra_amended_applications_list.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['alc-view-amended-application'] = array(
+        'title' => 'VIEW CLRA AMENDED APPLICATION',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('view_alc_clra_amended_applications'),
+        'file' => 'includes/view_alc_clra_amended_applications.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    /*** Menu Lists for Contractor License ***/
+
+    $items['alc-received-license'] = array(
+        'title callback' => 'license_contractor_title_callback',
+        'title arguments' => array(1),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('alc_received_license'),
+        'file' => 'includes/alc_received_license.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+    $items['alc-received-license/%'] = array(
+        'title callback' => 'license_contractor_title_callback',
+        'title arguments' => array(1),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('alc_received_license', 1),
+        'file' => 'includes/alc_received_license.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+    $items['issued-license-list-alc'] = array(
+        'title' => 'Issued Contractor License List',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('issued_license_list_alc'),
+        'file' => 'includes/issued_license_list_alc.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['alc-view-license/%'] = array(
+        'title' => 'Applying For License Under The acts of CLRA',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('alc_view_license_form', 1, 2),
+        'file' => 'includes/alc_view_license_form.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['remark-license-alc/%/%/%'] = array(
+        'title' => 'Remark',
+        'page callback' => 'remark_license_alc_callback',
+        'page arguments' => array(1, 2, 3),
+        'file' => 'includes/remark_license_alc.inc',
+        'access arguments' => array('Permission for application list_alc')
+    );
+
+    /*** Menu Lists for Contractor RENEWAL  Applications ***/
+
+    $items['alc/alc-received-renewal-details'] = array(
+        'title' => 'List of Renewal of Contractor License',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('alc_received_renewal_license_lists'),
+        'file' => 'includes/alc_received_renewal_license_lists - Copy.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['alc/alc-view-contractor-license-renewal/%/%/%/%'] = array(
+        'title' => 'Application of Renewal of Contractor License',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('alc_view_contractor_license_renewal', 2, 3, 4, 5),
+        'file' => 'includes/alc_view_contractor_license_renewal - Copy.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    /**4-12-2018   Payal **/
+    $items['alc-received-renewal-details'] = array(
+        'title' => 'Application for Renewal of Contractor License under The Contract Labour (R&A) Act, 1970',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('alc_received_renewal_license_lists'),
+        'file' => 'includes/alc_received_renewal_license_lists.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['alc-received-renewal-details/%'] = array(
+        'title callback' => 'renewal_contractor_title_callback',
+        'title arguments' => array(1),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('alc_received_renewal_license_lists', 1),
+        'file' => 'includes/alc_received_renewal_license_lists.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['alc-view-contractor-license-renewal/%/%'] = array(
+        'title' => 'Application of Renewal of Contractor License',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('alc_view_contractor_license_renewal', 1, 2),
+        'file' => 'includes/alc_view_contractor_license_renewal.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['alc_receivedapplications_bocwa/%'] = array(
+        'title' => t('Application Details for Establishment Registration Under BOCWA'),
+        'page callback' => 'drupal_get_form',
+        'file' => 'includes/bocwa_registration_form_view_alc.inc',
+        'page arguments' => array('view_bocwa_registration_form', 1),
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['bocwa-remarks-delete/%'] = array(
+        'title' => t('Remove Remakes'),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('remarks_delete', 1),
+        'file' => 'includes/bocwa_registration_form_view_alc.inc',
+        'access arguments' => array('access content'),
+    );
+
+    $items['add_backlog_pe_data'] = array(
+        'title' => 'PE DATA',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('add_backlog_pe_data', ),
+        'file' => 'includes/add_backlog_pe_data.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['digitally-sign-process'] = array(
+        'title' => 'How to digitally sign your documents using USB Token',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('digitally_sign_process', ),
+        'file' => 'includes/digitally_sign_process.inc',
+        //'access arguments' 	=> array('access content'),
+        'access arguments' => array('Permission to allofficer'),
+    );
+
+    $items['alc_official/alc-view-inspector/all_wb'] = array(
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('view_all_list_inspector', 2),
+        'file' => 'includes/view_all_list_inspector.inc',
+        'access arguments' => array('Permission for application super admin'),
+    );
+    $items['alc_official/alc-view-inspector/zone'] = array(
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('view_all_list_inspector', 2),
+        'file' => 'includes/view_all_list_inspector.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['alc_official/alc-view-inspector-profile/%/%'] = array(
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('alc_view_inspector_profile', 2, 3),
+        'file' => 'includes/alc_view_inspector_profile.inc',
+        'access arguments' => array('Permission to allofficer'),
+    );
+
+    $items['alc_official/view-activities/%/%/%/%'] = array(
+        'title' => 'VIEW ACTIVITES',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('view_activities', 2, 3, 4, 5),
+        'file' => 'includes/view_activities.inc',
+        'access arguments' => array('Permission to allofficer'),
+    );
+
+    $items['alc/alc-del-advancerenewal-remark/%/%/%/%/%'] = array(
+        'title' => 'Application of Renewal of Contractor License',
+        //'page callback'	=>  'drupal_get_form',
+        //'page arguments' 	=> 	array('advancerenewal_remarks_delete',2,3,4),
+        'page callback' => 'advancerenewal_remarks_delete',
+        'page arguments' => array(2, 3, 4, 5, 6),
+        'file' => 'includes/alc_view_contractor_license_renewal.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['alc_view_backlog_contractor_license_renewal/%/%/%/%'] = array(
+        'title' => 'Application of Renewal of Contractor License',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('alc_view_backlog_contractor_license_renewal', 1, 2, 3, 4),
+        'file' => 'includes/alc_view_backlog_contractor_license_renewal.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['alc/alc_view_backlog_contractor_license_renewal/%/%/%/%'] = array(
+        'title' => 'Application of Renewal of Contractor License',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('alc_view_backlog_contractor_license_renewal', 2, 3, 4, 5),
+        'file' => 'includes/alc_view_backlog_contractor_license_renewal - Copy.inc',
+        //'file' 				=>'includes/alcviewbacklogcontractorlicenserenewal.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['alc-approve-backlog-applications/%/%'] = array(
+        'title' => t('View and approved previous certificate'),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('view_and_approved_certificate_details', 1, 2),
+        'file' => 'includes/view_and_approved_certificate_details.inc',
+        'access arguments' => array('Permission for applications view_alc'),
+    );
+
+
+    $items['license-remarks-delete/%/%/%/%'] = array(
+        //'title'			=> t('Remove Remakes'),
+        'page callback' => 'license_remarks_delete',
+        'page arguments' => array(1, 2, 3, 4),
+        'file' => 'includes/alc_view_license_form.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+    /*********** Start MTW SECTION ***************/
+
+
+    $items['alc-receive-application-mtw'] = array(
+        'title' => t('List of Registration of Motor Transport Undertaking'),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('alc_receive_application'),
+        'file' => 'includes/alc_receive_mtw.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['alc-receive-application-mtw/%'] = array(
+        'title' => t('List of Issued Registration of Motor Transport Undertaking'),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('alc_receive_application', 1),
+        'file' => 'includes/alc_receive_mtw.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['alc-application-details-mtw/%/%'] = array(
+        'title' => t('Details of Registration of Motor Transport Undertaking'),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('alc_application_details_mtw', 1, 2),
+        'file' => 'includes/alc_application_details_mtw.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+    $items['remarks-delete/%/%/%'] = array(
+        'title' => t('Remove Remakes'),
+        'page callback' => 'remarks_delete_mtw',
+        'page arguments' => array(1, 2, 3),
+        'access arguments' => array('permission_for_appicant_alc_inspector'),
+    );
+
+    $items['remarks-delete/%/%/%/%/%'] = array(
+        'title' => t('Remove Remakes'),
+        'page callback' => 'remarks_delete_mtw',
+        'page arguments' => array(1, 2, 3, 4, 5),
+        'access arguments' => array('permission_for_appicant_alc_inspector'),
+    );
+
+
+    $items['mtw-certificate-generate/%'] = array(
+        'page callback' => 'mtw_registration_pdf_generator',
+        'page arguments' => array(1),
+        'file' => 'includes/mtw_registration_pdf.inc',
+        'access arguments' => array('permission_for_appicant_alc_inspector')
+    );
+    $items['mtw-certificate-generate/%/%'] = array(
+        'page callback' => 'mtw_registration_pdf_generator',
+        'page arguments' => array(1),
+        'file' => 'includes/mtw_registration_pdf.inc',
+        'access arguments' => array('Permission_for_api_call')
+    );
+    $items['alc-mtw-renewal-list'] = array(
+        'title' => t('List of Renewal of Motor Transport Undertaking'),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('alc_mtw_renewal_list'),
+        'file' => 'includes/alc_mtw_renewal_list.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['alc-mtw-renewal-details/%/%'] = array(
+        'title' => t('Details of Renewal of Motor Transport Undertaking'),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('alc_mtw_renewal_details', 1, 2),
+        'file' => 'includes/alc_mtw_renewal_details.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['mtw-renewcertificate-generate/%'] = array(
+        'page callback' => 'mtw_renewal_registration_pdf',
+        'page arguments' => array(1),
+        'file' => 'includes/mtw_renewal_registration_pdf.inc',
+        'access arguments' => array('permission_for_appicant_alc_inspector')
+    );
+
+    $items['mtw-all-application-data'] = array(
+        'page callback' => 'mtw_all_application_data',
+        'file' => 'includes/mtw_all_application_data.inc',
+        'access arguments' => array('access content')
+    );
+
+    $items['mtw-all-application-details/%'] = array(
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('mtw_all_application_details', 1),
+        'file' => 'includes/mtw_all_application_data.inc',
+        'access arguments' => array('access content')
+    );
+    /*********** End MTW SECTION ***************/
+
+    $items['renewal-remarks-delete/%/%/%/%/%'] = array(
+        'page callback' => 'renewal_remarks_delete',
+        'page arguments' => array(1, 2, 3, 4, 5),
+        'file' => 'includes/alc_view_backlog_contractor_license_renewal.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+
+    $items['alc-received-ammendment-license'] = array(
+        'title' => 'Application for Amendment of License under the Contract Labour (R&A) Act, 1970',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('alc_received_ammendment_license_application'),
+        'file' => 'includes/alc_received_ammendment_license_application.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+    $items['alc-received-ammendment-license/%'] = array(
+        'title callback' => 'amendment_contractor_title_callback',
+        'title arguments' => array(1, 2),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('alc_received_ammendment_license_application', 1, 2),
+        'file' => 'includes/alc_received_ammendment_license_application.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['alc-view-ammend-license/%/%/%/%/%'] = array(
+        'title' => 'Application for Amendment of License under the Contract Labour (R&A) Act, 1970',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('alc_view_ammend_license', 1, 2, 3, 4, 5),
+        'file' => 'includes/alc_view_ammend_license.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    /*** ISMW SECTION ****/
+
+    $items['ismwapplicationslist'] = array(
+        'title' => t('Applications List for Registration of Establishment Employing Migrant Workmen(ISMW))'),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('migrant_workmen_applications_ins_alc'),
+        'file' => 'includes/migrant_workmen_applications_ins_alc.inc',
+        'access arguments' => array('Permission for alc and inspector'),
+    );
+
+    $items['inspector/ismwapplicationslist'] = array(
+        //'title'			=> t('Inter-State Migrant Workmen Applications'),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('migrant_workmen_applications_ins_alc'),
+        'file' => 'includes/migrant_workmen_applications_ins_alc.inc',
+        'access arguments' => array('Permission for alc and inspector'),
+    );
+
+    $items['ismwapplications-view/%/%'] = array(
+        'title' => t('Application for Registration of Establishment Employing Migrant Workmen(ISMW))'),
+        'page callback' => 'drupal_get_form',
+        'file' => 'includes/ismw_application_alc.inc',
+        'page arguments' => array('view_ismw_application_alc', 1, 2),
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+    $items['ismw-remarks-delete/%/%/%/%'] = array(
+        'title' => t('Remove Remarks'),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('remarks_delete', 1, 2, 3, 4),
+        'file' => 'includes/ismw_application_alc.inc',
+        'access arguments' => array('permission_for_appicant_alc_inspector'),
+    );
+
+    /*** ISMW LICENSE SECTION ****/
+    $items['ismwlicense-list/%/%'] = array(
+        'title callback' => 'receivedapplications_license_ismw_title_callback',
+        'title arguments' => array(1, 2),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('ismw_license_list_ins_alc', 1, 2),
+        'file' => 'includes/ismw_license_ins_alc.inc',
+        'access arguments' => array('Permission for alc and inspector'),
+    );
+    /*	$items['ismwlicense-list/%/%'] = array(
+        'title callback'   => 'receivedapplications_license_ismw_title_callback',
+        'title arguments'  => array(1,2),
+        'page callback'		=> 'drupal_get_form',
+        'page arguments'	=> array('ismw_license_list_ins_alc',1,2),
+        'file'				=> 'includes/ismw_license_ins_alc.inc',
+        'access arguments'	=> array('Permission for alc and inspector'),
+    );*/
+    $items['ismwlicenseview-employment/%'] = array(
+        'title' => t('Applications for Grant of License for Employment Under ISMW'),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('ismw_license_employment_view', 1),
+        'file' => 'includes/ismw_license_employment_view.inc',
+        'access arguments' => array('Permission_for_alc'),
+    );
+    $items['ismwlicenseview-recruitment/%'] = array(
+        'title' => t('Applications for Grant of License for Recruitment Under ISMW'),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('ismw_license_recruitment_view', 1),
+        'file' => 'includes/ismw_license_recruitment_view.inc',
+        'access arguments' => array('Permission_for_alc'),
+    );
+    /*********** Annual Return **********/
+
+    $items['annual-return-alc'] = array(
+        'page callback' => 'drupal_get_form',
+        'file' => 'includes/annual_return_alc.inc',
+        'page arguments' => array('annual_return_alc', 2, 3),
+        'access arguments' => array('permission_for_appicant_alc_inspector'),
+    );
+
+    $items['alc_receivedapplications_bocwa_amendment/%/%'] = array(
+        'title' => t('BOCWA Registration Form'),
+        'page callback' => 'drupal_get_form',
+        'file' => 'includes/bocwa_registration_form_amendment_view_alc.inc',
+        'page arguments' => array('view_bocwa_registration_form_amendment', 1, 2),
+        'access arguments' => array('Permission for application list_alc'),
+    );
+    $items['alc-amendment-approval/%/%'] = array(
+        'title' => t('Approval for the Amendment of Location of the Establishment'),
+        'page callback' => 'drupal_get_form',
+        'file' => 'includes/alc_amendment_approval_form.inc',
+        'page arguments' => array('alc_amendment_approval', 1, 2),
+        'access arguments' => array('Permission_for_alc'),
+    );
+
+    /*********** BOCWA CESS **********/
+
+    $items['receivedapplications_cess/%/%'] = array(
+        'title callback' => 'receivedapplications_title_callback',
+        'page callback' => 'drupal_get_form',
+        'file' => 'includes/received_applications_cess_list.inc',
+        'page arguments' => array('received_applications_cess_list', 1, 2),
+        'access arguments' => array('Permission_for_alc'),
+    );
+    $items['cess_viewapplications/%/%'] = array(
+        'title callback' => 'Application for BOCWA CESS',
+        'page callback' => 'drupal_get_form',
+        'file' => 'includes/view_cessapplication.inc',
+        'page arguments' => array('view_cessapplication', 1, 2),
+        'access arguments' => array('Permission_for_alc'),
+    );
+
+    $items['annual-return-report'] = array(
+        'title' => t('Annual Return Reports'),
+        'page callback' => 'drupal_get_form',
+        'file' => 'includes/annual_return_alc_report.inc',
+        'page arguments' => array('get_annual_return_report_form_public'),
+        'access arguments' => array('access content'),
+    );
+
+    $items['annual-return-report-est-count'] = array(
+        'title' => t('Annual Return Reports'),
+        'page callback' => 'drupal_get_form',
+        'file' => 'includes/annual_return_alc_report.inc',
+        'page arguments' => array('get_annual_return_report_est_count'),
+        'access arguments' => array('access content'),
+    );
+
+    $items['received-self-certification-application'] = array(
+        'title' => 'Received Self Certification Application',
+        'page callback' => 'get_self_certification_application',
+        'file' => 'includes/self-certification-application-list.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+    $items['self-certification-application-view/%'] = array(
+        'title' => 'Application Details of Self Certification',
+        'page callback' => 'self_certification_application_view',
+        'page arguments' => array(1),
+        'file' => 'includes/self-certification-application-view.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+    $items['register-record'] = array(
+        'title' => 'Register Record Repository',
+        'page callback' => 'register_record_admin_list',
+        'file' => 'includes/register_record_repository_data.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+    $items['license_history/%'] = array(
+        'title' => 'License History ',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('license_history', 1),
+        'file' => 'includes/license_history.inc',
+        'access arguments' => array('Permission to allofficer'),
+    );
+    // $items['external-services/%'] = array(
+    //     'title' => 'External Services',
+    //     'page callback' => 'external_services',
+    //     'page arguments' => array(1),
+    //     'file' => 'includes/external_services.inc',
+    //     'access arguments' => array('Permission to allofficer'),
+    // );
+    // *************** Official Migrant Jobseeker start***************
+    // $items['official-karmasathi-list/%/%'] = array(
+    //     'title' => 'Karmasathi-Migrant Worker Application List',
+    //     'page callback' => 'drupal_get_form',
+    //     'page arguments' => array('karmasathi_migrant_list', 1, 2),
+    //     'file' => 'includes/karmasathi_migrant_list.inc',
+    //     'access arguments' => array('Permission for applications view'),
+    // );
+    // $items['official-karmasathi-list-xls/%/%'] = array(
+    //     'title' => 'Karmasathi-Migrant Worker Application List',
+    //     'page callback' => 'karmasathi_migrant_list',
+    //     'page arguments' => array(1, 2),
+    //     'file' => 'includes/karmasathi_migrant_list_xls.inc',
+    //     'access arguments' => array('Permission for applications view'),
+    // );
+
+    $items['duare-sarkar-official-karmasathi-list/%/%'] = array(
+        'title' => 'Application List',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('ds_karmasathi_migrant_list', 1, 2),
+        'file' => 'includes/ds_karmasathi_migrant_list.inc',
+        'access arguments' => array('Permission to allofficer'),
+    );
+    // $items['duare-sarkar-official-karmasathi-list-xls'] = array(
+    //     'title' => 'Duare Sarkar Application List',
+    //     'page callback' => 'drupal_get_form',
+    //     'page arguments' => array('ds_karmasathi_migrant_list'),
+    //     'file' => 'includes/ds_karmasathi_migrant_list_xls.inc',
+    //     'access arguments' => array('Permission to allofficer'),
+    // );
+
+    // $items['karmasathi-migrant-details'] = array(
+    //     'title' => 'Karmasathi-Migrant Worker Details',
+    //     'page callback' => 'drupal_get_form',
+    //     'page arguments' => array('karmasathi_migrant_details'),
+    //     'file' => 'includes/karmasathi_migrant_details.inc',
+    //     'access arguments' => array('Permission to allofficer'),
+    // );
+    // $items['karmasathi-migrant-details-dev'] = array(
+    //     'title' => 'Karmasathi-Migrant Worker Details',
+    //     'page callback' => 'drupal_get_form',
+    //     'page arguments' => array('karmasathi_migrant_details'),
+    //     'file' => 'includes/karmasathi_migrant_details-dev.inc',
+    //     'access arguments' => array('Permission to allofficer'),
+    // );
+
+    // $items['migrant-worker-action/%'] = array(
+    // 	'title' 			=> 'Migrant Wroker',
+    // 	'page callback' 	=> 'drupal_get_form',
+    // 	'page arguments' 	=> array('migrant_job_seeker_action',1),
+    // 	'file' 				=> 'includes/migrant_job_seeker_details.inc',
+    // 	'access arguments'  => array('Permission to allofficer'),
+    // );
+    // $items['emergency-details'] = array(
+    // 	'title' 			=> 'Emergency Details',
+    // 	'page callback' 	=> 'drupal_get_form',
+    // 	'page arguments' 	=> array('emergency_details'),
+    // 	'file' 				=> 'includes/migrant_emergency_details.inc',
+    // 	'access arguments'  => array('Permission to allofficer'),
+    // );
+    // $items['karmasathi-grievance-list'] = array(
+    //     'title' => 'Grievance Details',
+    //     'page callback' => 'drupal_get_form',
+    //     'page arguments' => array('grievance_list'),
+    //     'file' => 'includes/karmasathi_grievance_details.inc',
+    //     'access arguments' => array('Permission for applications view'),
+    // );
+    // $items['karmasathi-grievance-details'] = array(
+    //     'title' => 'Grievance View',
+    //     'page callback' => 'drupal_get_form',
+    //     'page arguments' => array('karmasathi_grievance_view'),
+    //     'file' => 'includes/karmasathi_grievance_details.inc',
+    //     'access arguments' => array('Permission for applications view'),
+    // );
+    // $items['services-details'] = array(
+    // 	'title' 			=> 'Services Details',
+    // 	'page callback' 	=> 'drupal_get_form',
+    // 	'page arguments' 	=> array('services_details'),
+    // 	'file' 				=> 'includes/migrant_services_details.inc',
+    // 	'access arguments'  => array('Permission to allofficer'),
+    // );
+
+    // $items['migrant-worker-emergency-details'] = array(
+    // 	'title' 			=> 'Emergency View',
+    // 	'page callback' 	=> 'drupal_get_form',
+    // 	'page arguments' 	=> array('migrant_worker_emergency_view'),
+    // 	'file' 				=> 'includes/migrant_emergency_details.inc',
+    // 	'access arguments'  => array('Permission to allofficer'),
+    // );
+    // $items['migrant-worker-services-details'] = array(
+    // 	'title' 			=> 'Services View',
+    // 	'page callback' 	=> 'drupal_get_form',
+    // 	'page arguments' 	=> array('migrant_worker_services_view'),
+    // 	'file' 				=> 'includes/migrant_services_details.inc',
+    // 	'access arguments'  => array('Permission to allofficer'),
+    // );
+    // $items['migrant-services-action-taken'] = array(
+    // 	'title' 			=> 'Services View',
+    // 	'page callback' 	=> 'drupal_get_form',
+    // 	'page arguments' 	=> array('service_action_view'),
+    // 	'file' 				=> 'includes/migrant_services_details.inc',
+    // 	'access arguments'  => array('Permission to allofficer'),
+    // );
+    // $items['download-audio'] = array(
+    //     'title' => 'Download Audio',
+    //     'page callback' => 'download_audio',
+    //     'file' => 'includes/migrant_emergency_details.inc',
+    //     'access arguments' => array('Permission for applications view'),
+
+    // );
+    // $items['download-letter/%/%/OFFICIAL-LETTER'] = array(
+    //     'title' => 'Download Official Letter',
+    //     'page callback' => 'drupal_get_form',
+    //     'page arguments' => array('download_official_letter', 1, 2),
+    //     'file' => 'includes/download_letter_official.inc',
+    //     'access arguments' => array('Permission for applications view'),
+
+    // );
+    // *************** Official Migrant Jobseeker end***************
+
+    // *************** Duare Sarker Migrant Jobseeker***************
+    // $items['duare-sarkar-add-user'] = array(
+    //     'title' => 'ADD USER FOR DUARE SARKAR',
+    //     'page callback' => 'drupal_get_form',
+    //     'page arguments' => array('add_slo_form'),
+    //     'file' => 'includes/duare_sarkar_user.inc',
+    //     'access arguments' => array('Permission_for_alc')
+    // );
+    // $items['duare-sarkar-user-list'] = array(
+    //     'title' => 'LIST USER FOR DUARE SARKAR',
+    //     'page callback' => 'drupal_get_form',
+    //     'page arguments' => array('slo_list'),
+    //     'file' => 'includes/duare_sarkar_user.inc',
+    //     'access arguments' => array('Permission_for_alc')
+    // );
+    // $items['view-duare-sarkar-user'] = array(
+    //     'title' => '',
+    //     'page callback' => 'slo_details_view',
+    //     'type' => MENU_CALLBACK,
+    //     'file' => 'includes/duare_sarkar_user.inc',
+    //     'access arguments' => array('Permission_for_alc')
+    // );
+    // $items['duare-sarkar-change-deo-password'] = array(
+    //     'title' => 'CHANGE PASSWORD',
+    //     'page callback' => 'drupal_get_form',
+    //     'page arguments' => array('change_deo_password'),
+    //     'file' => 'includes/duare_sarkar_user.inc',
+    //     'access arguments' => array('Permission_for_alc')
+    // );
+    // $items['ds-report'] = array(
+    //     'title' => 'DS Report',
+    //     'page callback' => 'drupal_get_form',
+    //     'page arguments' => array('admin_ds_report_form'),
+    //     'file' => 'includes/duare_sarkar_report.inc',
+    //     'access arguments' => array('Permission_for_alc'),
+    // );
+    // $items['superadmin/duare-sarkar-user-list'] = array(
+    //     'title' => 'LIST USER FOR DUARE SARKAR',
+    //     'page callback' => 'drupal_get_form',
+    //     'page arguments' => array('slo_list'),
+    //     'file' => 'includes/duare_sarkar_user.inc',
+    //     'access arguments' => array('Permission for application super admin')
+    // );
+
+    // $items['superadmin/view-duare-sarkar-user'] = array(
+    //     'title' => '',
+    //     'page callback' => 'slo_details_view',
+    //     'type' => MENU_CALLBACK,
+    //     'file' => 'includes/duare_sarkar_user.inc',
+    //     'access arguments' => array('Permission for application super admin')
+    // );
+    // $items['superadmin/duare-sarkar-change-deo-password'] = array(
+    //     'title' => 'CHANGE PASSWORD',
+    //     'page callback' => 'drupal_get_form',
+    //     'page arguments' => array('change_deo_password'),
+    //     'file' => 'includes/duare_sarkar_user.inc',
+    //     'access arguments' => array('Permission for application super admin')
+    // );
+
+
+    $items['deactivate-deo/%'] = array(
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('deactivate_deo_user', 1),
+        'file' => 'includes/duare_sarkar_user.inc',
+        'access arguments' => array('Permission for application super admin')
+    );
+    $items['superadmin/duare-sarkar-add-user'] = array(
+        'title' => 'ADD USER FOR DUARE SARKAR',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('add_slo_form'),
+        'file' => 'includes/duare_sarkar_user_dev.inc',
+        'access arguments' => array('Permission for application super admin')
+    );
+    $items['add-hard-copy'] = array(
+        'title' => 'ADD HARD COPY',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('hard_copy_form'),
+        'file' => 'includes/hard_copy_form.inc',
+        'access arguments' => array('Permission_for_alc')
+    );
+    $items['hard-copy-list'] = array(
+        'title' => 'HARD COPY LIST',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('hard_copy_list'),
+        'file' => 'includes/hard_copy_form.inc',
+        'access arguments' => array('Permission_for_alc')
+    );
+    $items['update-hard-copy'] = array(
+        'title' => 'UPDATE HARD COPY',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('update_hard_copy_form'),
+        'file' => 'includes/hard_copy_form.inc',
+        'access arguments' => array('Permission_for_alc')
+    );
+    $items['receivedapplications-dev'] = array(
+        'title callback' => 'receivedapplications_title_callback',
+        'title arguments' => array(1),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('received_applications_list'),
+        'file' => 'includes/received_applications_list_dev.inc',
+        'access arguments' => array('Permission for application list_alc'),
+    );
+
+
+    return $items;
+
+}
+
+// *************** Official Migrant address ***************
+function get_full_address_migrant($fieldArr = '', $address_result = '')
+{
+    //echo $table.'<br/>'.$type.'<br/>'.$id.'<br/>'; print_r($fieldArr);exit;
+    if (($fieldArr == '') || empty($fieldArr)) {
+        $fieldArr = array();
+    }
+    if (($address_result == '') || empty($address_result)) {
+        $address_result = array();
+    }
+
+    $location_address_dist = db_select('district_master', 'd');
+    $location_address_dist->fields('d', array('district_name'));
+    $location_address_dist->condition('d.district_code', $address_result[0], '=');
+    $location_result_dist = $location_address_dist->execute()->fetchAssoc();
+
+    $location_address_subdiv = db_select('sub_division', 's');
+    $location_address_subdiv->fields('s', array('sub_div_name'));
+    $location_address_subdiv->condition('s.sub_div_code', $address_result[1], '=');
+    $location_result_subdiv = $location_address_subdiv->execute()->fetchAssoc();
+
+    $location_address_block = db_select('block_mun_master', 'b');
+    $location_address_block->fields('b', array('block_mun_name'));
+    $location_address_block->condition('b.block_code', $address_result[3], '=');
+    $location_result_block = $location_address_block->execute()->fetchAssoc();
+
+    $location_address_ps = db_select('police_station', 'p');
+    $location_address_ps->fields('p', array('name_of_police_station'));
+    $location_address_ps->condition('p.police_station_code', $address_result[5], '=');
+    $location_result_ps = $location_address_ps->execute()->fetchAssoc();
+
+    $location_address_vill = db_select('village_ward_master', 'v');
+    $location_address_vill->fields('v', array('village_name'));
+    $location_address_vill->condition('v.village_code', $address_result[4], '=');
+    $location_result_vill = $location_address_vill->execute()->fetchAssoc();
+
+    $location_address_state = db_select('state_master', 'state');
+    $location_address_state->fields('state', array('statename'));
+    $location_address_state->condition('state.id', 1, '=');
+    $location_result_state = $location_address_state->execute()->fetchAssoc();
+
+
+    //$location_result = array($location_result_dist,$location_result_subdiv,$location_result_block,$location_result_vill,$location_result_ps,$location_result_state);
+    $location_result['village_name'] = $location_result_vill['village_name'];
+    $location_result['district_name'] = $location_result_dist['district_name'];
+    $location_result['subdiv_name'] = $location_result_subdiv['sub_div_name'];
+    $location_result['block_mun_name'] = $location_result_block['block_mun_name'];
+    $location_result['police_station'] = $location_result_ps['name_of_police_station'];
+
+    $location_result[$fieldArr[2]] = $address_result[2];
+    $location_result[$fieldArr[0]] = $address_result[0];
+    $location_result[$fieldArr[6]] = $address_result[6];
+    $location_result[$fieldArr[7]] = $address_result[7];
+
+
+    if (!empty($location_result)) {
+
+        if (trim($location_result[$fieldArr[2]]) == "B") {
+
+            $text_AreaType_loc = "Block - ";
+            $areatype_loc_name = ucwords($location_result['village_name']);
+        } elseif (trim($location_result[$fieldArr[2]]) == "M") {
+            $areatype_loc_name = 'Ward-' . $location_result['village_name'];
+        } elseif (trim($location_result[$fieldArr[2]]) == "C") {
+            $areatype_loc_name = $location_result['village_name'];
+        } elseif (trim($location_result[$fieldArr[2]]) == "N") {
+            $areatype_loc_name = 'Notified Area - ' . $location_result['village_name'];
+        }
+        //print_r($areatype_loc_name);die;
+
+
+        if ($location_result[$fieldArr[0]] == 17) {  //If the area is Kolkata ***/
+            if (!empty($location_result['village_name'])) {
+                $location_address_result .= $areatype_loc_name;
+            }
+            if (!empty($location_result['police_station'])) {
+                $location_address_result .= ',&nbsp;PS - ' . $location_result['police_station'];
+            }
+            if (!empty($location_result['district_name'])) {
+                $location_address_result .= ',&nbsp;' . $location_result['district_name'] . ', PIN- ' . $location_result[$fieldArr[6]];
+            }
+        } else {
+
+            if ($location_result[$fieldArr[7]] == 1 || empty($fieldArr[7])) {
+
+                if (!empty($location_result_vill['village_name'])) {
+                    $location_address_result .= $areatype_loc_name;
+                }
+                if (!empty($location_result[$fieldArr[2]]) && !empty($location_result['block_mun_name'])) {
+                    $location_address_result .= ',&nbsp;' . $text_AreaType_loc . $location_result['block_mun_name'] . ',<br/>';
+                }
+                if (!empty($location_result['subdiv_name'])) {
+                    $location_address_result .= $location_result['subdiv_name'];
+                }
+                if (!empty($location_result['police_station'])) {
+                    $location_address_result .= ',&nbsp;PS - ' . $location_result['police_station'];
+                }
+                if (!empty($location_result['district_name'])) {
+                    $location_address_result .= ',<br/>' . $location_result['district_name'];
+                }
+                if (!empty($location_result[$fieldArr[6]])) {
+                    $location_address_result .= '&nbsp;, PIN- ' . $location_result[$fieldArr[6]];
+                }
+                if (!empty($location_result[$fieldArr[7]])) {
+                    $location_address_result .= ',&nbsp;' . $location_result['statename'];
+                } else {
+                    $location_address_result .= '';
+                }
+
+            } else {
+                //If the state is Others ***/
+                if (!empty($location_result['village_name'])) {
+                    $location_address_result .= $location_result['village_name'];
+                } else {
+                    $location_address_result .= '';
+                }
+                if (!empty($location_result['block_mun_name'])) {
+                    $location_address_result .= ', ' . $location_result['block_mun_name'];
+                } else {
+                    $location_address_result .= '';
+                }
+                if (!empty($location_result['subdiv_name'])) {
+                    $location_address_result .= ', ' . $location_result['subdiv_name'];
+                } else {
+                    $location_address_result .= '';
+                }
+
+                if ((!empty($location_result['district_name'])) && !empty($location_result['subdiv_name'])) {
+                    $location_address_result .= ',<br/>' . $location_result['district_name'];
+                } else if ((!empty($location_result['district_name'])) && empty($location_result['subdiv_name'])) {
+                    $location_address_result .= $location_result['district_name'];
+                } else {
+                    $location_address_result .= '';
+                }
+                if ((!empty($location_result[$fieldArr[7]])) && !empty($location_result['district_name'])) {
+                    $location_address_result .= ',&nbsp;' . $location_result['statename'];
+                } else if ((!empty($location_result[$fieldArr[7]])) && empty($location_result['district_name'])) {
+                    $location_address_result .= $location_result['statename'];
+                } else {
+                    $location_address_result .= '';
+                }
+                if (!empty($location_result['police_station'])) {
+                    $location_address_result .= ', PS:-' . $location_result['police_station'];
+                } else {
+                    $location_address_result .= '';
+                }
+            }
+        }
+    }
+
+    return $location_address_result;
+}
+
+
+function receivedapplications_license_ismw_title_callback($licenseType = '', $actId = '')
+{
+    $act_id = encryption_decryption_fun('decrypt', $actId);
+    if ($act_id == 42) {
+        $title = 'Applications List for Grant of License for Employment Under ISMW';
+    } else if ($act_id == 43) {
+        $title = 'Applications List for Grant of License for Recruitment Under ISMW';
+    }
+    return $title;
+
+}
+
+/* title callback start */
+function receivedapplications_title_callback($act_id = '', $application_status = '')
+{
+    if ($application_status == 'forward') {
+        $application_status = 'forwarded';
+    } else if ($application_status == 'finalsubmit') {
+        $application_status = 'final submitted';
+    } else if ($application_status == 'renewal') {
+        $application_status = 'renewal';
+    }
+
+
+    $act_id = encryption_decryption_fun('decrypt', $act_id);
+
+    if ($act_id == 1) {
+        // return ucfirst($application_status).' Application for Amendment of Registration Certificate under the Contract Labour (R&A) Act, 1970';
+        return ucfirst($application_status) . ' Application for Registration of Principal Employer under the Contract Labour (R&A) Act, 1970';
+    } else if ($act_id == 2) {
+        return ucfirst($application_status) . ' Application for Registration of Establishment under BOCWA';
+    } else if ($act_id == 4) {
+        return ucfirst($application_status) . ' Application for Registration of Principal Employer under ISMW';
+    } else if ($act_id == 3) {
+        return ucfirst($application_status) . ' Application for Registration of Motor Transport Undertaking';
+    } else if ($act_id == 6) {
+        return ucfirst($application_status) . ' Application for BOCWA CESS';
+    }
+}
+
+function renewal_contractor_title_callback($application_status = '')
+{
+    if ($application_status == 'forward') {
+        $application_status = 'forwarded';
+    } else if ($application_status == 'finalsubmit') {
+        $application_status = 'final submited';
+    }
+    return ucfirst($application_status) . ' Application for Renewal of Contractor License under The Contract Labour (R&A) Act, 1970';
+}
+
+function license_contractor_title_callback($application_status = '')
+{
+    if ($application_status == 'forward') {
+        $application_status = 'forwarded';
+    } else if ($application_status == 'finalsubmit') {
+        $application_status = 'final submited';
+    } elseif (empty($application_status)) {
+        $application_status = 'all';
+    }
+    return ucfirst($application_status) . ' Application for Contractor License under The Contract Labour (R&A) Act, 1970';
+}
+
+function amendment_contractor_title_callback($cls = '', $application_status = '')
+{
+    if ($application_status == 'forward') {
+        $application_status = 'forwarded';
+    } else if ($application_status == 'finalsubmit') {
+        $application_status = 'final submited';
+    }
+    return ucfirst($application_status) . ' Application for Amendment of Contractor License under the Contract Labour (R&A) Act, 1970';
+}
+
+function bocwa_application_list_title_callback($arg = '')
+{
+    if (!empty($arg)) {
+        $arg = str_replace("-", " ", $arg);
+        $title = strtoupper(t('Application List of Establishment Registration Under BOCWA(' . $arg . ')'));
+    } else {
+        $title = strtoupper(t('Application List of Establishment Registration Under BOCWA'));
+    }
+    return $title;
+}
+
+function alc_mtw_renewal_list_title_callback($act_id = '', $application_status = '')
+{
+    if ($application_status == 'forward') {
+        $application_status = 'forwarded';
+    } else if ($application_status == 'finalsubmit') {
+        $application_status = 'final submited';
+    }
+    return 'List of ' . ucfirst($application_status) . ' Application for Renewal of Registration Certificate under Motor Transport Undertaking';
+}
+
+/* title callback end*/
+function rlo_area_form($form, &$form_state)
+{
+    global $base_root, $base_path, $user;
+
+    $fetch_ofc_map = db_select('l_ofc_map_address ', 'lofc');
+    $fetch_ofc_map->InnerJoin('l_customuser_relation_address', 'lcra', 'lcra.sub_div_code = lofc.area_code');
+
+    $fetch_ofc_map->fields('lofc', array('map_link'));
+    $fetch_ofc_map->condition('lcra.user_id ', $user->uid, '=');
+    $fetch_ofc_map->condition('lofc.area_type ', 'RLO');
+    $fetch_ofc_map->condition('lofc.is_active ', '1', '=');
+
+    $fetch_ofc_map_result = $fetch_ofc_map->execute()->fetchAssoc();
+
+    if (!empty($fetch_ofc_map_result)) {
+        $map_details = '<iframe src="https://www.google.com/maps/' . $fetch_ofc_map_result['map_link'] . '" width="850" height="600" frameborder="0" style="border:0" allowfullscreen></iframe>';
+    } else {
+        $map_details = 'Not Available';
+    }
+
+
+    $ui = '<div class="application_list">
+		  <table width="100%" class="application_view" style="border:none;">   			
+			 <tr>			 	 
+				 <td align="center">' . $map_details . '</td>
+		     </tr>			 
+		 </table>
+		 </div>';
+    $login_element = array(
+        '#title' => t(''),
+        '#children' => $ui,
+        '#collapsible' => true,
+        '#collapsed' => true,
+    );
+    $fieldset_login = theme('fieldset', array('element' => $login_element));
+    $form = array();
+
+    $form['login_information'] = array(
+        '#markup' => $fieldset_login,
+        '#prefix' => '<div id="logindiv">',
+        '#suffix' => '</div>'
+    );
+    return $form;
+}
+
+function rlo_details_form($form, &$form_state)
+{
+    global $user;
+    $uid = $user->uid;
+    $total_blocks = "";
+    $total_inspectors = "";
+    $user_type_query = "select officenumber from l_custom_user_detail where usr_id='" . $uid . "'";
+
+    $user_type_result = db_query($user_type_query);
+
+    foreach ($user_type_result as $dataUser) {
+
+        $officenumber = trim($dataUser->officenumber);
+    }
+
+
+    $query_user_info = "SELECT distinct cra.id AS id, cra.user_status AS user_status, cra.sub_div_code, subdv.sub_div_name AS sub_div_name,dis.district_name FROM l_customuser_relation_address cra Inner Join sub_division subdv ON 
+					cra.sub_div_code =subdv.sub_div_code Inner Join district_master dis ON 
+					cra.district_code =dis.district_code  WHERE cra.user_id ='" . $uid . "'";
+
+    $user_type_info = db_query($query_user_info);
+    foreach ($user_type_info as $dataUserInfo) {
+        $usr_dist_name = trim($dataUserInfo->district_name);
+        $subdivision_code = trim($dataUserInfo->sub_div_code);
+        $user_subdivision_name = $user_subdivision_name . trim($dataUserInfo->sub_div_name) . ",";
+
+        /*** total no block ***/
+
+        $no_block = "SELECT count(block_code) as totalblock from block_mun_master bmm where sub_division_code='" . $subdivision_code . "'";
+        $total_block = db_query($no_block);
+
+        foreach ($total_block as $rows) {
+            $total_blocks = $total_blocks + $rows->totalblock;
+        }
+
+        /***total inspector***/
+        $no_inspector = "select count(lcra.user_id) as totalinspector from l_customuser_relation_address lcra ,users_roles ur where ur.uid = lcra.user_id and ur.rid='7' and lcra.sub_div_code='" . $subdivision_code . "'";
+        $total_inspector = db_query($no_inspector);
+
+        foreach ($total_inspector as $row) {
+            $total_inspectors = $total_inspectors + $row->totalinspector;
+        }
+    }
+
+    $viewblockdetails = l('view list', 'rlo_block_details', array());
+    $viewinspectordetails = l('Details', 'rlo_insp_details', array());
+
+    $get_office_name_address = db_select('l_rlo_additional_info', 'lrai');
+    $get_office_name_address->fields('lrai', array('clra_certificate_address', 'office_name'));
+    $get_office_name_address->condition('lrai.sub_div_code', $subdivision_code, '=');
+    $result = $get_office_name_address->execute()->fetchAssoc();
+
+    if ($result['office_name'] == 'DLC') {
+        $office_name = 'OFFICE OF THE DEPUTY LABOUR COMMISSIONER<br/>';
+    } elseif ($result['office_name'] == 'ALC') {
+        $office_name = 'OFFICE OF THE ASSISTANT LABOUR COMMISSIONER<br/>';
+    } elseif ($result['office_name'] == 'KLC') {
+        $office_name = 'OFFICE OF THE LABOUR COMMISSIONER EL & MW SECTION<br>';
+    }
+
+
+    $ui = '<div class="application_list">
+		   <table width="100%" class="application_view">
+		   <tr>
+			 	 <td width="30%">RLO/Sub Division Name</td>
+				 <td>' . substr($user_subdivision_name, 0, -1) . '</td>
+		     </tr>
+		   <tr>
+		   		<td>District Name</td>
+				 <td>' . $usr_dist_name . '</td>
+		    </tr>	    
+			 <tr>
+			 	 <td>Office Phone Number</td>
+				 <td>' . $officenumber . '&nbsp;<span id="change_phone_no">Change</span></td>
+		     </tr> 			 	
+			  <tr>
+			 	 <td>Number of Block</td>		    		 	 
+				 <td>' . $total_blocks . '&nbsp;&nbsp;&nbsp;' . $viewblockdetails . '</td>
+		     </tr>	
+			  <tr>
+			 	 <td>Number of Inspector</td>		    		 	 
+				 <td>' . $total_inspectors . '&nbsp;&nbsp;&nbsp;' . $viewinspectordetails . '</td>
+		     </tr>
+			  <tr>
+			 	 <td>Office Name and Address<br/> [For Certificate]</td>				 
+				 <td>' . $office_name . $result['clra_certificate_address'] . '&nbsp;' . l('Edit', 'office-address') . '</td>
+		     </tr>			 
+		 </table>
+		 </div>';
+    $login_element = array(
+        '#title' => t(''),
+        '#children' => $ui,
+        '#collapsible' => true,
+        '#collapsed' => true,
+    );
+    $fieldset_login = theme('fieldset', array('element' => $login_element));
+    $form = array();
+
+    $form['login_information'] = array(
+        '#markup' => $fieldset_login,
+        '#prefix' => '<div id="logindiv">',
+        '#suffix' => '</div>'
+    );
+    return $form;
+}
+
+function alc_summary($form, &$form_state)
+{
+    global $user;
+    $uid = $user->uid;
+
+    $user_type_query = "select usr_id,usr_type,fullname,mobile,officenumber from l_custom_user_detail where usr_id='" . $uid . "'";
+
+    $user_type_result = db_query($user_type_query);
+
+    foreach ($user_type_result as $dataUser) {
+        $usr_type = trim($dataUser->usr_type);
+        $fullname = trim($dataUser->fullname);
+        $mobile = trim($dataUser->mobile);
+        $officenumber = trim($dataUser->officenumber);
+
+
+    }
+
+    $query_user = db_select('users', 'u');
+    $query_user->fields('u', array('name', 'mail'));
+    $query_user->condition('u.uid', $uid, '=');
+    $result_user = $query_user->execute();
+    foreach ($result_user as $row) {
+        $user_name = trim($row->name);
+        $email = trim($row->mail);
+    }
+
+
+    $query_user_info = "SELECT distinct cra.id AS id, cra.user_status AS user_status, cra.sub_div_code, subdv.sub_div_name AS sub_div_name,dis.district_name FROM l_customuser_relation_address cra Inner Join sub_division subdv ON 
+					cra.sub_div_code =subdv.sub_div_code Inner Join district_master dis ON 
+					cra.district_code =dis.district_code  WHERE cra.user_id ='" . $uid . "'";
+
+
+    $user_type_info = db_query($query_user_info);
+    foreach ($user_type_info as $dataUserInfo) {
+        $usr_dist_name = trim($dataUserInfo->district_name);
+        $user_subdivision_name = $user_subdivision_name . trim($dataUserInfo->sub_div_name) . ",";
+
+
+        $curyr = date("Y");
+        $designation = '';
+
+        if ($usr_type = 'ALC') {
+            $designation = 'Assistant Labour Commissioner';
+        }
+
+        $count_pending_app = db_query("select count(id) as pending_app from l_clra_registration_master  where status='0' and loc_e_subdivision='" . $dataUserInfo->sub_div_code . "'");
+        if ($count_pending_app->rowCount() > 0) {
+            foreach ($count_pending_app as $count_1) {
+                $pending_count = $count_1->pending_app;
+            }
+        }
+
+        $count_backed_app = db_query("select count(id) as backed_app from l_clra_registration_master where status='B' and loc_e_subdivision='" . $dataUserInfo->sub_div_code . "'");
+        if ($count_backed_app->rowCount() > 0) {
+            foreach ($count_backed_app as $count_2) {
+                $backed_count = $count_2->backed_app;
+            }
+        }
+        $count_forwarded_app = db_query("select count(id) as forwarded_app from l_clra_registration_master where status='F' and loc_e_subdivision='" . $dataUserInfo->sub_div_code . "'");
+        if ($count_forwarded_app->rowCount() > 0) {
+            foreach ($count_forwarded_app as $count_3) {
+                $forwarded_count = $count_3->forwarded_app;
+            }
+        }
+
+        $count_approved_app = db_query("select count(id) as approved_app from l_clra_registration_master where status='V' and loc_e_subdivision='" . $dataUserInfo->sub_div_code . "'");
+        if ($count_approved_app->rowCount() > 0) {
+            foreach ($count_approved_app as $count_4) {
+                $approved_count = $count_4->approved_app;
+            }
+        }
+        $count_verified_app = db_query("select count(id) as verified_app from l_clra_registration_master where status='V' and loc_e_subdivision='" . $dataUserInfo->sub_div_code . "'");
+        if ($count_verified_app->rowCount() > 0) {
+            foreach ($count_verified_app as $count_5) {
+                $verified_count = $count_5->verified_app;
+            }
+        }
+        $count_back_to_insp_app = db_query("select count(id) as back_to_insp_app from l_clra_registration_master where status='BI' and loc_e_subdivision='" . $dataUserInfo->sub_div_code . "'");
+        if ($count_forwarded_app->rowCount() > 0) {
+            foreach ($count_back_to_insp_app as $count_6) {
+                $back_to_insp_count = $count_6->back_to_insp_app;
+            }
+        }
+
+        $count_call_appliacnt_app = db_query("select count(id) as call_applicant_app from l_clra_registration_master where status='C' and loc_e_subdivision='" . $dataUserInfo->sub_div_code . "'");
+        if ($count_call_appliacnt_app->rowCount() > 0) {
+            foreach ($count_call_appliacnt_app as $count_7) {
+                $call_appliacnt_count = $count_7->call_applicant_app;
+            }
+        }
+
+        $count_issue_app = db_query("select count(id) as issue_app from l_clra_registration_master where status='I' and loc_e_subdivision='" . $dataUserInfo->sub_div_code . "'");
+        if ($count_issue_app->rowCount() > 0) {
+            foreach ($count_issue_app as $count_8) {
+                $issue_app_count = $count_8->issue_app;
+            }
+        }
+
+        $count_reject_app = db_query("select count(id) as reject_app from l_clra_registration_master where status='R' and loc_e_subdivision='" . $dataUserInfo->sub_div_code . "'");
+        if ($count_reject_app->rowCount() > 0) {
+            foreach ($count_reject_app as $count_9) {
+
+                $reject_app_count = $count_9->reject_app;
+
+            }
+        }
+
+
+    }
+
+
+    $ui = '<div class="application_list" style="width:100%">
+		  <table width="100%" class="application_view">
+   			 <tr>
+			 	 <td colspan="2" align="center">DETAILS</td>				 
+		     </tr>
+			 <tr>
+			 	 <td>Pending applications</td>
+				 <td>' . $pending_count . '</td>
+		     </tr>
+			 <tr>
+			 	 <td>Back For Correction</td>
+				 <td>' . $backed_count . '</td>
+		     </tr>
+			 <tr>
+			 	 <td>Back To Inspector</td>
+				 <td>' . $back_to_insp_count . '</td>
+		     </tr>
+			 <tr>
+			 	 <td>Approved For Fees Submit</td>
+				 <td>' . $approved_count . '</td>
+		     </tr>
+			  
+			 <tr>
+			 	 <td>Call Applicants</td>
+				 <td>' . $call_appliacnt_count . '</td>
+		     </tr>
+			 <tr>
+			 	 <td>Issue Certificates</td>
+				 <td>' . $issue_app_count . '</td>
+		     </tr>
+			 <tr>
+			 	 <td>Rejected Applications</td>
+				 <td>' . $reject_app_count . '</td>
+		     </tr>
+			 <!--<tr>
+			 	 <td>Verified (Last month)</td>
+				 <td>4</td>
+		     </tr>-->
+		 </table>
+		 </div>
+		 <div class="application_list" style="width:100%">
+		 <table width="100%" class="application_view">
+   			 <tr>
+			 	 <td colspan="2" align="center">Account Activity</td>				 
+		     </tr>
+			 <tr>
+			 	 <td>&nbsp;</td>
+				 <td>&nbsp;</td>
+		     </tr>			 
+		 </table>
+		 </div>';
+    $login_element = array(
+        '#title' => t(''),
+        '#children' => $ui,
+        '#collapsible' => true,
+        '#collapsed' => true,
+    );
+    $fieldset_login = theme('fieldset', array('element' => $login_element));
+    $form = array();
+
+    $form['login_information'] = array(
+        '#markup' => $fieldset_login,
+        '#prefix' => '<div id="logindiv">',
+        '#suffix' => '</div>'
+    );
+    return $form;
+}
+
+
+function alc_permission()
+{
+    $permission = array();
+    $permission['Permission for application list_alc'] = array(
+        'title' => t('Permission for application list_alc'),
+        'description' => t('Permission for application list_alc'),
+    );
+
+    $permission['Permission for applications view_alc'] = array(
+        'title' => t('Permission for applications view_alc'),
+        'description' => t('Permission for applications view_alc'),
+    );
+    $permission['Permission_for_api_call'] = array(
+        'title' => t('Permission for Api call'),
+        'description' => t('Permission for applications api'),
+    );
+
+    return $permission;
+}
+
+function applicantview_by_alc_page_content($application_id = '', $user_id)
+{
+    global $user;
+
+    $action = 'decrypt';
+    $userid = encryption_decryption_fun($action, $user_id);
+
+    $action = 'decrypt';
+    $id = encryption_decryption_fun($action, $application_id);
+
+
+    $data = array();
+
+    if (!empty($id)) {
+
+        $identification_number = $data[0]->identification_number;
+
+        $master_part_clra_reg = db_select('l_clra_registration_master', 'lcrm');
+        $master_part_clra_reg->fields('lcrm', array());
+        $master_part_clra_reg->condition('lcrm.user_id', $userid);
+        $master_part_clra_reg->condition('lcrm.id', $id);
+        $master_part_clra_reg_result = $master_part_clra_reg->execute();
+
+        $content = $master_part_clra_reg_result->fetchAssoc();
+
+
+        //----------------------Nature of Work of Principal Employeer------------------------------
+        $principal_employee_nature = "";
+
+        $fetch_wrork = db_select('l_clra_reg_nature_of_work ', 'lcrnw');
+        $fetch_wrork->InnerJoin('contractor_works', 'cw', 'cw.contractor_work_id=lcrnw.e_nature_of_work');
+        $fetch_wrork->fields('cw', array('cont_work_name'));
+        $fetch_wrork->fields('lcrnw', array('e_nature_of_work'));
+        $fetch_wrork->condition('lcrnw.user_id', $userid, '=');
+        $fetch_wrork->condition('lcrnw.act_id', 1);
+        $fetch_wrork->condition('lcrnw.is_active', 1);
+        $fetch_wrork->condition('lcrnw.application_id', $id, '=');
+        $fetch_wrork_result = $fetch_wrork->execute();
+
+        if ($fetch_wrork_result->rowcount() > 0) {
+            foreach ($fetch_wrork_result as $row) {
+
+                if ($row->e_nature_of_work == 28) {
+                    $pe_nature_wrk = '';
+                } else {
+                    $pe_nature_wrk = $pe_nature_wrk . $row->cont_work_name . ', ';
+
+                }
+            }
+
+            $principal_employee_nature = substr($pe_nature_wrk, 0, -2);
+
+        }
+
+        //-------------Contractor Info Master---------------------
+        $master_part_clra_contractor = db_select('l_contractor_info_master', 'lcim');
+        $master_part_clra_contractor->fields('lcim', array());
+        $master_part_clra_contractor->condition('lcim.user_id', $userid);
+        $master_part_clra_contractor->condition('lcim.application_id', $id);
+        $master_part_clra_docs_result = $master_part_clra_contractor->execute();
+
+        $contractor_info = array();
+        foreach ($master_part_clra_docs_result as $master_part_clra_contractor_row) {
+            $contractor_info[] = $master_part_clra_contractor_row;
+        }
+
+        $query = db_select('l_contractor_info_master', 'lcim');
+        $query->fields('lcim', array());
+        $query->condition('lcim.application_id', $id);
+        $query->condition('lcim.user_id', $userid);
+        $result = $query->execute();
+
+
+        $contractor_nature_wrk = array();
+        while ($record = $result->fetchObject()) {
+            $contractor_id[] = $record->id;
+            $contractor_nature_wrk[0] = $record->other_nature_work;
+            $contractor_wrk_name = db_select('l_clra_con_nature_of_work', 'lccnw');
+            $contractor_wrk_name->leftJoin('contractor_works', 'cw', 'cw.contractor_work_id=lccnw.contractor_nature_of_work');
+            $contractor_wrk_name->fields('lccnw', array('contractor_nature_of_work'));
+            $contractor_wrk_name->fields('cw', array('cont_work_name'));
+            $contractor_wrk_name->condition('lccnw.contractor_id', $record->id);
+            $result_2 = $contractor_wrk_name->execute();
+            while ($record_2 = $result_2->fetchObject()) {
+                $contractor_nature_wrk[$record->id][] = $record_2->cont_work_name;
+
+            }
+        }
+        /*if($user->uid == 85){
+            echo '<pre>'; print_r($contractor_nature_wrk); die;
+        }*/
+
+        $query_remark = db_query("select R.*, U.uid, U.name, UR.rid, RL.name as user_type from l_remarks_master R left join users U on U.uid = R.remark_by left join users_roles as UR on U.uid = UR.uid left join role as RL on UR.rid = RL.rid where R.remark_to = " . $userid . " and R.application_id=" . $id . " and (R.remark_by_role ='4' or R.remark_by_role ='7') and is_active=1 order by R.remark_id desc");
+        $data_remark = $query_remark->fetchAll();
+
+
+        //--------------------Upload Doc----------------------
+        /*if($content['eodb_app_id'] != 0){
+            $enc_doc_array = array('TL'=> '','PD'=> '','AOA'=> '','MOA'=> '','MOC'=>'','FL'=> '','AC'=> '','PC'=> '','BB'	=> '','SC'	=> '','IC'	=> '','AP'=> '','ODSC'=> '','CR'=> '','WO'=> '','ORC'=> '','CH'=>'','FI'=>'');
+            $pdficonlink = '<i class="fa fa-file fa-lg"></i>&nbsp;';
+            $query_result = db_select('l_encrypted_uploaded_documents','leud')->fields('leud',array())->condition('status','1')->condition('act_id',1)->condition('application_id',$id)->execute();
+
+            if($query_result->rowCount() > 0){
+                foreach($query_result as $data ){
+                    $content_docs[$data->document_type_code]['content'] = 'view_documents/'.encryption_decryption_fun('encrypt',$data->id);
+                }
+            }
+        }else{*/
+        $master_part_clra_docs = db_select('l_documents_upload', 'ldu');
+        $master_part_clra_docs->fields('ldu', array());
+        $master_part_clra_docs->condition('ldu.user_id', $userid);
+        $master_part_clra_docs->condition('ldu.application_id', $id);
+        $master_part_clra_docs->condition('ldu.act_id', '1', '=');
+        $master_part_clra_docs_result = $master_part_clra_docs->execute();
+
+        $content_docs = array();
+        foreach ($master_part_clra_docs_result as $master_part_clra_docs_row) {
+            $content_docs[] = $master_part_clra_docs_row;
+        }
+
+        // }
+
+        // print_r($content_docs); die;
+
+
+    }
+
+    //---------------------------trade_union---------------------------------
+    $master_part_trade_union = db_select('l_clra_reg_trade_union_master', 'lcrtu');
+    $master_part_trade_union->fields('lcrtu', array());
+    $master_part_trade_union->condition('lcrtu.user_id', $userid);
+    $master_part_trade_union->condition('lcrtu.application_id', $id);
+    $master_part_trade_union_result = $master_part_trade_union->execute();
+
+    $trade_union_result = $master_part_trade_union_result->fetchAll();
+
+    $var_id = trim($id);
+
+    // if($user->uid == 1094){
+    return theme('new_applicantview_page_by_alc', array('param_remark' => $data_remark, 'content' => $content, /*'param_estaddress' => $fetch_e_add_result,'param_empaddress' => $fetch_emp_add_result,*/'content_docs' => $content_docs, /*'param_mangaddress' => $fetch_manager_add_result,*/'param_work' => $principal_employee_nature, 'contractor_info' => $contractor_info, 'contractor_nature_wrk' => $contractor_nature_wrk, 'var_id' => $var_id, 'userid' => $userid, 'param_trad' => $trade_union_result, 'reg_details' => $reg_details));  // with parameter
+    // }else{
+    // return theme('applicantview_page_by_alc', array('param_remark' => $data_remark,'content'=> $content,/*'param_estaddress' => $fetch_e_add_result,'param_empaddress' => $fetch_emp_add_result,*/'content_docs' => $content_docs,/*'param_mangaddress' => $fetch_manager_add_result,*/'param_work' => $principal_employee_nature,'contractor_info' => $contractor_info,'contractor_nature_wrk' => $contractor_nature_wrk,'var_id' => $var_id,'userid'=>$userid,'param_trad'=>$trade_union_result,'reg_details'=>$reg_details));  // with parameter
+    // }
+
+
+}
+
+function alc_theme()
+{
+    return array(
+        'applicantview_page_by_alc' => array(
+            'path' => drupal_get_path('module', 'alc') . '/templates',
+            'template' => 'applicantview_page_by_alc', //name of template file, place test.tpl.php in your module
+            'variables' => array('param' => NULL)
+        ),
+        'liecnse_view_page' => array(
+            'path' => drupal_get_path('module', 'alc') . '/templates',
+            'template' => 'liecnse_view_page', //name of template file, place test.tpl.php in your module
+            'variables' => array('param' => NULL),
+        ),
+        'new_applicantview_page_by_alc' => array(
+            'path' => drupal_get_path('module', 'alc') . '/templates',
+            'template' => 'new_applicantview_page_by_alc', //name of template file, place test.tpl.php in your module
+            'variables' => array('param' => NULL)
+        ),
+    );
+}
+
+function alc_form($form, &$form_state)
+{
+    global $user;
+
+    $query = db_select('l_customuser_relation_address', 'crt');
+    $query->leftJoin('l_rlo_additional_info', 'ra', 'crt.sub_div_code=ra.sub_div_code');
+    $query->fields('crt', array('user_id'));
+    $query->fields('ra', array('office_mobile_number', 'office_email_address'));
+    $query->condition('crt.user_id', $user->uid);
+    // $query->condition('ra.office_email_address', '', '=');
+    $result = $query->execute()->fetchObject();  /*echo $result->rowCount();*/// print_r($result); die;
+
+    if (empty($result->office_mobile_number) || empty($result->office_email_address)) {
+        drupal_goto('office-address');
+    }
+
+    /*$query_user=db_select('l_custom_user_detail', 'cu');
+    $query_user->fields('cu', array('profile_updated_status'));
+    $query_user->condition('cu.usr_id', $user->uid,'=');
+    $query_user->condition('cu.profile_updated_status', 0,'=');
+    $result = $query_user->execute();
+
+    if($result->rowCount() > 0){
+        drupal_goto('update-user-profile');
+    }*/
+
+
+    /*foreach($user_type_result as $dataUser) {
+        $usr_type=trim($dataUser->usr_type);
+        $fullname =trim($dataUser->fullname);
+        $mobile=trim($dataUser->mobile);
+        $officenumber=trim($dataUser->officenumber);
+
+
+    }
+
+    $query_user=db_select('users', 'u');
+    $query_user->fields('u',array('name','mail'));
+    $query_user->condition('u.uid',$uid,'=');
+    $result_user = $query_user->execute();
+    foreach($result_user as $row) {
+             $user_name=trim($row->name);
+         $email = trim($row->mail);
+    }
+
+
+   if($usr_type = 'ALC')
+       $designation = 'Assistant Labour Commissioner';
+
+
+   $ui = '<div class="application_list">
+             <table width="100%" class="application_view">
+                <tr>
+                  <td width="35%">Name</td>
+                 <td>'.$fullname.'</td>
+             </tr>
+             <tr>
+                  <td>Username</td>
+                 <td>'.$user_name.'</td>
+             </tr>
+             <tr>
+                  <td>Email</td>
+                 <td>'.$email.'</td>
+             </tr>
+             <tr>
+                  <td>Designation/Official Position</td>
+                 <td>'.$designation.'</td>
+             </tr>
+
+                  <td>Phone Number</td>
+                 <td>'.$mobile.'</td>
+             </tr>
+             <tr>
+                 <td colspan="2">'.l('Edit personal information', 'custom_user/edit').'</td>
+             </tr>
+
+            </table>
+         </div>';
+   $login_element = array(
+                      '#title'  => t(''),
+                      '#children'    => $ui,
+                      '#collapsible' => true,
+                      '#collapsed'  => true,
+                       );
+   $fieldset_login = theme('fieldset', array('element' => $login_element));
+   $form = array();
+
+    $form['login_information'] = array(
+          '#markup' => $fieldset_login,
+          '#prefix' => '<div id="logindiv">',
+          '#suffix' => '</div>'
+    );*/
+    return $form;
+}
+
+function issued_application_list_alc($status = '')
+{
+    global $user, $base_root, $base_path;
+    $uid = $user->uid;
+    $output = '';
+
+    // Table header
+    $header = array(
+        array('data' => 'Sl. No.', 'field' => 'slno', 'width' => '6%'),
+        array('data' => 'Establishment Name', 'field' => 'e_name'),
+        array('data' => 'Registration No. & Date', 'field' => 'applicationDate', 'width' => '17%'),
+        array('data' => 'Apply Date', 'field' => 'applicationDate'),
+        array('data' => 'Status', 'field' => 'status', 'width' => '7%'),
+        array('data' => 'Certificates', 'field' => 'certificates'),
+        array('data' => 'Action', 'field' => 'actions'),
+    );
+
+    if (isset($_GET['sort']) && isset($_GET['order'])) {
+        if ($_GET['sort'] == 'asc')
+            $sort = 'ASC';
+        else
+            $sort = 'DESC';
+
+        switch ($_GET['order']) {
+            case 'Name':
+                $order = 'identification_number';
+                break;
+            case 'Email':
+                $order = 'f_name';
+                break;
+            default:
+                $order = 'm_name';
+        }
+    } else {
+        $sort = 'ASC';
+        $order = 'f_name';
+    }
+
+    $query_subdivision = db_select('l_customuser_relation_address', 'lcra');
+    $query_subdivision->fields('lcra', array('sub_div_code', 'district_code'));
+    $query_subdivision->condition('lcra.user_id', $uid, '=');
+    $result_query_subdivision = $query_subdivision->execute();
+
+    if ($result_query_subdivision->rowCount() > 0) {
+        foreach ($result_query_subdivision as $row) {
+            $subdivision_alc = $row->sub_div_code;
+
+            $query = db_select('l_common_application_master', 'c_app_master');
+            $query->InnerJoin('l_clra_registration_master', 'clra_master', 'clra_master.user_id = c_app_master.user_id');
+
+            // Adding fields
+            $query->fields('c_app_master', array('f_name', 'm_name', 'l_name', 'user_id'));
+            $query->fields('clra_master', array('identification_number', 'act_id', 'application_date', 'final_submit_status', 'id', 'loc_e_subdivision', 'status', 'e_name', 'registration_number', 'registration_date', 'certificates_fid'));
+            $query->condition('clra_master.loc_e_subdivision', $subdivision_alc);
+            $query->condition('clra_master.final_submit_status', 'P');
+            $query->condition('clra_master.status', 'I');
+
+
+            $query->orderBy('clra_master.id', 'ASC');
+
+            $result = $query->execute()->fetchAll();
+            $result = $query->execute();
+
+            $sl_no = 0;
+            if (!empty($result)) {
+                while ($data = $result->fetchObject()) {
+                    $sl_no++;
+                    $datum = 1;
+
+                    $query_form_description = "select act_description from l_act_info_master where act_id='" . trim($datum) . "'";
+                    $query_form_description_result = db_query($query_form_description);
+                    foreach ($query_form_description_result as $obj) {
+                        $des = trim($obj->act_description);
+                    }
+
+                    $formStatus = "";
+
+                    if ($data->status == "0")
+                        $formStatus = '<span class="pending" title="Pending Application"></span>';
+                    if ($data->status == "A") {
+                        $formStatus = '<span class="approved" title="Approved"></span>';
+                    } elseif ($data->status == "B") {
+                        $formStatus = '<span class="backed" title="Back for Rectification"></span>';
+                    } elseif ($data->status == "F") {
+                        $formStatus = '<span class="forward" title="Forwarded"></span>';
+                    } elseif ($data->status == "V") {
+                        $formStatus = '<span class="feespending" title="Fees Pending"></span>';
+                    } elseif ($data->status == "BI") {
+                        $formStatus = '<span class="backtoins" title="Back to Inspector"></span>';
+                    } elseif ($data->status == "S") {
+                        $formStatus = '<span class="finalsubmit" title="Final Submit"></span>';
+                    } elseif ($data->status == "I") {
+                        $formStatus = '<span class="issued" title="Certificate Issued"></span>';
+                    } elseif ($data->status == "R") {
+                        $formStatus = '<span class="reject" title="Reject Application">Reject</span>';
+                    }
+                    if (empty($data->registration_number) && $data->status == "R")
+                        $reg = "Reject";
+                    else if (empty($data->registration_number) && $data->status != "R")
+                        $reg = "Processing";
+                    else
+                        $reg = $data->registration_number;
+
+                    if (!empty($data->registration_date)) {
+                        $registration_date = date('d M Y', strtotime($data->registration_date));
+                    }
+
+                    // For Escalation
+
+                    $applicationdate = strtotime($data->application_date);
+                    $application_date = date('d M Y', $applicationdate);
+                    $last_week_date = strtotime('-7 day');
+                    $view_img = '<span class="badge bg-blue"><i class="fa fa-eye"></i> View Details<div>';
+                    $applicant_name = $data->e_name;
+
+
+                    //-------------------------------------fetch upload certificates------------------------------------
+                    if (!empty($data->certificates_fid)) {
+                        $upload_certificates_id = db_select('file_managed', 'fm');
+                        $upload_certificates_id->fields('fm', array());
+                        $upload_certificates_id->condition('fid', $data->certificates_fid);
+                        $upload_certificates_file = $upload_certificates_id->execute()->fetchAssoc();
+
+
+                        if (!empty($upload_certificates_file)) {
+                            $url = explode('//', $upload_certificates_file['uri']);
+                            $upload_certificates_file_url = $url[1];
+                            $upload_certificates_file_name = $upload_certificates_file['filename'];
+
+                            $View_certificate = '<a title="Click here to download Original Certificate" href="' . $GLOBALS['base_url'] . '/sites/default/files/' . $upload_certificates_file_url . '" target="_blank"><span class="badge bg-green"><i class="fa fa-file"></i>&nbsp;Download&nbsp;<i class="fa fa-download" aria-hidden="true"></i>
+    </span></a>';
+                        } else {
+                            $View_certificate = '<span class="badge bg-orange">N/A</span>';
+                        }
+                    } else {
+                        $View_certificate = '<span class="badge bg-orange">N/A</span>';
+                    }
+
+
+                    $rows[] = array(
+                        array('data' => $sl_no, 'align' => 'left', 'class' => array('odd')),
+                        array('data' => $applicant_name, 'align' => 'left', 'class' => array('odd')),
+                        array('data' => '<strong>' . $reg . '</strong><br>' . $registration_date, 'align' => 'left', 'class' => array('even')),
+                        array('data' => $application_date, 'align' => 'left', 'class' => array('even')),
+                        array('data' => $formStatus, 'align' => 'left', 'class' => array('odd')),
+                        array('data' => $View_certificate, 'align' => 'left', 'class' => array('odd')),
+                        array('data' => l($view_img, 'alc-visible-applications/' . encryption_decryption_fun('encrypt', trim($data->id)) . '/' . encryption_decryption_fun('encrypt', trim($data->user_id)), array('html' => TRUE)), 'align' => 'left', 'class' => array('even ')),
+
+
+                    );
+
+
+                }
+
+            }
+        }
+    }
+
+    //die();
+
+
+    $variables = array(
+        'attributes' => array('class' => array('table table-striped table-responsive admin-custom-table')),
+        'header' => $header,
+        'rows' => $rows,
+    );
+
+    $output = theme('datatable', $variables);
+
+    // Returning the output
+    return $output;
+
+}
+
+
+function application_list_alc($status = '')
+{  // echo $status; die;
+    global $user, $base_root, $base_path;
+    $uid = $user->uid;
+    $output = '';
+
+    // Table header
+    $header = array(
+        array('data' => 'Sl. No', 'field' => 'slno'),
+        array('data' => 'Identification Number', 'field' => 'reg_no', 'width' => '17%'),
+        array('data' => 'Establishment Name', 'field' => 'e_name'),
+        array('data' => 'Apply Date', 'field' => 'applicationDate', 'width' => '10%'),
+        array('data' => 'Registration No. & Date', 'field' => 'reg_no', 'width' => '15%'),
+        array('data' => 'Status', 'field' => 'status', 'width' => '7%'),
+        array('data' => 'Action', 'field' => 'actions', 'width' => '8%'),
+    );
+
+    if (isset($_GET['sort']) && isset($_GET['order'])) {
+        if ($_GET['sort'] == 'asc')
+            $sort = 'ASC';
+        else
+            $sort = 'DESC';
+
+        switch ($_GET['order']) {
+            case 'Name':
+                $order = 'identification_number';
+                break;
+            case 'Email':
+                $order = 'f_name';
+                break;
+            default:
+                $order = 'm_name';
+        }
+    } else {
+        $sort = 'ASC';
+        $order = 'f_name';
+    }
+
+    $query_subdivision = db_select('l_customuser_relation_address', 'lcra');
+    $query_subdivision->fields('lcra', array('sub_div_code', 'district_code'));
+    $query_subdivision->condition('lcra.user_id', $uid, '=');
+    $result_query_subdivision = $query_subdivision->execute();
+
+    if ($result_query_subdivision->rowCount() > 0) {
+        foreach ($result_query_subdivision as $row) {
+            $subdivision_alc = $row->sub_div_code;
+
+            $query = db_select('l_common_application_master', 'c_app_master');
+            $query->InnerJoin('l_clra_registration_master', 'clra_master', 'clra_master.user_id = c_app_master.user_id');
+
+            // Adding fields
+            $query->fields('c_app_master', array('f_name', 'm_name', 'l_name', 'user_id'));
+            $query->fields('clra_master', array('identification_number', 'act_id', 'application_date', 'final_submit_status', 'id', 'loc_e_subdivision', 'status', 'e_name', 'registration_number', 'certificates_fid', 'backlog_id', 'user_id', 'amendment_parent_id'));
+            $query->condition('clra_master.loc_e_subdivision', $subdivision_alc);
+            $query->condition('clra_master.final_submit_status', 'P');
+
+            /*** 15_06-2017**/
+            //$query->isNull('clra_master.amendment_parent_id');
+
+
+            if ($status == 'pending') {
+                $query->condition('clra_master.status', '0');
+            } else if ($status == 'final-submit') {
+                // $query->condition('clra_master.status','S');
+                $query->condition('clra_master.status', "%S%", 'LIKE');
+            } else if ($status == 'fees-paid') {
+                // $query->condition('clra_master.status','T ');
+                $query->condition('clra_master.status', "%T%", 'LIKE');
+            }
+
+
+            $query->orderBy('clra_master.id', 'ASC');
+
+            $result = $query->execute()->fetchAll();
+            $result = $query->execute();
+
+            $sl_no = 0;
+            if (!empty($result)) {
+                while ($data = $result->fetchObject()) {
+                    $sl_no++;
+                    $datum = 1;
+                    $apply_category = '';
+
+                    $query_form_description = "select act_description from l_act_info_master where act_id='" . trim($datum) . "'";
+                    $query_form_description_result = db_query($query_form_description);
+                    foreach ($query_form_description_result as $obj) {
+                        $des = trim($obj->act_description);
+                    }
+
+                    $formStatus = "";
+
+                    if ($data->status == "0") {
+                        $formStatus = '<span class="pending" title="Pending Application"></span>';
+                    } elseif ($data->status == "A") {
+                        $formStatus = '<span class="approved" title="Approved"></span>';
+                    } elseif ($data->status == "B") {
+                        $formStatus = '<span class="backed" title="Back for Rectification"></span>';
+                    } elseif ($data->status == "F") {
+                        $formStatus = '<span class="forward" title="Forwarded"></span>';
+                    } elseif ($data->status == "V") {
+                        $formStatus = '<span class="feespending" title="Fees Pending"></span>';
+                    } elseif ($data->status == "T") {
+                        $formStatus = '<span class="feespaid" title="Fees Paid"></span>';
+                    } elseif ($data->status == "S") {
+                        $formStatus = '<span class="finalsubmit" title="Final Submit"></span>';
+                    } elseif ($data->status == "I") {
+                        $formStatus = '<span class="issued" title="Certificate Issued"></span>';
+                    } elseif ($data->status == "R") {
+                        $formStatus = '<span class="reject" title="Reject Application">Reject</span>';
+                    }
+                    if (empty($data->registration_number) && $data->status == "R")
+                        $reg = "Reject";
+                    else if (empty($data->registration_number) && $data->status != "R")
+                        $reg = "PROCESSING";
+                    else
+                        $reg = $data->registration_number;
+
+                    // For Escalation
+
+                    $applicationdate = strtotime($data->application_date);
+                    $application_date = date('j M Y', $applicationdate);
+                    $last_week_date = strtotime('-7 day');
+                    $view_img = '<span class="badge bg-blue"><i class="fa fa-eye"></i> View Details<div>';
+                    $applicant_name = $data->e_name;
+
+
+                    if (!empty($data->amendment_parent_id) && $data->amendment_parent_id != 0) {
+                        $view_details = array('data' => l($view_img, 'alc-view-amended-application/' . encryption_decryption_fun('encrypt', trim($data->id)) . '/' . encryption_decryption_fun('encrypt', trim($data->user_id)), array('html' => TRUE)), 'align' => 'left', 'class' => array(''));
+                        $apply_category = '<span style="font-size:10px; color:#E5291C;">FOR AMENDMENT</span>';
+                    } else {
+
+                        $view_details = array('data' => l($view_img, 'alc-visible-applications/' . encryption_decryption_fun('encrypt', trim($data->id)) . '/' . encryption_decryption_fun('encrypt', trim($data->user_id)), array('html' => TRUE)), 'align' => 'left', 'class' => array('even'));
+                        /*$backlog_rc_upload = db_select('l_documents_upload', 'ldu');
+                $backlog_rc_upload->fields('ldu',array('backlog_clra_registration_certificate_file'));
+                $backlog_rc_upload->condition('ldu.application_id', $data->id);
+                $backlog_rc_upload->condition('ldu.act_id', 1);
+                $backlog_rc_upload = $backlog_rc_upload->execute();
+                $backlog_rc_upload_result = $backlog_rc_upload->fetchObject();
+
+                if(!empty($backlog_rc_upload_result->backlog_clra_registration_certificate_file) && empty($data->backlog_id)){
+                    $view_details = array('data' => l($view_img, 'alc-approve-backlog-applications/'.encryption_decryption_fun('encrypt', trim($data->id)).'/'.encryption_decryption_fun('encrypt', trim($data->user_id)), array('html' => TRUE)), 'align' => 'left', 'class' => array('exp_pendng '));
+                }*/
+                    }
+
+                    $rows[] = array(
+                        array('data' => $sl_no, 'align' => 'left', 'class' => array('odd')),
+                        array('data' => $data->identification_number . '<br/>' . $apply_category, 'align' => 'left', 'class' => array('exp_pendng')),
+                        array('data' => $applicant_name, 'align' => 'left', 'class' => array('odd')),
+                        array('data' => $application_date, 'align' => 'left', 'class' => array('even')),
+                        array('data' => $reg, 'align' => 'left', 'class' => array('even')),
+                        array('data' => $formStatus, 'align' => 'left', 'class' => array('odd')),
+                        $view_details,
+                    );
+
+
+                }
+
+            }
+        }
+    }
+
+    //die();
+
+
+    $variables = array(
+        'attributes' => array('class' => array('table table-striped table-responsive admin-custom-table')),
+        'header' => $header,
+        'rows' => $rows,
+    );
+
+    $output = theme('datatable', $variables);
+
+    // Returning the output
+    return $output;
+
+}
+
+
+function rlo_block_details_form($form, &$form_state)
+{
+
+    $form = array();
+    $markup_rlo_details = markup_rlo_details();
+
+
+    $form['rlo_block'] = array(
+
+        '#type' => 'fieldset',
+
+    );
+    $form['rlo_block']['mark_up_rlo_details'] = array(
+        '#prefix' => '<div>',
+        '#suffix' => '</div>',
+        '#type' => 'markup',
+        '#markup' => $markup_rlo_details
+    );
+
+    $markup_back = l(t('Back to Dashboard'), 'alcdashboard/rlo-details', array('attributes' => array('class' => 'rlo_alc')));
+
+
+    $form['rlo_block']['markup_download_link'] = array(
+        '#prefix' => '<br><div >',
+        '#suffix' => '</br></div>',
+        '#type' => 'markup',
+        '#markup' => $markup_back
+    );
+    return $form;
+
+}
+
+
+function markup_rlo_details()
+{
+    global $user;
+    $uid = $user->uid;
+    $output = '';
+
+    $query_user_info = "SELECT distinct cra.id AS id, cra.user_status AS user_status, cra.sub_div_code, subdv.sub_div_name AS sub_div_name,dis.district_name FROM l_customuser_relation_address cra Inner Join sub_division subdv ON 
+					cra.sub_div_code =subdv.sub_div_code Inner Join district_master dis ON 
+					cra.district_code =dis.district_code  WHERE cra.user_id ='" . $uid . "'";
+
+    $user_type_info = db_query($query_user_info);
+
+    foreach ($user_type_info as $dataUserInfo) {
+        $usr_dist_name = trim($dataUserInfo->district_name);
+        $subdivision_code = trim($dataUserInfo->sub_div_code);
+        $user_subdivision_name = $user_subdivision_name . trim($dataUserInfo->sub_div_name) . ",";
+
+
+        //----------------block details-----------------
+
+        $fetch_blockdetails = db_select('block_mun_master ', 'bmm');
+        $fetch_blockdetails->InnerJoin('district_master', 'd', 'd.district_code=bmm.distict_code');
+        $fetch_blockdetails->InnerJoin('sub_division', 's', 's.sub_div_code=bmm.sub_division_code');
+        $fetch_blockdetails->fields('d', array('district_code', 'district_name'));
+        $fetch_blockdetails->fields('s', array('sub_div_code', 'sub_div_name'));
+        $fetch_blockdetails->fields('bmm', array('block_code', 'block_mun_name'));
+        $fetch_blockdetails->distinct();
+        $fetch_blockdetails->condition('bmm.sub_division_code', $subdivision_code, '=');
+        $fetch_blockdetails_result = $fetch_blockdetails->execute();
+
+
+        //----------total inspector--------------------
+
+
+    }
+
+
+    $header = array(
+        array('data' => 'Sl. No', 'field' => 'slno'),
+        array('data' => 'District Name', 'field' => 'district_name'),
+        array('data' => 'SubDivision Name', 'field' => 'sub_div_name'),
+        array('data' => 'Area Name', 'field' => 'block_mun_name'),
+    );
+    $sl_no = 0;
+    while ($result = $fetch_blockdetails_result->fetchObject()) {
+
+        $sl_no++;
+
+        $rows[] = array(
+            array('data' => $sl_no, 'align' => 'left'),
+            array('data' => $result->district_name, 'align' => 'left'),
+            array('data' => $result->sub_div_name, 'align' => 'left'),
+            array('data' => $result->block_mun_name, 'align' => 'left'),
+
+
+        );
+    }
+    $variables = array(
+        'attributes' => array('class' => array('clra_applications')),
+        'header' => $header,
+        'rows' => $rows,
+    );
+
+    $output = theme('datatable', $variables);
+
+    // Returning the output
+    return $output;
+}
+
+
+function rlo_insp_details_form($form, &$form_state)
+{
+    $form = array();
+    $markup_rlo_insp_details = markup_rlo_insp_details();
+
+
+    $form['rlo_insp'] = array(
+
+        '#type' => 'fieldset',
+
+    );
+    $form['rlo_insp']['mark_up_rlo_insp'] = array(
+        '#prefix' => '<div>',
+        '#suffix' => '</div>',
+        '#type' => 'markup',
+        '#markup' => $markup_rlo_insp_details
+    );
+
+    $markup_back = l(t('Back to Dashboard'), 'alcdashboard/rlo-details', array('attributes' => array('class' => 'rlo_alc')));
+
+
+    $form['rlo_insp']['markup_download_link'] = array(
+        '#prefix' => '<br><div >',
+        '#suffix' => '</br></div>',
+        '#type' => 'markup',
+        '#markup' => $markup_back
+    );
+    return $form;
+
+
+}
+
+function markup_rlo_insp_details()
+{
+    global $user;
+    $uid = $user->uid;
+    $output = '';
+
+    $header = array(
+        array('data' => 'Sl. No', 'field' => 'slno'),
+        array('data' => 'Inspector Name', 'field' => ''),
+        array('data' => 'Mobile Number', 'field' => 'district_name'),
+        array('data' => 'Department', 'field' => 'district_name'),
+        array('data' => 'SubDivision Name', 'field' => 'sub_div_name'),
+        array('data' => 'Area Name', 'field' => 'block_mun_name'),
+    );
+
+    $query_user_info = "SELECT distinct cra.id AS id, cra.user_status AS user_status, cra.sub_div_code, subdv.sub_div_name AS sub_div_name,dis.district_name FROM l_customuser_relation_address cra Inner Join sub_division subdv ON 
+					cra.sub_div_code =subdv.sub_div_code Inner Join district_master dis ON 
+					cra.district_code =dis.district_code  WHERE cra.user_id ='" . $uid . "'";
+
+    $user_type_info = db_query($query_user_info);
+    foreach ($user_type_info as $dataUserInfo) {
+        $usr_dist_name = trim($dataUserInfo->district_name);
+        $subdivision_code = trim($dataUserInfo->sub_div_code);
+
+
+        //---------- inspector Details--------------------
+
+
+        $fetch_inspdetails = db_select('l_customuser_relation_address ', 'lcra');
+        $fetch_inspdetails->InnerJoin('sub_division', 's', 's.sub_div_code=lcra.sub_div_code');
+        $fetch_inspdetails->fields('lcra', array('user_id'));
+        $fetch_inspdetails->distinct();
+        $fetch_inspdetails->condition('lcra.sub_div_code', $subdivision_code, '=');
+        $fetch_inspdetails_result = $fetch_inspdetails->execute();
+        foreach ($fetch_inspdetails_result as $result) {
+
+            $query_inspector_info = "SELECT distinct cra.id AS id, cra.user_status AS user_status, cra.sub_div_code, subdv.sub_div_name AS sub_div_name,b.block_mun_name,
+			 dis.district_name, lcud.fullname,lcud.mobile,lcud.department		
+			 FROM  l_customuser_relation_address cra 
+			 Inner Join sub_division subdv ON cra.sub_div_code =subdv.sub_div_code
+			 Inner Join block_mun_master b ON cra.block_code =b.block_code 
+			 Inner Join district_master dis ON 	cra.district_code =dis.district_code 
+			 Inner Join l_custom_user_detail lcud ON lcud.usr_id =cra.user_id 
+			 WHERE cra.user_id ='" . $result->user_id . "' and lcud.usr_rid =7";
+
+            $query_inspector_info_details = db_query($query_inspector_info);
+            $sl_no = 0;
+            while ($resullist = $query_inspector_info_details->fetchObject()) {
+                $sl_no++;
+                $rows[] = array(
+                    array('data' => $sl_no, 'align' => 'left'),
+                    array('data' => $resullist->fullname, 'align' => 'left'),
+                    array('data' => $resullist->mobile, 'align' => 'left'),
+                    array('data' => $resullist->department, 'align' => 'left'),
+                    array('data' => $resullist->sub_div_name, 'align' => 'left'),
+                    array('data' => $resullist->block_mun_name, 'align' => 'left'),
+
+                );
+            }
+
+
+        }
+
+
+    }
+    $variables = array(
+        'attributes' => array('class' => array('clra_applications')),
+        'header' => $header,
+        'rows' => $rows,
+    );
+
+    $output = theme('datatable', $variables);
+
+    // Returning the output
+    return $output;
+
+
+}
+
+
+//Mail
+
+/*function testmail_send($to = '', $subject = '', $message = '') {
+    $from = 'tapas.ghsl@gmail.com';
+    $params = array('subject' => $subject, 'message' => $message);
+    drupal_mail('testmail', 'key', $to, language_default(), $params, $from, TRUE);
+}
+function testmail_mail($key, &$message, $params) {
+
+  switch($key) {
+
+        case 'testmail_email':
+            $message['subject'] = t('Test subject');
+            $message['body'][] = t('Test content');
+            //$message['attachment'][] = $attachment;
+        break;
+
+        case 'key':
+
+
+            $message['subject'] = $params['subject'];
+            $message['body'][] = $params['message'];
+        break;
+        }
+}*/
+
+function actions_dropdown_by_alc($action_value = '')
+{
+
+    $options = array();
+
+    if (trim($action_value) == 'S') {
+
+        $options['C'] = t('Call Applicant');
+        $options['I'] = t('Issue Certificate');
+        $options['R'] = t('Reject');
+
+    } else if (trim($action_value) == 'RN') {
+        $options['V'] = t('Verified & Approval For Fees Submission');
+        $options['I'] = t('Issue Certificate');
+        $options['R'] = t('Reject');
+    } else if (trim($action_value) == 'C') {
+        $options['C'] = t('Call Applicant');
+        $options['I'] = t('Issue Certificate');
+        $options['R'] = t('Reject');
+    } else {
+        $options['B'] = t('Back For Correction');
+        $options['BI'] = t('Back To Inspector');
+        $options['V'] = t('Verified & Approval For Fees Submission');
+        $options['VA'] = t('Verified & Approval without Fees Submission');
+        $options['R'] = t('Reject');
+    }
+    return $options;
+
+}
+
+function actions_dropdown_by_alc_mtw($action_value = '', $backlog = '')
+{
+
+    $options = array();
+
+    if (trim($action_value) == 'S') {
+
+        $options['U'] = t('Back For Correction (FORM - I )');
+        $options['I'] = t('Issue Certificate');
+        $options['R'] = t('Reject');
+
+    } else if (trim($action_value) == 'RN') {
+        if ($backlog != '') {
+            $options['B'] = t('Back For Correction');
+        }
+        $options['V'] = t('Verified & Approval For Fees Submission');
+        //$options['I']		= t('Issue Certificate');
+        $options['R'] = t('Reject');
+    } else if (trim($action_value) == 'C') {
+        $options['C'] = t('Call Applicant');
+        $options['I'] = t('Issue Certificate');
+        $options['R'] = t('Reject');
+    } else {
+        $options['B'] = t('Back For Correction');
+        $options['BI'] = t('Back To Inspector');
+        $options['V'] = t('Verified & Approval For Fees Submission');
+        $options['VA'] = t('Verified & Approval without Fees Submission');
+        $options['R'] = t('Reject');
+    }
+    return $options;
+
+}
+
+
+function actions_dropdown_by_alc_new($applicant_status, $amount_payable)
+{
+
+    if (trim($applicant_status) == 'S') {
+
+        $options['U'] = t('Back For Correction (FORM - I )');
+        //$options['C']		= t('Call Applicant');
+        $options['I'] = t('Issue Certificate');
+        $options['R'] = t('Reject');
+
+        /*}elseif ( trim($applicant_status) == 'C' ){
+
+        $options['C']		= t('Call Applicant');
+        $options['I']		= t('Issue Certificate');
+        $options['R']		= t('Reject');*/
+
+    } else {
+
+        $options['B'] = t('Back For Correction');
+        $options['BI'] = t('Back To Inspector');
+
+        //if(trim($amount_payable) == 'Y'){
+        $options['V'] = t('Verified & Approval For Fees Submission');
+        //}else{
+        $options['VA'] = t('Verified & Approval without Fees Submission');
+        //}
+        $options['R'] = t('Reject');
+
+    }
+    return $options;
+}
+
+function clra_remarks_delete($rowId = '', $application_id = '', $app_user_id = '')
+{
+    $row_id = encryption_decryption_fun('decrypt', $rowId);
+    $application_id = encryption_decryption_fun('decrypt', $application_id);
+    $app_user_id = encryption_decryption_fun('decrypt', $app_user_id);
+
+
+    $delquery = db_update('l_remarks_master')->fields(array('is_active' => 0))->condition('remark_id', $row_id)->execute();
+    $getLastId = db_query("SELECT * FROM l_remarks_master WHERE remark_id=(SELECT MAX(remark_id) FROM l_remarks_master WHERE is_active=1 and application_id=" . $application_id . ")")->fetchObject();
+    $previousStatus = $getLastId->remark_type;
+
+    // update clra master table
+    $update = db_update('l_clra_registration_master')
+        ->fields(
+            array(
+                'status' => $previousStatus,
+            )
+        )
+        ->condition('id', $application_id)
+        ->execute();
+    drupal_goto('alc-visible-applications/' . encryption_decryption_fun('encrypt', $application_id) . '/' . encryption_decryption_fun('encrypt', $app_user_id));
+
+}
+
+function remarks_delete_mtw($rowId = '', $application_id = '', $app_user_id = '', $action = '', $renewal_id = 0)
+{
+    $row_id = encryption_decryption_fun('decrypt', $rowId);
+    $application_id = encryption_decryption_fun('decrypt', $application_id);
+
+    $delquery = db_update('l_mtw_remark_master')->fields(array('is_active' => 0))->condition('id', $row_id)->execute();
+    $getLastId = db_query("SELECT * FROM l_mtw_remark_master WHERE id=(SELECT MAX(id) FROM l_mtw_remark_master WHERE is_active=1 and application_id=" . $application_id . ")")->fetchObject();
+    $previousStatus = $getLastId->remark_type;
+    if ($action == 'renewal') {
+        $updateArray = array(
+            'status' => $previousStatus,
+        );
+        $redirectUrl = 'alc-mtw-renewal-details/';
+        if ($previousStatus == 'S') {
+            db_update('l_mtw_registration_renewal')->fields(array('status' => 'T'))->condition('application_id', $application_id)->condition('id', $renewal_id)->execute();
+        } else if ($previousStatus == 'RN') {
+            db_update('l_mtw_registration_renewal')->fields(array('status' => '1'))->condition('application_id', $application_id)->condition('id', $renewal_id)->execute();
+        }
+    } else {
+        $updateArray = array(
+            'status' => $previousStatus,
+            'certificate_serial' => '',
+            'registration_number' => '',
+            'mtw_qr_code' => ''
+        );
+        $redirectUrl = 'alc-application-details-mtw/';
+    }
+
+    // update mtw master table
+    $update = db_update('l_mtw_registration_master')
+        ->fields($updateArray)
+        ->condition('id', $application_id)
+        ->execute();
+    drupal_goto($redirectUrl . encryption_decryption_fun('encrypt', $application_id) . '/' . $app_user_id);
+
+}
+
+function mwin_number_generation()
+{
+
+    $current_year = date('Y');
+    $last_application_query = db_query("select modified_date, identification_number from l_migrant_jobseeker_master where modified_date in (select max(modified_date) from l_migrant_jobseeker_master where status != 'I')");
+
+    $last_application_result = $last_application_query->fetchObject();
+    $last_application_date = $last_application_result->modified_date;
+    if ($last_application_date != '') {
+        $last_application_year = date('Y', strtotime($last_application_date));
+        if ($current_year == $last_application_year) {
+            $last_application_identification_number = $last_application_result->identification_number;
+            $identification_number_serial = substr($last_application_identification_number, 6);
+            $identification_number = 'MW' . $current_year . str_pad(($identification_number_serial + 1), 6, "0", STR_PAD_LEFT);
+        } else {
+            $identification_number = 'MW' . $current_year . '000001';
+        }
+    } else {
+        $identification_number = 'MW' . $current_year . '000001';
+    }
+    echo $identification_number;
+    die;
+}
+
+function action_official($user_id)
+{
+    $get_area_details = db_select('l_customuser_relation_address', 'lcra');
+    $get_area_details->leftJoin('users_roles', 'ur', 'ur.uid=lcra.user_id ');
+    $get_area_details->leftJoin('role', 'ro', 'ro.rid = ur.rid');
+    $get_area_details->leftJoin('l_custom_user_detail', 'lcud', 'ur.uid=lcud.usr_id');
+    $get_area_details->fields('ro', array('name', 'rid'));
+    $get_area_details->fields('lcra', array('district_code', 'sub_div_code', 'block_code', 'custom_area_jurisdiction', 'is_custom_area_jurisdiction', 'user_id'));
+
+    $get_area_details->fields('lcud', array('fullname', 'employee_id'));
+    $get_area_details->condition('lcra.user_id', $user_id);
+    $get_area_details_result = $get_area_details->execute()->fetchAssoc();
+    return $get_area_details_result['fullname'];
+
+}
+
+// function get_full_address_migrant($table='', $type='', $id='', $fieldArr='', $keyField =''){
+// 	//echo $table.'<br/>'.$type.'<br/>'.$id.'<br/>'; print_r($fieldArr);exit;
+// 	if(($fieldArr=='')|| empty($fieldArr)){
+// 		$fieldArr =	array();
+// 	}
+// 	$location_address_result =	'';
+// 	$alias = $table.'ali';
+
+// 	$query_location_address	= db_select($table, $alias);
+// 	if(isset($fieldArr[0]) && ($fieldArr[0]!='' || $fieldArr[0]!=0)){
+// 		$query_location_address->LeftJoin('district_master', 'd', 'd.district_code='.$alias.'.'.$fieldArr[0]);
+// 		$query_location_address->fields('d', array('district_name'));
+// 		if(isset($fieldArr[1]) && ($fieldArr[1]!='' || $fieldArr[1]!=0)){
+// 			$query_location_address->LeftJoin('sub_division', 's', 's.sub_div_code='.$alias.'.'.$fieldArr[1]);
+// 			//$query_location_address->fields('v', array('village_name'));
+// 			if(isset($fieldArr[3]) && ($fieldArr[3]!='' || $fieldArr[3]!=0)){
+// 				$query_location_address->LeftJoin('block_mun_master', 'b', 'b.block_code='.$alias.'.'.$fieldArr[3]);
+// 				$query_location_address->fields('s', array('sub_div_name'));
+// 				$query_location_address->fields('b', array('block_mun_name'));
+// 					if(isset($fieldArr[5]) && ($fieldArr[5]!='' || $fieldArr[5]!=0)){
+// 						$query_location_address->LeftJoin('police_station', 'p', 'p.police_station_code='.$alias.'.'.$fieldArr[5]);
+// 						$query_location_address->fields('p', array('name_of_police_station'));
+// 						if(isset($fieldArr[7]) && ($fieldArr[7]!='' || $fieldArr[7]!=0)){
+// 							$query_location_address->LeftJoin('state_master', 'state', 'state.id='.$alias.'.'.$fieldArr[7]);
+// 							$query_location_address->fields('state', array('statename'));
+// 						}
+// 					}
+// 				// if(isset($fieldArr[4]) && ($fieldArr[4]!='' || $fieldArr[4]!=0)){
+// 				// 	$query_location_address->LeftJoin('village_ward_master', 'v', 'v.village_code='.$alias.'.'.$fieldArr[4]);
+
+// 				// }
+// 			}
+// 		}
+// 	}
+
+// 	if($keyField != ''){
+// 		$query_location_address		->	fields($alias, array());
+// 		$query_location_address		->	condition($alias.'.'.$keyField,$id,'=');
+// 	}
+
+// 	$location_result = $query_location_address->execute()->fetchAssoc();
+
+// 	if(!empty($location_result)){
+
+// 		if($location_result[$fieldArr[2]]=="B"){
+// 			$text_AreaType_loc = "Block - ";
+// 			$areatype_loc_name = ucwords($location_result['village_name']);
+// 		}elseif($location_result[$fieldArr[2]]=="M"){
+// 			$areatype_loc_name = 'Ward-'.$location_result['village_name'];
+// 		}elseif($location_result[$fieldArr[2]]=="C"){
+// 			$areatype_loc_name = $location_result['village_name'];
+// 		}elseif($location_result[$fieldArr[2]]=="N"){
+// 			$areatype_loc_name = 'Notified Area - '.$location_result['village_name'];
+// 		}
+
+
+// 		if($location_result[$fieldArr[0]] == 17){  //If the area is Kolkata ***/
+// 			if(!empty($location_result['village_name'])){
+// 				$location_address_result .= $areatype_loc_name;
+// 			}
+// 			if(!empty($location_result['name_of_police_station'])){
+// 				$location_address_result .= ',&nbsp;PS - '.$location_result['name_of_police_station'];
+// 			}
+// 			if(!empty($location_result['district_name'])){
+// 				$location_address_result 	.= ',&nbsp;'.$location_result['district_name'].', PIN- '.$location_result[$fieldArr[6]];
+// 			}
+// 		}else{
+
+// 			//If the state is West Bengal ***/
+// 			if($location_result[$fieldArr[7]] == 1 || empty($fieldArr[7])){
+// 				if(!empty($location_result['village_name'])){
+// 					$location_address_result .= $areatype_loc_name;
+// 				}
+// 				if(!empty($location_result[$fieldArr[2]]) && !empty($location_result['block_mun_name']) ){
+// 					$location_address_result 	.= ',&nbsp;'.$text_AreaType_loc.$location_result['block_mun_name'].',<br/>';
+// 				}
+// 				if(!empty($location_result['sub_div_name'])){
+// 					$location_address_result 	.= $location_result['sub_div_name'];
+// 				}
+// 				if(!empty($location_result['name_of_police_station'])){
+// 					$location_address_result 	.= ',&nbsp;PS - '.$location_result['name_of_police_station'];
+// 				}
+// 				if(!empty($location_result['district_name'])){
+// 					$location_address_result 	.= ',<br/>'.$location_result['district_name'];
+// 				}
+// 				if(!empty($location_result[$fieldArr[6]])){
+// 					$location_address_result 	.= '&nbsp;, PIN- '.$location_result[$fieldArr[6]];
+// 				}
+// 				if(!empty($location_result[$fieldArr[7]])){
+// 					$location_address_result 	.= ',&nbsp;'.$location_result['statename'];
+// 				}else{
+// 					$location_address_result 	.= '';
+// 				}
+// 			}else{
+// 				//If the state is Others ***/
+// 				if(!empty($location_result['village_name'])){
+// 					$location_address_result .= $location_result['village_name'];
+// 				}else{
+// 					$location_address_result .= '';
+// 				}
+// 				if(!empty($location_result['block_mun_name'])){
+// 					$location_address_result .= ', '.$location_result['block_mun_name'];
+// 				}else{
+// 					$location_address_result 		.= '';
+// 				}
+// 				if(!empty($location_result['sub_div_name'])){
+// 					$location_address_result .= ', '.$location_result['sub_div_name'];
+// 				}else{
+// 					$location_address_result .= '';
+// 				}
+
+// 				if( (!empty($location_result['district_name'])) && !empty($location_result['sub_div_name'])) {
+// 					$location_address_result 	.= ',<br/>'.$location_result['district_name'];
+// 				}else if( (!empty($location_result['district_name'])) && empty($location_result['sub_div_name']) ){
+// 					$location_address_result 	.= $location_result['district_name'];
+// 				}else{
+// 					$location_address_result 	.= '';
+// 				}
+// 				if ( (!empty($location_result[$fieldArr[7]])) && !empty($location_result['district_name'])){
+// 					$location_address_result 	.= ',&nbsp;'.$location_result['statename'];
+// 				}else if( (!empty($location_result[$fieldArr[7]])) && empty($location_result['district_name']) ){
+// 					$location_address_result 	.= $location_result['statename'];
+// 				}else{
+// 					$location_address_result 	.= '';
+// 				}
+// 				if(!empty($location_result['police_station'])){
+// 					$location_address_result .= ', PS:-'.$location_result['police_station'];
+// 				}else{
+// 					$location_address_result 		.= '';
+// 				}
+// 			}
+// 		}
+// 	}
+
+//  return $location_address_result;
+// }

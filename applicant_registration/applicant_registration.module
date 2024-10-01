@@ -1,0 +1,193 @@
+<?php
+	
+	function applicant_registration_menu() {
+		$items	=	array();
+		$items['applicant-registration'] = array(
+											'title'=>'Applicant Registration',
+											'page callback'=>'drupal_get_form',
+											'page arguments'=>array('applicant_registration_form'),
+											'file' => 'include/applicant_registration_form.inc',
+											'access arguments' => array('access content'),
+											'access callback'=>TRUE
+											);
+		
+		$items['checkname']			= array(
+											'page callback' => 'checknameExist',
+											'access arguments' => array('access content'),
+											'type' => MENU_CALLBACK
+											);
+											
+		$items['checkemail']		= array(
+											'page callback' => 'checkEmailExist',
+											'access arguments' => array('access content'),
+											'type' => MENU_CALLBACK
+											);
+		$items['checkmobile']		= array(
+											'page callback' => 'checkMobileExist',
+											'access arguments' => array('access content'),
+											'type' => MENU_CALLBACK
+											);												
+		$items['employer-info'] 	= array(
+											'title'				=> 'Proprietor/Partners/Directors information',
+											'page callback'		=> 'drupal_get_form',
+											'page arguments'	=> array('get_est_employer_list'),
+											'file' 				=> 'include/est_employer_list.inc',
+											'access arguments' 	=> array('access content'),
+											'access callback'	=> TRUE
+											);
+		
+		$items['employer-info/add'] 	= array(
+											'title'				=> 'Add Proprietor/Partners/Directors information',
+											'page callback'		=> 'drupal_get_form',
+											'page arguments'	=> array('add_est_employer'),
+											'file' 				=> 'include/add_est_employer.inc',
+											'access arguments' 	=> array('access content'),
+											'access callback'	=> TRUE
+											);
+		
+		$items['employer-info/edit/%'] 	= array(
+											'title'				=> 'Modify Proprietor/Partners/Directors information',
+											'page callback'		=> 'drupal_get_form',
+											'page arguments'	=> array('edit_est_employer'),
+											'file' 				=> 'include/edit_est_employer.inc',
+											'access arguments' 	=> array('access content'),
+											'access callback'	=> TRUE
+											);
+											
+		$items['applicant-varification'] 	= array(
+											'title'				=> 'Applicant Varification',
+											'page callback'		=> 'drupal_get_form',
+											'page arguments'	=> array('applicant_varify'),
+											'file' 				=> 'include/applicant_varification_page.inc',
+											'access arguments' 	=> array('access content'),
+											'access callback'	=> TRUE
+											);
+											
+		$items['applicant-varification-link/%/%/%'] 	= array(
+											'title'				=> 'Applicant Varification',
+											'page callback'		=> 'applicant_varify_link',
+											'page arguments'	=> array(1, 2, 3),
+											'file' 				=> 'include/applicant_varification_page.inc',
+											'access arguments' 	=> array('access content')											
+											);
+											
+		$items['find-user-details'] 	= array(
+											'title'				=> '',
+											'page callback'		=> 'drupal_get_form',
+											'page arguments'	=> array('find_user_details'),
+											'file' 				=> 'include/find_user_details.inc',
+											'access arguments' 	=> array('access content'),
+											'access callback'	=> TRUE
+											);
+											
+		return $items;
+	}
+	
+	/*function applicant_registration_init() {
+		
+	}*/
+	/*function applicant_registration_permission() {
+				return array(
+						'applicant_common_user_per' => array(
+						'title' => t('Establishment owner add/modify/list info permission')),									
+						'Permission for applications view_alc'  => array('title' => t('Establishment owner add/modify/list info permission')
+   						));
+	}*/
+	
+	function checknameExist($username=''){
+		$username 			= 	$_POST['username'];
+		$query 				= 	db_select('users', 'u');
+		$query				->	fields('u', array('uid'));
+		$query				->	condition('u.name', $username, '=');
+		$exist_username 	= 	$query->execute();
+		if( $exist_username->rowCount() > 0 ){
+			$output			= "Exist";
+		}else{
+			$output			= "DoesNotExist";
+		}
+		
+		return drupal_json_output($output);
+	}
+	
+	function checkEmailExist(){
+		$mail				=	$_POST['email'];
+		//echo $mail; exit;
+		$query 				= 	db_select('users', 'u');
+		$query				->	fields('u', array('uid'));
+		$query				->	condition('u.mail', $mail, '=');
+		$exist_mail 		= 	$query->execute();
+		if( $exist_mail->rowCount() > 0 ){
+			$output			= "Exist";
+		}else{
+			$output			= "DoesNotExist";
+		}
+		//print_r($output); exit;
+		return drupal_json_output($output);
+	}
+	function checkMobileExist(){
+		$mobile =	$_POST['mobile'];
+		//echo $mobile; exit;
+		$query = db_select('l_common_application_master', 'u');
+		$query->fields('u', array('user_id'));
+		$query->condition('u.mobile', $mobile, '=');
+		$exist_mobile = $query->execute();
+		if( $exist_mobile->rowCount() > 0 ){
+			$output	= "Exist";
+		}else{
+			$output	= "DoesNotExist";
+		}
+		//print_r($output); exit;
+		return drupal_json_output($output);
+	}
+	function checkScriptNameExist($username=''){
+		
+		if(empty($username)){
+			$username 			= 	$_POST['username'];
+		}
+		
+	
+		$query 				= 	db_select('users', 'u');
+		$query				->	fields('u', array('uid'));
+		$query				->	condition('u.name', $username, '=');
+		$exist_username 	= 	$query->execute();
+		if( $exist_username->rowCount() > 0 ){
+			$output			= "Exist";
+		}else{
+			$output			= "DoesNotExist";
+		}
+		
+		return $output;
+	}
+	function checkScriptEmailExist($email=''){
+		
+		if(empty($email)){
+			$email = $_POST['email'];
+		}
+	
+		$query = db_select('users', 'u');
+		$query->fields('u', array('uid'));
+		$query->condition('u.mail', $email, '=');
+		$exist_email = $query->execute();
+		if( $exist_email->rowCount() > 0 ){
+			$output	= "Exist";
+		}else{
+			$output	= "DoesNotExist";
+		}
+		
+		return $output;
+	} 
+	function checkScriptMobileExist($mobile = ''){
+		$mobile =	$_POST['mobile'];
+		//echo $mobile; exit;
+		$query = db_select('l_common_application_master', 'u');
+		$query->fields('u', array('user_id'));
+		$query->condition('u.mobile', $mobile, '=');
+		$exist_mobile = $query->execute();
+		if( $exist_mobile->rowCount() > 0 ){
+			$output	= "Exist";
+		}else{
+			$output	= "DoesNotExist";
+		}		
+		return $output;
+	}
+	

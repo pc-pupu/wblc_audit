@@ -1,0 +1,47 @@
+<?php
+
+function acts_rules_menu() {
+	
+	$items = array();
+	$items['acts-rules'] = array( 
+		'title' 			=> 'Act & Rules',
+		'page callback' 	=> 'get_acts_rules',		
+		'file' 				=> 'inc/get_acts_rules.inc',
+		'access arguments'  => array('access content'),		
+	);	
+		
+	$items['acts-rules/%'] = array(		
+		'page callback' 	=> 'get_acts_rules_details',
+		'page arguments' 	=> array(1), 
+		'file' 				=> 'inc/get_acts_rules_details.inc',
+		'access arguments' 	=> array('access content'),		
+	);
+	
+	$items['acts-rules-new'] = array( 
+		'title' 			=> 'Act & Rules',
+		'page callback' 	=> 'get_acts_rules_notification',
+		'file' 				=> 'inc/get_acts_rules_notification.inc',
+		'access arguments' 	=> array('access content'),		
+	);
+	$items['list-of-rules/%'] = array( 
+		'title' 			=> 'Rules',
+		'page callback' 	=> 'get_all_rules',
+		'page arguments' 	=> array(1), 
+		'file' 				=> 'inc/get_acts_rules_notification.inc',
+		'access arguments' 	=> array('access content'),		
+	);
+	
+	$items['list-of-notification/%'] = array( 
+		'title' 			=> 'Notification',
+		'page callback' 	=> 'get_all_notification',
+		'page arguments' 	=> array(1), 
+		'file' 				=> 'inc/get_acts_rules_notification.inc',
+		'access arguments' 	=> array('access content'),		
+	);
+	
+	return $items;
+	
+}
+
+/*** FOR MODULE PERMISSION ****/
+

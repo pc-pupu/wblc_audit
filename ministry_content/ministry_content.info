@@ -1,0 +1,4 @@
+name = Ministry Content
+description = Ministry Content Block
+core = 7.x
+stylesheets[all][] = css/ministry_content.css

@@ -1,0 +1,12 @@
+.star_red{
+	color:#F00 !important;
+}
+
+#rcorners1 {
+    border-radius: 6px;
+    background: #73AD21;
+    padding: 7px !important;
+	text-decoration:none;
+	text-transform:uppercase;
+	color:#ffff66;
+}
