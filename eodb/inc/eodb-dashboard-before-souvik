@@ -1,0 +1,1447 @@
+<?php
+
+drupal_add_js(drupal_get_path('module', 'eodb') . '/js/custom-js.js');
+drupal_add_js(drupal_get_path('module', 'eodb') . '/js/load_data.js');
+drupal_add_css(drupal_get_path('module', 'eodb') . '/css/custom-css.css');
+
+function eodb_granted_dashboard($act_id = '')
+{
+
+    global $base_url, $base_root, $base_path;
+
+    /******************************** CLRA PE Registration ****************************************/
+
+    /* Total No of application received */
+    $result = db_query("select count(application_id) as appreceiv from (
+		select count(rm.remark_id), application_id from l_remarks_master rm
+		join l_clra_registration_master main on main.id = rm.application_id
+		where remark_type = 'S' and remark_date >= 1604169000 and is_active = 1 and amendment_parent_id is null
+		group by application_id
+	) as t");
+    $record = $result->fetchObject();
+
+    /* Total Number of applications approved */
+    $result_app = db_query("select count(id) as appapprov from (
+		select clra.id,clra.registration_date as issuedt
+		from l_clra_registration_master as clra
+		join (
+			select max(to_timestamp(remark_date)) as submitdt, application_id
+			from l_remarks_master
+			where remark_type = 'S' and remark_date >= 1604169000 and is_active = 1
+			group by application_id
+		) as rm on rm.application_id = clra.id
+		where clra.registration_date >= '2020-11-01 00:00:00' and clra.amendment_parent_id is null
+		) as main");
+    $record_app = $result_app->fetchObject();
+
+    /* Average time taken to obtain registration / Maximum time taken to obtain registration / Minimum time taken to obtain registration */
+
+    $query_avg_min_max = db_query("select round(avg(actiontime)) as avgtime, max(actiontime) as maxtime, min(actiontime) as mintime from (
+	select clra.id,clra.registration_date as issuedt, rm.submitdt, extract( day from clra.registration_date-rm.submitdt) as actiontime
+	from l_clra_registration_master as clra
+	join (
+		select max(to_timestamp(remark_date)) as submitdt, application_id
+		from l_remarks_master
+		where remark_type = 'S' and remark_date >= 1604169000 and is_active = 1
+		group by application_id
+	) as rm on rm.application_id = clra.id
+	where clra.registration_date > '2020-11-01 00:00:00' and clra.amendment_parent_id is null and clra.status = 'I'
+	order by actiontime
+	) as main where actiontime <= '50' and actiontime >=0 ");
+
+
+
+    $record_avg_min_max = $query_avg_min_max->fetchObject();
+    $avgtimeclra = $maxtimeclra = $mintimeclra = 0;
+
+    if ($record_avg_min_max->avgtime != '') {
+        $avgtimeclra = $record_avg_min_max->avgtime;
+        if ($avgtimeclra == 1) {
+            $avgtimeclra = $avgtimeclra . ' day';
+        } else {
+            $avgtimeclra = $avgtimeclra . ' days';
+        }
+    } else {
+        $avgtimeclra = 0;
+    }
+    if ($record_avg_min_max->maxtime != '') {
+        $maxtimeclra = $record_avg_min_max->maxtime;
+        if ($maxtimeclra == 1) {
+            $maxtimeclra = $maxtimeclra . ' day';
+        } else {
+            $maxtimeclra = $maxtimeclra . ' days';
+        }
+    } else {
+        $maxtimeclra = 0;
+    }
+    if ($record_avg_min_max->mintime != '') {
+        $mintimeclra = $record_avg_min_max->mintime;
+        if ($mintimeclra == '0') {
+            $mintimeclra = 'Same day';
+        } else if ($mintimeclra < '0') {
+            $mintimeclra = 'Same day';
+        }
+    } else {
+        $mintimeclra = 0;
+    }
+
+    /* Median time taken to obtain registration */
+    /*$clra_median_query = db_query("select actiontime
+	from (
+		select clra.id,clra.registration_date as issuedt, rm.submitdt, (clra.registration_date-rm.submitdt) as actiontime
+		from l_clra_registration_master as clra
+		join (
+			select max(to_timestamp(remark_date)) as submitdt, application_id
+			from l_remarks_master
+			where remark_type = 'S' and remark_date >= 1604169000 and is_active = 1
+			group by application_id
+		) as rm on rm.application_id = clra.id
+		where clra.registration_date > '2020-11-01 00:00:00' and clra.amendment_parent_id is null and clra.status = 'I'
+		order by actiontime
+	) as main where actiontime <= '50 days 23:59:59'");	
+	
+	$clra_median_query = db_query("select actiontime
+	from (
+		select clra.id,clra.registration_date as issuedt, rm.submitdt, extract( day from clra.registration_date-rm.submitdt) as actiontime
+		from l_clra_registration_master as clra
+		join (
+			select max(to_timestamp(remark_date)) as submitdt, application_id
+			from l_remarks_master
+			where remark_type = 'S' and remark_date >= 1604169000 and is_active = 1
+			group by application_id
+		) as rm on rm.application_id = clra.id
+		where clra.registration_date > '2020-11-01 00:00:00' and clra.amendment_parent_id is null and clra.status = 'I'
+		order by actiontime
+	) as main where actiontime <= '50' order by actiontime");*/
+
+    $clra_median_query = db_query("select actiontime
+from (
+	select clra.id,clra.registration_date as issuedt, rm.submitdt, extract( day from clra.registration_date-rm.submitdt) as actiontime
+	from l_clra_registration_master as clra
+	join (
+		select max(to_timestamp(remark_date)) as submitdt, application_id
+		from l_remarks_master
+		where remark_type = 'S' and remark_date >= 1604169000 and is_active = 1
+		group by application_id
+	) as rm on rm.application_id = clra.id
+	where clra.registration_date > '2020-11-01 00:00:00' and clra.amendment_parent_id is null and clra.status = 'I'
+	order by actiontime
+) as main where actiontime <= '50' and actiontime>='0'
+group by actiontime
+order by actiontime");
+
+
+
+    $clra_median_record = $clra_median_query->fetchAll();
+    if (!empty($clra_median_record)) {
+        foreach ($clra_median_record as $singleclra) {
+            $clra_arr[] = $singleclra->actiontime;
+        }
+    } else {
+        $clra_arr = NULL;
+    }
+
+    //$clra_median = calc_median_new($clra_arr);
+    $clra_median = calc_median_prev($clra_arr);
+
+    $output = "
+	<section id='welcome'>
+		<div class='welcome-bg-inside'>
+			<div class='row'>
+				<div class='content-box-inner-top'>
+					<span style='float:right';><b>Last updated on :" . date('d-m-Y h:i A') . "</b></span>
+					<div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>
+						<div class='bhoechie-tab-container'>
+							<div class='col-lg-3 col-md-3 col-sm-3 col-xs-3 bhoechie-tab-menu'>
+								<div class='list-group'>
+									<a href='#' class='list-group-item active text-center'>
+										<h4 class=''><img src='" . $GLOBALS['base_url'] . "/" . drupal_get_path('theme', 'lcTheme') . "/images/icons-clra-pe.png' alt='CLRA PE Registration' /></h4>Registration of Principal Employer Under Contract Labour (R&A) Act,1970
+									</a>
+									<a href='#' class='list-group-item text-center' onclick='ajax_load(1)'>
+										<h4 class=''><img src='" . $GLOBALS['base_url'] . "/" . drupal_get_path('theme', 'lcTheme') . "/images/icons-clra-amend.png' alt='CLRA PE Amendment' /></h4>Amendment of Registration Certificate for Principal Employer Under Contract Labour (R&A) Act,1970
+									</a>
+									<a href='#' class='list-group-item text-center' onclick='ajax_load(2)'>
+										<h4 class=''><img src='" . $GLOBALS['base_url'] . "/" . drupal_get_path('theme', 'lcTheme') . "/images/icons-bocwa-reg.png' alt='BOCWA Registration' /></h4>Registration of Establishments under Building and Other Construction Workers (RE&CS) Act, 1996.
+									</a>
+									<a href='#' class='list-group-item text-center' onclick='ajax_load(3)'>
+										<h4 class=''><img src='" . $GLOBALS['base_url'] . "/" . drupal_get_path('theme', 'lcTheme') . "/images/icons-ismw-reg2.png' alt='ISMW PE Registration' /></h4>Registration of Principal Employers under Inter State Migrant Workmen (RE&CS) Act, 1979.
+									</a>
+									<a href='#' class='list-group-item text-center' onclick='ajax_load(4)'>
+										<h4 class=''><img src='" . $GLOBALS['base_url'] . "/" . drupal_get_path('theme', 'lcTheme') . "/images/icons-con-license.png' alt='License' /></h4>Licensing for Contractors under The Contract Labour (R&A) Act 1970
+									</a>
+									<a href='#' class='list-group-item text-center' onclick='ajax_load(5)'>
+										<h4 class=''><img src='" . $GLOBALS['base_url'] . "/" . drupal_get_path('theme', 'lcTheme') . "/images/icons-con-lic-renewal.png' alt='License Auto-Renewal' /></h4>Auto-Renewal of License for Contractors under The Contract Labour (R&A) Act 1970
+									</a>
+									<a href='#' class='list-group-item text-center' onclick='ajax_load(6)'>
+										<h4 class=''><img src='" . $GLOBALS['base_url'] . "/" . drupal_get_path('theme', 'lcTheme') . "/images/icons-con-lic-amend.png' alt='Amendment of License' /></h4>Amendment of License for Contractors under The Contract Labour (R&A) Act 1970
+									</a>
+									<a href='#' class='list-group-item text-center' onclick='ajax_load(7)'>
+										<h4 class=''><img src='" . $GLOBALS['base_url'] . "/" . drupal_get_path('theme', 'lcTheme') . "/images/icons-con-license.png' alt='License' /></h4>Licensing for Contractors under Inter State Migrant Workmen (RE&CS) Act, 1979.
+									</a>
+									<a href='#' class='list-group-item text-center' onclick='ajax_load(8)'>
+										<h4 class=''><img src='" . $GLOBALS['base_url'] . "/" . drupal_get_path('theme', 'lcTheme') . "/images/icons-con-lic-renewal.png' alt='License Auto-Renewal' /></h4>Auto-Renewal of License for Contractors under Inter State Migrant Workmen (RE&CS) Act, 1979.
+									</a>
+								</div>
+							</div>
+							<div class='col-lg-9 col-md-9 col-sm-9 col-xs-9 bhoechie-tab loader-eodb-main'>
+								<div id='ajax-loader' class='loader-eodb-dashb'>
+									<img src='" . $base_url . "/sites/all/themes/lcTheme/images/ic_loading.gif' />
+								</div>
+								<div class='bhoechie-tab-content active'>
+									<table class='view-act-rules-table fixed_headers reg-dashboard-bf-login' cellspacing='0' cellpadding='0' border='0' width='100%'>
+										<thead>
+											<tr><th colspan='5' style='background:#6d6e73;color:#fff;text-align:center;'>Registration of Principal Employers under Contract Labour (Regulation &amp; Abolition) Act 1970.</th></tr>
+											<tr>
+												<th>Particulars</th>
+												<th>Details</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>Time limit prescribed as per the Public Service Guarantee Act</td>
+												<td>30 days</td>
+											</tr>
+											<tr>
+												<td>Total Number of applications received</td>
+												<td>" . $record->appreceiv . "</td>
+											</tr>
+											<tr>
+												<td>Total Number of applications approved</td>
+												<td>" . $record_app->appapprov . "</td>
+											</tr>
+											<tr>
+												<td>Average time taken to obtain registration</td>
+												<td>" . $avgtimeclra . "</td>
+											</tr>
+											<tr>
+												<td>Median time taken to obtain registration</td>
+												<td>" . $clra_median . "</td>
+											</tr>
+											<tr>
+												<td>Minimum time taken to obtain registration</td>
+												<td>" . $mintimeclra . "</td>
+											</tr>
+											<tr>
+												<td>Maximum time taken to obtain registration</td>
+													<td>" . $maxtimeclra . "</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<div id='ajax-target-1' class='bhoechie-tab-content'></div>
+								<div id='ajax-target-2' class='bhoechie-tab-content'></div>
+								<div id='ajax-target-3' class='bhoechie-tab-content'></div>
+								<div id='ajax-target-4' class='bhoechie-tab-content'></div>
+								<div id='ajax-target-5' class='bhoechie-tab-content'></div>
+								<div id='ajax-target-6' class='bhoechie-tab-content'></div>
+								<div id='ajax-target-7' class='bhoechie-tab-content'></div>
+								<div id='ajax-target-8' class='bhoechie-tab-content'></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>";
+
+    /******************************** Inspection EODB Dashboard **********************/
+
+    /*Total Number of inspections conducted*/
+    $resultins1 = db_query("select count(*) as noofins from l_inspection_establishment where type_of_insnote_user = 'inspection_note' and ins_submit_dt>='2020-11-01'");
+    $recordins1 = $resultins1->fetchObject();
+
+    /*Total Number of companies that provided self-certifications and were exempted from inspections*/
+    $resultins2 = db_query("select count(*) selfcerti from(SELECT epayments.identification_no,receive_data.transaction_id,receive_data.id,receive_data.banktransactionstatus, epayments.act_id,to_date (challanrefid_date, 'dd-mm-yy')as transaction_date,receive_data.challanrefid_date 
+	FROM l_principle_epayments_receive_data receive_data
+	join l_principle_epayments_data epayments on epayments.identification_no = receive_data.transaction_id
+	where epayments.act_id=100 and receive_data.banktransactionstatus='Success' and to_date(challanrefid_date, 'dd-mm-yy')>= to_date('01-11-2020','dd-mm-yy')
+	order by transaction_date) as inptection");
+    $recordins2 = $resultins2->fetchObject();
+
+    /*Total Number of companies that provided third party certifications and were exempted from inspections*/
+    /*No query*/
+
+    $output .= "<br>";
+    $output .= "
+				<div class='row'>
+					<div class='col-lg-12 col-md-12 col-sm-12 col-xs-12 bhoechie-tab-menu bhoechie-tab-content'>
+						<div class='col-md-12'>
+							<div class='bhoechie-tab-container below-div'>
+								<table class='view-act-rules-table fixed_headers reg-dashboard-bf-login' cellspacing='0' cellpadding='0' border='0' width='100%'>
+									<thead>
+										<tr><th colspan='5' style='background:#6d6e73;color:#fff;text-align:center;'>Inspection Dashboard</th></tr>
+										<tr>
+											<th>Particulars</th>
+											<th>Details</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>Total Number of inspections conducted</td>
+											<td>" . $recordins1->noofins . "</td>
+										</tr>
+										<tr>
+											<td>Average Time Taken for Inspection</td>
+											<td>2 days</td>
+										</tr>
+										<tr>
+											<td>Total Number of companies that provided self-certifications and were exempted from inspections</td>
+											<td>" . $recordins2->selfcerti . "</td>
+										</tr>
+										<tr>
+											<td>Total Number of companies that provided third party certifications and were exempted from inspections</td>
+											<td>0</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>";
+
+    return $output;
+}
+
+function fetchOtherServiceDetails($serviceId)
+{
+    switch ($serviceId) {
+        case 1:
+            fetchClraPeAmendmentDetails();
+            break;
+        case 2:
+            fetchBocwaRegistrationDetails();
+            break;
+        case 3:
+            fetchIsmwPeRegistrationDetails();
+            break;
+        case 4:
+            fetchContractorLicenseDetails();
+            break;
+        case 5:
+            fetchContractorLicenseRenewalDetails();
+            break;
+        case 6:
+            fetchContractorLicenseAmendmentDetails();
+            break;
+        case 7:
+            fetchISMWContractorLicenseDetails();
+            break;
+        default:
+            fetchISMWContractorLicenseRenewalDetails();
+    }
+}
+
+function fetchClraPeAmendmentDetails()
+{
+    /******************************** CLRA PE Amendment ****************************************/
+
+    /* Total No of application received */
+    $result_re_ca = db_query("select count(id) as appreceiv from (
+		select clra.id, clra.amendment_date
+			from l_clra_registration_master as clra
+			join (
+				select max(to_timestamp(remark_date)) as submitdt, application_id
+				from l_remarks_master
+				where remark_type = 'S' and remark_date >= 1604169000 and is_active = 1
+				group by application_id
+			) as rm on rm.application_id = clra.id
+			where clra.amendment_parent_id is not null
+			order by clra.id
+		) as main");
+
+    $record_re_ca = $result_re_ca->fetchObject();
+
+    /* Total Number of applications approved */
+    $result_app_ca = db_query("select count(id) as appapprov from (
+		select clra.id,clra.amendment_date as issuedt
+			from l_clra_registration_master as clra
+			join (
+				select max(to_timestamp(remark_date)) as submitdt, application_id
+				from l_remarks_master
+				where remark_type = 'S' and remark_date >= 1604169000 and is_active = 1
+				group by application_id
+			) as rm on rm.application_id = clra.id
+			where clra.amendment_date >= '2020-11-01 00:00:00' and clra.amendment_parent_id is not null
+			order by clra.amendment_date
+		) as main");
+
+    $record_app_ca = $result_app_ca->fetchObject();
+
+    /* Average time taken to obtain registration / Maximum time taken to obtain registration / Minimum time taken to obtain registration */
+
+    $query_avg_min_max_ca = db_query("select round(avg(actiontime)) as avgtime, max(actiontime) as maxtime, min(actiontime) as mintime from (
+	select clra.id,clra.amendment_date as issuedt, rm.submitdt, extract( day from clra.amendment_date-rm.submitdt) as actiontime
+	from l_clra_registration_master as clra
+	join (
+		select max(to_timestamp(remark_date)) as submitdt, application_id
+		from l_remarks_master
+		where remark_type = 'S' and remark_date >= 1604169000 and is_active = 1
+		group by application_id
+	) as rm on rm.application_id = clra.id
+	where clra.amendment_date > '2020-11-01 00:00:00' and clra.amendment_parent_id is not null and clra.status = 'I'
+	order by actiontime
+	) as main where actiontime <= '50' and actiontime >=0 ");
+    $record_avg_min_max_ca = $query_avg_min_max_ca->fetchObject();
+
+    if ($record_avg_min_max_ca->avgtime != '') {
+        $avgtimeca = $record_avg_min_max_ca->avgtime;
+        if ($avgtimeca == 1) {
+            $avgtimeca = $avgtimeca . ' day';
+        } else {
+            $avgtimeca = $avgtimeca . ' days';
+        }
+    } else {
+        $avgtimeca = 0;
+    }
+    if ($record_avg_min_max_ca->maxtime != '') {
+        $maxtimeca = $record_avg_min_max_ca->maxtime;
+        if ($maxtimeca == 1) {
+            $maxtimeca = $maxtimeca . ' day';
+        } else {
+            $maxtimeca = $maxtimeca . ' days';
+        }
+    } else {
+        $maxtimeca = 0;
+    }
+    if ($record_avg_min_max_ca->mintime != '') {
+        $mintimeca = $record_avg_min_max_ca->mintime;
+        if ($mintimeca == '0') {
+            $mintimeca = 'Same day';
+        }
+    } else {
+        $mintimeca = 0;
+    }
+
+    /* Median time taken to obtain registration */
+
+    $ca_median_query = db_query("select actiontime
+from (
+	select clra.id,clra.amendment_date as issuedt, rm.submitdt, extract( day from clra.amendment_date-rm.submitdt) as actiontime
+	from l_clra_registration_master as clra
+	join (
+		select max(to_timestamp(remark_date)) as submitdt, application_id
+		from l_remarks_master
+		where remark_type = 'S' and remark_date >= 1604169000 and is_active = 1
+		group by application_id
+	) as rm on rm.application_id = clra.id
+	where clra.amendment_date > '2020-11-01 00:00:00' and clra.amendment_parent_id is not null and clra.status = 'I'
+	order by actiontime
+) as main where actiontime <= '50' and actiontime >='0'
+group by actiontime
+order by actiontime");
+    $ca_median_record = $ca_median_query->fetchAll();
+    if (!empty($ca_median_record)) {
+        foreach ($ca_median_record as $singleca) {
+            $ca_arr[] = $singleca->actiontime;
+        }
+    } else {
+        $ca_arr = NULL;
+    }
+    //$ca_median = calc_median_new($ca_arr);
+    $ca_median = calc_median_prev($ca_arr);
+
+    echo "
+			<table class='view-act-rules-table fixed_headers reg-dashboard-bf-login' cellspacing='0' cellpadding='0' border='0' width='100%'>
+				<thead>
+					<tr><th colspan='5' style='background:#6d6e73;color:#fff;text-align:center;'>Amendment of registration certificate for Principal Employers under Contract Labour (Regulation &amp; Abolition) Act 1970.</th></tr>
+					<tr>
+						<th>Particulars</th>
+						<th>Details</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Time limit prescribed as per the Public Service Guarantee Act</td>
+						<td>30 days</td>
+					</tr>
+					<tr>
+						<td>Total Number of applications received</td>
+						<td>" . $record_re_ca->appreceiv . "</td>
+					</tr>
+					<tr>
+						<td>Total Number of applications approved</td>
+						<td>" . $record_app_ca->appapprov . "</td>
+					</tr>
+					<tr>
+						<td>Average time taken to obtain registration</td>
+						<td>" . $avgtimeca . "</td>
+					</tr>
+					<tr>
+						<td>Median time taken to obtain registration</td>
+						<td>" . $ca_median . "</td>
+					</tr>
+					<tr>
+						<td>Minimum time taken to obtain registration</td>
+						<td>" . $mintimeca . "</td>
+					</tr>
+					<tr>
+						<td>Maximum time taken to obtain registration</td>
+						<td>" . $maxtimeca . "</td>
+					</tr>
+				</tbody>
+			</table>";
+}
+
+function fetchBocwaRegistrationDetails()
+{
+    /******************************** BOCWA Registration ****************************************/
+
+    /* Total No of application received */
+    $result_re_bocw = db_query("select count(application_id) as appreceiv from (
+		select count(rm.id), application_id from l_bocwa_remark_master rm
+		join l_bocwa_registration_master main on main.id = rm.application_id
+		where remark_type = 'S' and remark_date >= 1604169000 and is_active = 1 and amendment_parent_id is null
+		group by application_id
+	) as t");
+    $record_re_bocw = $result_re_bocw->fetchObject();
+
+    /* Total Number of applications approved */
+    $result_app_bocw = db_query("select count(id) as appapprov from (
+		select bocw.id,bocw.registration_date as issuedt
+		from l_bocwa_registration_master as bocw
+		join (
+			select max(to_timestamp(remark_date)) as submitdt, application_id
+			from l_bocwa_remark_master
+			where remark_type = 'S' and remark_date >= 1604169000 and is_active = 1
+			group by application_id
+		) as rm on rm.application_id = bocw.id
+		where bocw.registration_date >= '2020-11-01 00:00:00' and bocw.amendment_parent_id is null 
+		) as main
+	");
+    $record_app_bocw = $result_app_bocw->fetchObject();
+
+    /* Average time taken to obtain registration / Maximum time taken to obtain registration / Minimum time taken to obtain registration */
+
+    /*$query_avg_min_max_bocw =db_query("select date_trunc('day',avg(actiontime)) as avgtime, date_trunc('day',max(actiontime)) as maxtime, case when date_trunc('day',min(actiontime))<'00:00:00' then '00:00:00' else date_trunc('day',min(actiontime)) end  mintime from (
+	select bocw.id,bocw.registration_date as issuedt, rm.submitdt, (bocw.registration_date - (date_trunc('day',rm.submitdt))) as actiontime
+	from l_bocwa_registration_master as bocw
+	join (
+		select max(to_timestamp(remark_date)::timestamp without time zone) as submitdt, application_id
+		from l_bocwa_remark_master
+		where remark_type = 'S' and remark_date >= 1604169000 and is_active = 1
+		group by application_id
+	) as rm on rm.application_id = bocw.id
+	where bocw.registration_date > '2020-11-01 00:00:00' and bocw.amendment_parent_id is null and bocw.status = 'I'
+	order by actiontime
+	) as main where actiontime <= '50 days 23:59:59'");	*/
+
+
+    $query_avg_min_max_bocw = db_query("select round(avg(actiontime)) as avgtime, max(actiontime) as maxtime, min(actiontime) as mintime from (
+	select bocw.id,bocw.registration_date as issuedt, rm.submitdt, extract( day from bocw.registration_date - rm.submitdt) as actiontime
+	from l_bocwa_registration_master as bocw
+	join (
+		select max(to_timestamp(remark_date)::timestamp without time zone) as submitdt, application_id
+		from l_bocwa_remark_master
+		where remark_type = 'S' and remark_date >= 1604169000 and is_active = 1
+		group by application_id
+	) as rm on rm.application_id = bocw.id
+	where bocw.registration_date > '2020-11-01 00:00:00' and bocw.amendment_parent_id is null and bocw.status = 'I'
+	order by actiontime
+) as main where actiontime <= '50' and actiontime>=0");
+
+
+
+
+
+    $record_avg_min_max_bocw = $query_avg_min_max_bocw->fetchObject();
+
+    if ($record_avg_min_max_bocw->avgtime != '') {
+        $avgtimebocw = $record_avg_min_max_bocw->avgtime;
+    } else {
+        $avgtimebocw = 0;
+    }
+    if ($record_avg_min_max_bocw->maxtime != '') {
+        $maxtimebocw = $record_avg_min_max_bocw->maxtime;
+    } else {
+        $maxtimebocw = 0;
+    }
+    if ($record_avg_min_max_bocw->mintime != '') {
+        $mintimebocw = $record_avg_min_max_bocw->mintime;
+        if ($mintimebocw == '0') {
+            $mintimebocw = 'Same day';
+        }
+    } else {
+        $mintimebocw = 0;
+    }
+
+    /* Median time taken to obtain registration */
+
+    /*$bocw_median_query=db_query("select bocw.id, (bocw.registration_date - (date_trunc('day',rm.submitdt))) as actiontime
+	from l_bocwa_registration_master as bocw
+	join (
+		select max(to_timestamp(remark_date)::timestamp without time zone) as submitdt, application_id
+		from l_bocwa_remark_master
+		where remark_type = 'S' and remark_date >= 1604169000 and is_active = 1
+		group by application_id
+	) as rm on rm.application_id = bocw.id
+	where bocw.registration_date > '2020-11-01 00:00:00' and bocw.amendment_parent_id is null and bocw.status = 'I'
+	order by actiontime");	*/
+
+    $bocw_median_query = db_query("select actiontime
+from(
+	select bocw.id,bocw.registration_date as issuedt, rm.submitdt, extract( day from bocw.registration_date - rm.submitdt) as actiontime
+	from l_bocwa_registration_master as bocw
+	join (
+		select max(to_timestamp(remark_date)::timestamp without time zone) as submitdt, application_id
+		from l_bocwa_remark_master
+		where remark_type = 'S' and remark_date >= 1604169000 and is_active = 1
+		group by application_id
+	) as rm on rm.application_id = bocw.id
+	where bocw.registration_date > '2020-11-01 00:00:00' and bocw.amendment_parent_id is null and bocw.status = 'I'
+	order by actiontime
+) as main 
+where actiontime <= '50' and actiontime >=0
+group by actiontime
+order by actiontime");
+
+
+    $bocw_median_record = $bocw_median_query->fetchAll();
+    if (!empty($bocw_median_record)) {
+        foreach ($bocw_median_record as $singlebocw) {
+            $bocw_arr[] = $singlebocw->actiontime;
+        }
+    } else {
+        $bocw_arr = NULL;
+    }
+    //$bocw_median = calc_median_new($bocw_arr);
+    $bocw_median = calc_median_prev($bocw_arr);
+
+    echo "
+			<table class='view-act-rules-table fixed_headers reg-dashboard-bf-login' cellspacing='0' cellpadding='0' border='0' width='100%'>
+				<thead>
+					<tr><th colspan='5' style='background:#6d6e73;color:#fff;text-align:center;'>Registration of Establishments under Building and Other Construction Workers (Regulation of Employment and Conditions of Service) Act, 1996.</th></tr>
+					<tr>
+						<th>Particulars</th>
+						<th>Details</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Time limit prescribed as per the Public Service Guarantee Act</td>
+						<td>30 days</td>
+					</tr>
+					<tr>
+						<td>Total Number of applications received</td>
+						<td>" . $record_re_bocw->appreceiv . "</td>
+					</tr>
+					<tr>
+						<td>Total Number of applications approved</td>
+						<td>" . $record_app_bocw->appapprov . "</td>
+					</tr>
+					<tr>
+						<td>Average time taken to obtain registration</td>
+						<td>" . $avgtimebocw . "</td>
+					</tr>
+					<tr>
+						<td>Median time taken to obtain registration</td>
+						<td>" . $bocw_median . "</td>
+					</tr>
+					<tr>
+						<td>Minimum time taken to obtain registration</td>
+						<td>" . $mintimebocw . "</td>
+					</tr>
+					<tr>
+						<td>Maximum time taken to obtain registration</td>
+						<td>" . $maxtimebocw . "</td>
+					</tr>
+				</tbody>
+			</table>";
+}
+
+function fetchIsmwPeRegistrationDetails()
+{
+    /******************************** ISMW PE Registration ****************************************/
+
+    /* Total No of application received */
+    $result_re_ismw = db_query("select count(application_id) as appreceiv from (
+		select count(rm.id), application_id from l_interstate_remark_master rm
+		join l_interstate_workman_master main on main.id = rm.application_id
+		where remark_type = 'S' and remark_date >= 1604169000 and is_active = 1 and amendment_parent_id is null
+		group by application_id
+	) as t");
+    $record_re_ismw = $result_re_ismw->fetchObject();
+
+    /* Total Number of applications approved */
+    $result_app_ismw = db_query("select count(id) as appapprov from (
+	select ismw.id,ismw.registration_date as issuedt
+	from l_interstate_workman_master as ismw
+	join (
+		select max(to_timestamp(remark_date)) as submitdt, application_id
+		from l_interstate_remark_master
+		where remark_type = 'S' and remark_date >= 1604169000 and is_active = 1
+		group by application_id
+	) as rm on rm.application_id = ismw.id
+	where ismw.registration_date >= '2020-11-01 00:00:00' and ismw.amendment_parent_id is null
+	) as main");
+    $record_app_ismw = $result_app_ismw->fetchObject();
+
+    /* Average time taken to obtain registration / Maximum time taken to obtain registration / Minimum time taken to obtain registration */
+
+    $query_avg_min_max_ismw = db_query("select round(avg(actiontime)) as avgtime, max(actiontime) as maxtime, min(actiontime) as mintime 
+from (
+	select ismw.id,ismw.registration_date as issuedt, rm.submitdt, extract( day from ismw.registration_date - rm.submitdt) as actiontime
+	from l_interstate_workman_master as ismw
+	join (
+		select max(to_timestamp(remark_date)::timestamp without time zone) as submitdt, application_id
+		from l_interstate_remark_master
+		where remark_type = 'S' and remark_date >= 1604169000 and is_active = 1
+		group by application_id
+	) as rm on rm.application_id = ismw.id
+	where ismw.registration_date > '2020-11-01 00:00:00' and ismw.amendment_parent_id is null and ismw.status = 'I'
+	order by actiontime
+) as main where actiontime <= '50'");
+    $record_avg_min_max_ismw = $query_avg_min_max_ismw->fetchObject();
+
+    if ($record_avg_min_max_ismw->avgtime != '') {
+        $avgtimeismw = $record_avg_min_max_ismw->avgtime;
+        if ($avgtimeismw == 1) {
+            $avgtimeismw = $avgtimeismw . ' day';
+        } else {
+            $avgtimeismw = $avgtimeismw . ' days';
+        }
+    } else {
+        $avgtimeismw = 0;
+    }
+    if ($record_avg_min_max_ismw->maxtime != '') {
+        $maxtimeismw = $record_avg_min_max_ismw->maxtime;
+        if ($maxtimeismw == 1) {
+            $maxtimeismw = $maxtimeismw . ' day';
+        } else {
+            $maxtimeismw = $maxtimeismw . ' days';
+        }
+    } else {
+        $maxtimeismw = 0;
+    }
+    if ($record_avg_min_max_ismw->mintime != '') {
+        $mintimeismw = $record_avg_min_max_ismw->mintime;
+        if ($mintimeismw == '0') {
+            $mintimeismw = 'Same day';
+        }
+    } else {
+        $mintimeismw = 0;
+    }
+
+    /* Median time taken to obtain registration */
+
+    $ismw_median_query = db_query("select actiontime
+from (
+	select ismw.id,ismw.registration_date as issuedt, rm.submitdt, extract( day from ismw.registration_date - rm.submitdt) as actiontime
+	from l_interstate_workman_master as ismw
+	join (
+		select max(to_timestamp(remark_date)::timestamp without time zone) as submitdt, application_id
+		from l_interstate_remark_master
+		where remark_type = 'S' and remark_date >= 1604169000 and is_active = 1
+		group by application_id
+	) as rm on rm.application_id = ismw.id
+	where ismw.registration_date > '2020-11-01 00:00:00' and ismw.amendment_parent_id is null and ismw.status = 'I'
+	order by actiontime
+) as main 
+where actiontime <= '50' and actiontime >= '0'
+group by actiontime
+order by actiontime");
+    $ismw_median_record = $ismw_median_query->fetchAll();
+    if (!empty($ismw_median_record)) {
+        foreach ($ismw_median_record as $singleismw) {
+            $ismw_arr[] = $singleismw->actiontime;
+        }
+    } else {
+        $ismw_arr = NULL;
+    }
+
+    //$ismw_median = calc_median_new($ismw_arr);
+    $ismw_median = calc_median_prev($ismw_arr);
+
+    echo "
+			<table class='view-act-rules-table fixed_headers reg-dashboard-bf-login' cellspacing='0' cellpadding='0' border='0' width='100%'>
+				<thead>
+					<tr><th colspan='5' style='background:#6d6e73;color:#fff;text-align:center;'>Registration of Principal Employers under Inter State Migrant Workmen (Regulation of Employment and Conditions of Service) Act, 1979.</th></tr>
+					<tr>
+						<th>Particulars</th>
+						<th>Details</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Time limit prescribed as per the Public Service Guarantee Act</td>
+						<td>30 days</td>
+					</tr>
+					<tr>
+						<td>Total Number of applications received</td>
+						<td>" . $record_re_ismw->appreceiv . "</td>
+					</tr>
+					<tr>
+						<td>Total Number of applications approved</td>
+						<td>" . $record_app_ismw->appapprov . "</td>
+					</tr>
+					<tr>
+						<td>Average time taken to obtain registration</td>
+						<td>" . $avgtimeismw . "</td>
+					</tr>
+					<tr>
+						<td>Median time taken to obtain registration</td>
+						<td>" . $ismw_median . "</td>
+					</tr>
+					<tr>
+						<td>Minimum time taken to obtain registration</td>
+						<td>" . $mintimeismw . "</td>
+					</tr>
+					<tr>
+						<td>Maximum time taken to obtain registration</td>
+						<td>" . $maxtimeismw . "</td>
+					</tr>
+				</tbody>
+			</table>";
+}
+
+function fetchContractorLicenseDetails()
+{
+    /******************************** Contractor License ****************************************/
+
+    /* Total No of application received */
+    $result_re_linc = db_query("select count(remark_to) as appreceiv from (
+		select count(rm.id), remark_to from l_remark_license rm
+		join l_contractor_license_application main on main.serial_no_from_v = rm.remark_to
+		where remark_type = 'U' and remark_date >= 1604169000 and flag ='L'
+		group by remark_to
+	) as t");
+    $record_re_linc = $result_re_linc->fetchObject();
+
+    /* Total Number of applications approved */
+    $result_app_linc = db_query("select count(serial_no_from_v) as appapprov from (
+		select linc.serial_no_from_v, linc.modification_date as issuedt
+		from l_contractor_license_application as linc
+		join (
+			select max(to_timestamp(remark_date)) as submitdt, remark_to
+			from l_remark_license
+			where remark_type = 'U' and remark_date >= 1604169000 and is_active = 1 and flag ='L'
+			group by remark_to
+		) as rm on rm.remark_to = linc.serial_no_from_v
+		where linc.modification_date >= '2020-11-01 00:00:00' and linc.status = 'I' 
+	) as main");
+    $record_app_linc = $result_app_linc->fetchObject();
+
+    /* Average time taken to obtain registration / Maximum time taken to obtain registration / Minimum time taken to obtain registration */
+
+    $query_avg_min_max_linc = db_query("select round(avg(actiontime)) as avgtime, max(actiontime) as maxtime, min(actiontime) as  mintime 
+from (
+	select linc.id,linc.modification_date as issuedt, rm.submitdt, extract( day from linc.modification_date - rm.submitdt) as actiontime
+	from l_contractor_license_application as linc
+	join (
+		select max(to_timestamp(remark_date)) as submitdt, remark_to
+		from l_remark_license
+		where remark_type = 'U' and remark_date >= 1604169000 and is_active = 1 and flag ='L'
+		group by remark_to
+	) as rm on rm.remark_to = linc.serial_no_from_v
+	where linc.modification_date > '2020-11-01 00:00:00' and linc.status = 'I'
+	order by actiontime
+) as main where actiontime <= '50' and actiontime >= '0'");
+    $record_avg_min_max_linc = $query_avg_min_max_linc->fetchObject();
+
+    if ($record_avg_min_max_linc->avgtime != '') {
+        $avgtimelinc = $record_avg_min_max_linc->avgtime;
+        if ($avgtimelinc == 1) {
+            $avgtimelinc = $avgtimelinc . ' day';
+        } else {
+            $avgtimelinc = $avgtimelinc . ' days';
+        }
+    } else {
+        $avgtimelinc = 0;
+    }
+    if ($record_avg_min_max_linc->maxtime != '') {
+        $maxtimelinc = $record_avg_min_max_linc->maxtime;
+        if ($maxtimelinc == 1) {
+            $maxtimelinc = $maxtimelinc . ' day';
+        } else {
+            $maxtimelinc = $maxtimelinc . ' days';
+        }
+    } else {
+        $maxtimelinc = 0;
+    }
+    if ($record_avg_min_max_linc->mintime != '') {
+        $mintimelinc = $record_avg_min_max_linc->mintime;
+        if ($mintimelinc == '0') {
+            $mintimelinc = 'Same day';
+        }
+    } else {
+        $mintimelinc = 0;
+    }
+
+    /* Median time taken to obtain license application */
+
+    $linc_median_query = db_query("select actiontime 
+from (
+		select linc.id,linc.modification_date as issuedt, rm.submitdt, extract( day from linc.modification_date - rm.submitdt) as actiontime
+		from l_contractor_license_application as linc
+		join (
+			select max(to_timestamp(remark_date)) as submitdt, remark_to
+			from l_remark_license
+			where remark_type = 'U' and remark_date >= 1604169000 and is_active = 1 and flag ='L'
+			group by remark_to
+		) as rm on rm.remark_to = linc.serial_no_from_v
+		where linc.modification_date > '2020-11-01 00:00:00' and linc.status = 'I'
+		order by actiontime
+	) as main where actiontime <= '50' and actiontime >= '0'
+	group by actiontime
+	order by actiontime");
+    $linc_median_record = $linc_median_query->fetchAll();
+    if (!empty($linc_median_record)) {
+        foreach ($linc_median_record as $singlelinc) {
+            $linc_arr[] = $singlelinc->actiontime;
+        }
+    } else {
+        $linc_arr = NULL;
+    }
+    //$linc_median = calc_median_new($linc_arr);
+    $linc_median = calc_median_prev($linc_arr);
+    echo "
+			<table class='view-act-rules-table fixed_headers reg-dashboard-bf-login' cellspacing='0' cellpadding='0' border='0' width='100%'>
+				<thead>
+					<tr><th colspan='5' style='background:#6d6e73;color:#fff;text-align:center;'>Licensing for Contractors under Contract Labour (Regulation & Abolition) Act 1970</th></tr>
+					<tr>
+						<th>Particulars</th>
+						<th>Details</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Time limit prescribed as per the Public Service Guarantee Act</td>
+						<td>30 days</td>
+					</tr>
+					<tr>
+						<td class='par-bg'>Total Number of applications received</td>
+						<td class='micro-bg'>" . $record_re_linc->appreceiv . "</td>
+					</tr>
+					<tr>
+						<td class='par-bg'>Total Number of applications approved</td>
+						<td class='micro-bg'>" . $record_app_linc->appapprov . "</td>
+					</tr>
+					<tr>
+						<td class='par-bg'>Average time taken to obtain registration</td>
+						<td class='micro-bg'>" . $avgtimelinc . "</td>
+					</tr>
+					<tr>
+						<td class='par-bg'>Median time taken to obtain registration</td>
+						<td class='micro-bg'>" . $linc_median . "</td>
+					</tr>
+					<tr>
+						<td class='par-bg'>Minimum time taken to obtain registration</td>
+						<td class='micro-bg'>" . $mintimelinc . "</td>
+					</tr>
+					<tr>
+						<td class='par-bg'>Maximum time taken to obtain registration</td>
+						<td class='micro-bg'>" . $maxtimelinc . "</td>
+					</tr>
+				</tbody>
+			</table>";
+}
+
+function fetchContractorLicenseRenewalDetails()
+{
+    /******************************** Contractor License Renewal ****************************************/
+
+    /* Total No of application received */
+    $result_re_lincautoren = db_query("select count(id) as appreceiv
+		from l_contractor_license_apply_renweal
+		where renewal_appliaction_status = 'U'
+		and modification_date >= 1604169000 and is_autorenewal = 'Y'");
+    $record_re_lincautoren = $result_re_lincautoren->fetchObject();
+
+    /* Total Number of applications approved */
+    $result_app_lincautoren = db_query("select count(id) as appapprov
+		from l_contractor_license_apply_renweal
+		where renewal_appliaction_status = 'I'
+		and modification_date >= 1604169000 and is_autorenewal = 'Y'");
+    $record_app_lincautoren = $result_app_lincautoren->fetchObject();
+
+    $avgtimelincautoren = $maxtimelincautoren = $mintimelincautoren = $lincautoren_median = 'Same Day';
+
+    echo "
+			<table class='view-act-rules-table fixed_headers reg-dashboard-bf-login' cellspacing='0' cellpadding='0' border='0' width='100%'>
+				<thead>
+					<tr><th colspan='5' style='background:#6d6e73;color:#fff;text-align:center;'>Auto-Renewal of License for Contractors under The Contract Labour (Regulation & Abolition) Act 1970</th></tr>
+					<tr>
+						<th>Particulars</th>
+						<th>Details</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Time limit prescribed as per the Public Service Guarantee Act</td>
+						<td>Same Day</td>
+					</tr>
+					<tr>
+						<td>Total Number of applications received</td>
+						<td>" . $record_app_lincautoren->appapprov . "</td>
+					</tr>
+					<tr>
+						<td>Total Number of applications approved</td>
+						<td>" . $record_app_lincautoren->appapprov . "</td>
+					</tr>
+					<tr>
+						<td>Average time taken to obtain registration</td>
+						<td>" . $avgtimelincautoren . "</td>
+					</tr>
+					<tr>
+						<td>Median time taken to obtain registration</td>
+						<td>" . $lincautoren_median . "</td>
+					</tr>
+					<tr>
+						<td>Minimum time taken to obtain registration</td>
+						<td>" . $mintimelincautoren . "</td>
+					</tr>
+					<tr>
+						<td>Maximum time taken to obtain registration</td>
+						<td>" . $maxtimelincautoren . "</td>
+					</tr>
+				</tbody>
+			</table>";
+}
+
+function fetchContractorLicenseAmendmentDetails()
+{
+    /******************************** Contractor License Amendment ****************************************/
+
+    /* Total No of application received */
+    $result_re_lincamd = db_query("select count(coid) as appreceiv 
+		from(
+			select count(id) as coid, particular_id
+			from l_remark_license as rm
+			where flag = 'A' and remark_date >= 1604169000 and remark_type = 'U'
+			group by particular_id
+			order by coid
+		) as ts");
+    $record_re_lincamd = $result_re_lincamd->fetchObject();
+
+    /* Total Number of applications approved */
+    $result_app_lincamd = db_query("select count(particular_id) as appapprov 
+		from (
+			select to_timestamp(remark_date), particular_id 
+			from l_remark_license
+			where particular_id in (
+				select  particular_id
+				from l_remark_license as rm
+				where flag = 'A' and remark_date >= 1604169000 and is_active = 1 and remark_type = 'I'
+				group by particular_id
+			) and remark_type = 'U' and flag = 'A' and remark_date >= 1604169000
+		) as ti");
+    $record_app_lincamd = $result_app_lincamd->fetchObject();
+
+    /* Average time taken to obtain registration / Maximum time taken to obtain registration / Minimum time taken to obtain registration */
+
+    $query_avg_min_max_lincamd = db_query("select round(avg(actiontime)) as avgtime, max(actiontime) as maxtime, min(actiontime) as  mintime 
+from (
+	select ti.*,ts.*, extract(day from ti.issuedt - ts.submitdt) as actiontime from (
+		select to_timestamp(remark_date) as issuedt, particular_id 
+		from l_remark_license
+		where particular_id in (
+			select  particular_id
+			from l_remark_license as rm
+			where flag = 'A' and remark_date >= 1604169000 and is_active = 1 and remark_type = 'I'
+			group by particular_id
+		) and remark_type = 'I' and flag = 'A' and remark_date >= 1604169000
+	) as ti
+	join (
+		select to_timestamp(remark_date) as submitdt, particular_id 
+		from l_remark_license
+		where particular_id in (
+			select  particular_id
+			from l_remark_license as rm
+			where flag = 'A' and remark_date >= 1604169000 and is_active = 1 and remark_type = 'I'
+			group by particular_id
+		) and remark_type = 'U' and flag = 'A' and remark_date >= 1604169000
+	) as ts on ti.particular_id = ts.particular_id
+	order by actiontime
+) as main where actiontime <= '50' and actiontime>='0'");
+    $record_avg_min_max_lincamd = $query_avg_min_max_lincamd->fetchObject();
+
+    if ($record_avg_min_max_lincamd->avgtime != '') {
+        $avgtimelincamd = $record_avg_min_max_lincamd->avgtime;
+        if ($avgtimelincamd == 1) {
+            $avgtimelincamd = $avgtimelincamd . ' day';
+        } else {
+            $avgtimelincamd = $avgtimelincamd . ' days';
+        }
+    } else {
+        $avgtimelincamd = 0;
+    }
+    if ($record_avg_min_max_lincamd->maxtime != '') {
+        $maxtimelincamd = $record_avg_min_max_lincamd->maxtime;
+        if ($maxtimelincamd == 1) {
+            $maxtimelincamd = $maxtimelincamd . ' day';
+        } else {
+            $maxtimelincamd = $maxtimelincamd . ' days';
+        }
+    } else {
+        $maxtimelincamd = 0;
+    }
+    if ($record_avg_min_max_lincamd->mintime != '') {
+        $mintimelincamd = $record_avg_min_max_lincamd->mintime;
+        if ($mintimelincamd == '0') {
+            $mintimelincamd = 'Same day';
+        }
+    } else {
+        $mintimelincamd = 0;
+    }
+
+    /* Median time taken to obtain registration */
+
+    $lincamd_median_query = db_query("select actiontime 
+from (
+	select ti.*,ts.*, extract(day from ti.issuedt - ts.submitdt) as actiontime from (
+		select to_timestamp(remark_date) as issuedt, particular_id 
+		from l_remark_license
+		where particular_id in (
+			select  particular_id
+			from l_remark_license as rm
+			where flag = 'A' and remark_date >= 1604169000 and is_active = 1 and remark_type = 'I'
+			group by particular_id
+		) and remark_type = 'I' and flag = 'A' and remark_date >= 1604169000
+	) as ti
+	join (
+		select to_timestamp(remark_date) as submitdt, particular_id 
+		from l_remark_license
+		where particular_id in (
+			select  particular_id
+			from l_remark_license as rm
+			where flag = 'A' and remark_date >= 1604169000 and is_active = 1 and remark_type = 'I'
+			group by particular_id
+		) and remark_type = 'U' and flag = 'A' and remark_date >= 1604169000
+	) as ts on ti.particular_id = ts.particular_id
+	order by actiontime
+) as main where actiontime <= '50' and actiontime>='0'
+group by actiontime
+order by actiontime");
+    $lincamd_median_record = $lincamd_median_query->fetchAll();
+    if (!empty($lincamd_median_record)) {
+        foreach ($lincamd_median_record as $singlelincamd) {
+            $lincamd_arr[] = $singlelincamd->actiontime;
+        }
+    } else {
+        $lincamd_arr = NULL;
+    }
+
+    //$lincamd_median = calc_median_new($lincamd_arr);
+    $lincamd_median = calc_median_prev($lincamd_arr);
+
+    echo "
+			<table class='view-act-rules-table fixed_headers reg-dashboard-bf-login' cellspacing='0' cellpadding='0' border='0' width='100%'>
+				<thead>
+					<tr><th colspan='5' style='background:#6d6e73;color:#fff;text-align:center;'>Amendment of License for Contractors under The Contract Labour (Regulation & Abolition) Act 1970.</th></tr>
+					<tr>
+						<th>Particulars</th>
+						<th>Details</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Time limit prescribed as per the Public Service Guarantee Act</td>
+						<td>30 days</td>
+					</tr>
+					<tr>
+						<td>Total Number of applications received</td>
+						<td>" . $record_re_lincamd->appreceiv . "</td>
+					</tr>
+					<tr>
+						<td>Total Number of applications approved</td>
+						<td>" . $record_app_lincamd->appapprov . "</td>
+					</tr>
+					<tr>
+						<td>Average time taken to obtain registration</td>
+						<td>" . $avgtimelincamd . "</td>
+					</tr>
+					<tr>
+						<td>Median time taken to obtain registration</td>
+						<td>" . $lincamd_median . "</td>
+					</tr>
+					<tr>
+						<td>Minimum time taken to obtain registration</td>
+						<td>" . $mintimelincamd . "</td>
+					</tr>
+					<tr>
+						<td>Maximum time taken to obtain registration</td>
+						<td>" . $maxtimelincamd . "</td>
+					</tr>
+				</tbody>
+			</table>";
+}
+
+function fetchISMWContractorLicenseDetails()
+{
+    /******************************** ISMW Contractor License ****************************************/
+
+    $applicationReceivedResult = db_query("select count(id) as application_received from
+		(select count(remarks.id), license.id from l_interstate_license_master as license
+		join l_interstate_remarks_license as remarks on license.id = remarks.license_id and license.form_six = remarks.form_six
+		where remarks.remark_type = 'S' and remarks.remark_date >= 1604169000 and is_active = 1 and license.act_id = 42
+		group by license.id)
+		as temp;");
+
+    $applicationApprovedResult = db_query("select count(id) as application_approved from
+		(select license.id from l_interstate_license_master as license
+		join l_interstate_remarks_license as remarks on license.id = remarks.license_id and license.form_six = remarks.form_six
+		where remarks.remark_type = 'I' and remarks.remark_date >= 1604169000 and is_active = 1 and license.act_id = 42
+		group by license.id having license.id in (
+		select license.id from l_interstate_license_master as license
+		join l_interstate_remarks_license as remarks on license.id = remarks.license_id and license.form_six = remarks.form_six
+		where remarks.remark_type = 'S' and remarks.remark_date >= 1604169000 and is_active = 1 and license.act_id = 42
+		group by license.id))
+		as temp;");
+
+    $timeTakenResult = db_query("select date_trunc('day',max(difference)) as max_time,
+		case when date_trunc('day',min(difference)) < '00:00:00' then '00:00:00' else date_trunc('day',min(difference)) end as min_time,
+		date_trunc('day',avg(difference)) as avg_time
+		from
+		((select remarks1.license_id, submit_date, to_timestamp(remarks1.remark_date) as issue_date, to_timestamp(remarks1.remark_date) - submit_date as difference, remarks1.form_six
+		from l_interstate_remarks_license as remarks1
+		join
+		(select max(to_timestamp(remark_date)) as submit_date, license_id
+		from l_interstate_remarks_license
+		where remark_type = 'S' and remark_date >= 1604169000 and is_active = 1
+		group by license_id
+		) as remarks2
+		on remarks1.license_id = remarks2.license_id
+		where remarks1.remark_type = 'I' and remarks1.remark_date >= 1604169000 and is_active = 1
+		order by difference) as remarks
+		join l_interstate_license_master as license on license.id = remarks.license_id and license.form_six = remarks.form_six and license.act_id = 42)
+		as temp;");
+
+    $timeTaken = $timeTakenResult->fetchObject();
+    $maxTimeTaken = $minTimeTaken = $avgTimeTaken = 0;
+
+    if ($timeTaken->max_time != '') {
+        $maxTimeTaken = $timeTaken->max_time;
+    } else {
+        $maxTimeTaken = 0;
+    }
+    if ($timeTaken->min_time != '') {
+        $minTimeTaken = $timeTaken->min_time;
+        if ($minTimeTaken == '00:00:00') {
+            $minTimeTaken = 'Same day';
+        } else if ($minTimeTaken < '00:00:00') {
+            $minTimeTaken = 'Same day';
+        }
+    } else {
+        $minTimeTaken = 0;
+    }
+    if ($timeTaken->avg_time != '') {
+        $avgTimeTaken = $timeTaken->avg_time;
+    } else {
+        $avgTimeTaken = 0;
+    }
+
+    $medianTimeTakenResult = db_query("select license.id, remarks.difference from
+	(select remarks1.license_id, extract ( day from (to_timestamp(remarks1.remark_date) - submit_date)) as difference, remarks1.form_six
+	from l_interstate_remarks_license as remarks1
+	join
+	(select max(to_timestamp(remark_date)) as submit_date, license_id
+	from l_interstate_remarks_license
+	where remark_type = 'S' and remark_date >= 1604169000 and is_active = 1
+	group by license_id
+	) as remarks2
+	on remarks1.license_id = remarks2.license_id
+	where remarks1.remark_type = 'I' and remarks1.remark_date >= 1604169000 and is_active = 1) as remarks
+	join l_interstate_license_master as license on license.id = remarks.license_id and license.form_six = remarks.form_six and license.act_id = 42
+	order by difference");
+
+    $medianTimeTaken = $medianTimeTakenResult->fetchAll();
+    $arr = array();
+    if (!empty($medianTimeTaken)) {
+        for ($i = 0; $i < count($medianTimeTaken); $i++) {
+            $arr[$i] = $medianTimeTaken[$i]->difference;
+        }
+    }
+
+    echo "
+			<table class='view-act-rules-table fixed_headers reg-dashboard-bf-login' cellspacing='0' cellpadding='0' border='0' width='100%'>
+				<thead>
+					<tr><th colspan='5' style='background:#6d6e73;color:#fff;text-align:center;'>Licensing for Contractors under Inter State Migrant Workmen (RE&CS) Act, 1979.</th></tr>
+					<tr>
+						<th>Particulars</th>
+						<th>Details</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Time limit prescribed as per the Public Service Guarantee Act</td>
+						<td>30 days</td>
+					</tr>
+					<tr>
+						<td>Total Number of applications received</td>
+						<td>" . $applicationReceivedResult->fetchObject()->application_received . "</td>
+					</tr>
+					<tr>
+						<td>Total Number of applications approved</td>
+						<td>" . $applicationApprovedResult->fetchObject()->application_approved . "</td>
+					</tr>
+					<tr>
+						<td>Average time taken to obtain registration</td>
+						<td>" . $avgTimeTaken . "</td>
+					</tr>
+					<tr>
+						<td>Median time taken to obtain registration</td>
+						<td>" . calc_median_prev($arr) . "</td>
+					</tr>
+					<tr>
+						<td>Minimum time taken to obtain registration</td>
+						<td>" . $minTimeTaken . "</td>
+					</tr>
+					<tr>
+						<td>Maximum time taken to obtain registration</td>
+						<td>" . $maxTimeTaken . "</td>
+					</tr>
+				</tbody>
+			</table>";
+}
+
+function fetchISMWContractorLicenseRenewalDetails()
+{
+    /******************************** ISMW Contractor License Renewal ****************************************/
+
+    $applicationReceivedResult = db_query("select count(id) as application_received from
+	(select count(remarks.id), license.id from l_interstate_license_master as license
+	join l_interstate_remarks_license as remarks on license.id = remarks.license_id and license.form_six = remarks.form_six
+	where remarks.remark_type = 'S' and remarks.remark_date >= 1604169000 and is_active = 1 and license.act_id = 44
+	group by license.id)
+	as temp;");
+
+    $applicationApprovedResult = db_query("select count(id) as application_approved from
+	(select license.id from l_interstate_license_master as license
+	join l_interstate_remarks_license as remarks on license.id = remarks.license_id and license.form_six = remarks.form_six
+	where remarks.remark_type = 'I' and remarks.remark_date >= 1604169000 and is_active = 1 and license.act_id = 44
+	group by license.id having license.id in (
+	select license.id from l_interstate_license_master as license
+	join l_interstate_remarks_license as remarks on license.id = remarks.license_id and license.form_six = remarks.form_six
+	where remarks.remark_type = 'S' and remarks.remark_date >= 1604169000 and is_active = 1 and license.act_id = 44
+	group by license.id))
+	as temp;");
+
+    $applicationReceived = $applicationReceivedResult->fetchObject()->application_received;
+    if ($applicationReceived == 0) {
+        $timeTaken = 'N/A';
+    } else {
+        $timeTaken = 'Same Day';
+    }
+
+    echo "
+			<table class='view-act-rules-table fixed_headers reg-dashboard-bf-login' cellspacing='0' cellpadding='0' border='0' width='100%'>
+				<thead>
+					<tr><th colspan='5' style='background:#6d6e73;color:#fff;text-align:center;'>Auto-Renewal of License for Contractors under Inter State Migrant Workmen (RE&CS) Act, 1979.</th></tr>
+					<tr>
+						<th>Particulars</th>
+						<th>Details</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Time limit prescribed as per the Public Service Guarantee Act</td>
+						<td>30 days</td>
+					</tr>
+					<tr>
+						<td>Total Number of applications received</td>
+						<td>" . $applicationReceived . "</td>
+					</tr>
+					<tr>
+						<td>Total Number of applications approved</td>
+						<td>" . $applicationApprovedResult->fetchObject()->application_approved . "</td>
+					</tr>
+					<tr>
+						<td>Average time taken to obtain registration</td>
+						<td>" . $timeTaken . "</td>
+					</tr>
+					<tr>
+						<td>Median time taken to obtain registration</td>
+						<td>$timeTaken</td>
+					</tr>
+					<tr>
+						<td>Minimum time taken to obtain registration</td>
+						<td>$timeTaken</td>
+					</tr>
+					<tr>
+						<td>Maximum time taken to obtain registration</td>
+						<td>$timeTaken</td>
+					</tr>
+				</tbody>
+			</table>";
+}
+
+function calc_median_prev($time_taken_arr = NULL)
+{
+    if (empty($time_taken_arr)) {
+        return 0;
+    } else {
+        //sort($time_taken_arr); 
+        //echo '<pre>'; print_r($time_taken_arr);die;
+        $num = count($time_taken_arr);
+        $middleVal = ($num / 2);
+        if ($num % 2) {
+            if (round($time_taken_arr[$middleVal]) == 1) {
+                $tag = 'day';
+            } else {
+                $tag = 'days';
+            }
+            return round($time_taken_arr[$middleVal]) . ' ' . $tag;
+        } else {
+            $lowMid = $time_taken_arr[$middleVal];
+            $highMid = $time_taken_arr[$middleVal + 1];
+            $medianMid =  (($lowMid + $highMid) / 2);
+            if (round($time_taken_arr[$medianMid]) == 1) {
+                $tag = 'day';
+            } else {
+                $tag = 'days';
+            }
+            return round($time_taken_arr[$medianMid]) . ' ' . $tag;
+        }
+    }
+}
+
+function calc_median_new($time_taken_arr = NULL)
+{
+    if (empty($time_taken_arr)) {
+        return 0;
+    } else {
+        sort($time_taken_arr);
+        $num = count($time_taken_arr);
+        $middleIndex = floor($num / 2);
+        if ($num % 2 == 1) {
+            $median = $time_taken_arr[$middleIndex];
+            if (strpos($median, 'day') !== false) {
+                $medianArr = explode(" ", $median);
+                return $medianArr[0] . " days";
+            } else {
+                sscanf($median, "%d:%d:%d", $hours, $minutes, $seconds);
+                $median = isset($seconds) ? $hours * 3600 + $minutes * 60 + $seconds : $hours * 60 + $minutes;
+            }
+        } else {
+            $lowMid = $time_taken_arr[$middleIndex - 1];
+            $highMid = $time_taken_arr[$middleIndex];
+            if (strpos($lowMid, 'day') !== false) {
+                $lowMidArr = explode(" ", $lowMid);
+                $lowMidHrs = substr($lowMid, -8);
+                sscanf($lowMidHrs, "%d:%d:%d", $hours, $minutes, $seconds);
+                $lowMidSec = $lowMidArr[0] * 24 * 3600 + (isset($seconds) ? $hours * 3600 + $minutes * 60 + $seconds : $hours * 60 + $minutes);
+            } else {
+                sscanf($lowMid, "%d:%d:%d", $hours, $minutes, $seconds);
+                $lowMidSec = isset($seconds) ? $hours * 3600 + $minutes * 60 + $seconds : $hours * 60 + $minutes;
+            }
+            if (strpos($highMid, 'day') !== false) {
+                $highMidArr = explode(" ", $highMid);
+                $highMidHrs = substr($highMid, -8);
+                sscanf($highMidHrs, "%d:%d:%d", $hours, $minutes, $seconds);
+                $highMidSec = $highMidArr[0] * 24 * 3600 + (isset($seconds) ? $hours * 3600 + $minutes * 60 + $seconds : $hours * 60 + $minutes);
+            } else {
+                sscanf($highMid, "%d:%d:%d", $hours, $minutes, $seconds);
+                $highMidSec = isset($seconds) ? $hours * 3600 + $minutes * 60 + $seconds : $hours * 60 + $minutes;
+            }
+            $median = floor(($lowMidSec + $highMidSec) / 2);
+        }
+        $date1 = new DateTime("@0");
+        $date2 = new DateTime("@$median");
+        return $date1->diff($date2)->format('%a days, %h hours, %i minutes and %s seconds');
+    }
+}
+?>
+<script type="text/javascript">
+    window.onload = function() {
+        $('#ajax-loader').hide();
+    };
+</script>

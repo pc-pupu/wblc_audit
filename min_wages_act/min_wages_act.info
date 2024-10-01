@@ -1,0 +1,5 @@
+name = Minimum Wages Act
+description = Minimum Wages Act Module
+core = 7.x
+stylesheets[][] = css/min_wages_act.css
+;scripts[] = js/min_wages_act.js

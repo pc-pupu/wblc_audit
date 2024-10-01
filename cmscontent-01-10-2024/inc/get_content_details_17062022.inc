@@ -426,48 +426,33 @@ function e_service_list(){
 	$content = '';
 	
 	$content .='<div class="row">
-					<div class="col-lg-3 col-md-6 col-sm-6">
-						<div class="eservice-box">
-							<div class="eservice-box-logo"><img src="sites/all/themes/lcTheme/images/logo-regs.png" alt="Registration" title="Registration"></div>
-							<h1>Registration<br>of Principal Employer</h1>
-							<p>under The Contract Labour (Regulation & Abolition) Act 1970.</p>
-							<div class="eservice-box-btm">
-								<span data-toggle="modal" data-target="#howtoclra"><a href="javascript:void(0)" data-val="clra" class="how-to-apply">Guideline</a></span>
-								<span data-toggle="modal" data-target="#applicant_login"><a href="javascript:void(0)" data-val="clra" class="apply_link apply">Apply</a></span></div>
-							</div>
-						</div>
-				
-						<div class="col-lg-3 col-md-6 col-sm-6">
-							<div class="eservice-box">
-								<div class="eservice-box-logo"><img src="sites/all/themes/lcTheme/images/logo-regs.png" alt="Amendment of Registration Certificate" title="Amendment of Registration Certificate"></div>				
-								<h1>Amendment<br> of Registration Certificate</h1><p>for Principal Employers under The Contract Labour (Regulation & Abolition) Act 1970.</p>
-								<div class="eservice-box-btm">
-									<span data-toggle="modal" data-target="#user_guide_amndclra"><a href="javascript:void(0)" data-val="clra" class="how-to-apply">Guideline</a></span>
-									<a id="dir_id" href="clra" class="apply_link apply">Apply</a>
-								</div>
-							</div>
-						</div>
-				
+				<div class="col-lg-3 col-md-6 col-sm-6">
+				<div class="eservice-box">
+				<div class="eservice-box-logo"><img src="sites/all/themes/lcTheme/images/logo-regs.png" alt="Registration" title="Registration"></div>
+				<h1>Registration<br>of Principal Employer</h1>
+				<p>under The Contract Labour (Regulation & Abolition) Act 1970.</p>
+				<div class="eservice-box-btm"><span data-toggle="modal" data-target="#howtoclra"><a href="javascript:void(0)" data-val="clra" class="how-to-apply">Guideline</a></span><span data-toggle="modal" data-target="#applicant_login"><a href="javascript:void(0)" data-val="clra" class="apply_link apply">Apply</a></span></div>
+				</div></div>
+				<div class="col-lg-3 col-md-6 col-sm-6">
+				<div class="eservice-box">
+				<div class="eservice-box-logo"><img src="sites/all/themes/lcTheme/images/logo-regs.png" alt="Amendment of Registration Certificate" title="Amendment of Registration Certificate"></div>				
+				<h1>Amendment<br> of Registration Certificate</h1>
+				<p>for Principal Employers under The Contract Labour (Regulation & Abolition) Act 1970.</p>
+				<div class="eservice-box-btm"><span data-toggle="modal" data-target="#user_guide_amndclra"><a href="javascript:void(0)" data-val="clra" class="how-to-apply">Guideline</a></span><span data-toggle="modal" data-target="#applicant_login"><a href="javascript:void(0)" data-val="clra" class="apply_link apply">Apply</a></span></div>
+				</div></div>
 				<div class="col-lg-3 col-md-6 col-sm-6">
 				<div class="eservice-box">
 				<div class="eservice-box-logo"><img src="sites/all/themes/lcTheme/images/logo-licence-contractor.png" alt="Licensing for Contractors" title="Licensing for Contractors"></div>
 				<h1>Licensing<br> for Contractors</h1>
 				<p>under The Contract Labour (Regulation & Abolition) Act 1970.</p>
-					<div class="eservice-box-btm">
-						<span data-toggle="modal" data-target="#user_guide_licenseclra"><a href="javascript:void(0)" data-val="clra" class="how-to-apply">Guideline</a></span>
-						<span data-toggle="modal" data-target="#applicant_login"><a href="javascript:void(0)" data-val="clra" class="apply_link apply">Apply</a></span>
-						</div>
+				<div class="eservice-box-btm"><span data-toggle="modal" data-target="#user_guide_licenseclra"><a href="javascript:void(0)" data-val="clra" class="how-to-apply">Guideline</a></span><span data-toggle="modal" data-target="#applicant_login"><a href="javascript:void(0)" data-val="clra" class="apply_link apply">Apply</a></span></div>
 				</div></div>
-				
 				<div class="col-lg-3 col-md-6 col-sm-6">
 				<div class="eservice-box">
 				<div class="eservice-box-logo"><img src="sites/all/themes/lcTheme/images/logo-licence-contractor.png" alt="Renewal of License for Contractors" title="Renewal of License for Contractors"></div>
 				<h1>Renewal<br> of License for Contractors</h1>
 				<p>under The Contract Labour (Regulation & Abolition) Act 1970.</p>
-				<div class="eservice-box-btm">
-					<span data-toggle="modal" data-target="#howtorenewalclra"><a href="javascript:void(0)" data-val="clra" class="how-to-apply#"><!--How to apply?--></a></span>
-					<span data-toggle="modal" data-target="#applicant_loginss"><a href="javascript:void(0)" data-val="clra" class="apply_link apply">Apply</a></span></div>
-					<!--<a id="dir_id" href="clra" class="apply_link apply">Apply</a>-->
+				<div class="eservice-box-btm"><span data-toggle="modal" data-target="#howtorenewalclra"><a href="javascript:void(0)" data-val="clra" class="how-to-apply#"><!--How to apply?--></a></span><span data-toggle="modal" data-target="#applicant_login"><a href="javascript:void(0)" data-val="clra" class="apply_link apply">Apply</a></span></div>
 				</div></div>
 				
 				<div class="col-lg-3 col-md-6 col-sm-6">
@@ -475,34 +460,23 @@ function e_service_list(){
 				<div class="eservice-box-logo"><img src="sites/all/themes/lcTheme/images/logo-licence-contractor.png" alt="Amendment of License / Renewal for Contractors" title="Amendment of License / Renewal for Contractors"></div>
 				<h1>Amendment of <br>License / Renewal for Contractors</h1>
 				<p>under The Contract Labour (Regulation & Abolition) Act 1970.</p>
-				<div class="eservice-box-btm">
-				<span data-toggle="modal" data-target="#howtoamlicclra"><a href="javascript:void(0)" data-val="clra" class="how-to-apply#"><!--How to apply?--></a></span>
-				
-				<a id="dir_id" href="clra" class="apply_link apply">Apply</a></span></div>
+				<div class="eservice-box-btm"><span data-toggle="modal" data-target="#howtoamlicclra"><a href="javascript:void(0)" data-val="clra" class="how-to-apply#"><!--How to apply?--></a></span><span data-toggle="modal" data-target="#applicant_login"><a href="javascript:void(0)" data-val="clra" class="apply_link apply">Apply</a></span></div>
 				</div></div>
-				
-				
-				
 				<div class="col-lg-3 col-md-6 col-sm-6">
 				<div class="eservice-box">
 				<div class="eservice-box-logo"><img src="sites/all/themes/lcTheme/images/logo-regs.png" alt="Registration of Principal Employers" title="Registration of Principal Employers"></div>
 				<img src="sites/all/themes/lcTheme/images/new-animation.gif" alt="New" title="New" class="new-animation">
 				<h1>Registration of <br>Principal Employers</h1>
 				<p>under The Inter State Migrant Workmen (Regulation of Employment and Conditions of Service) Act, 1979</p>
-				<div class="eservice-box-btm"><span data-toggle="modal" data-target="#howtoismw"><a href="javascript:void(0)" data-val="ismw" class="how-to-apply#"><!--How to apply?--></a></span><span data-toggle="modal" data-target="#applicant_login"><a href="javascript:void(0)" data-val="ismw" class="apply_link apply">Apply</a></span></div>
+				<div class="eservice-box-btm"><span data-toggle="modal" data-target="#howtoismw"><a href="javascript:void(0)" data-val="clra" class="how-to-apply#"><!--How to apply?--></a></span><span data-toggle="modal" data-target="#applicant_login"><a href="javascript:void(0)" data-val="ismw" class="apply_link apply">Apply</a></span></div>
 				</div></div>
-
 				<div class="col-lg-3 col-md-6 col-sm-6">
 				<div class="eservice-box">
 				<div class="eservice-box-logo"><img src="sites/all/themes/lcTheme/images/logo-regs.png" alt="Licence of Principal Employers" title="Licence of Principal Employers"></div>
-				
+				<img src="sites/all/themes/lcTheme/images/coming-soon.png" alt="Coming Soon" title="Coming Soon" class="coming-soon-animation">
 				<h1>Licence of <br>Contractors</h1>
 				<p>under The Inter State Migrant Workmen (Regulation of Employment and Conditions of Service) Act, 1979</p>
-					<div class="eservice-box-btm">
-						<span data-toggle="modal" data-target="#howtoismw"><a href="javascript:void(0)" data-val="ismw" class="how-to-apply#"><!--How to apply?--></a></span>
-						<!--<span data-toggle="modal" data-target="#applicant_login"><a href="javascript:void(0)" data-val="ismw" class="apply_link apply">Apply</a></span>-->
-						<a id="dir_id" href="ismw" class="apply_link apply">Apply</a>
-					</div>
+				<div class="eservice-box-btm"><span data-toggle="modal" data-target="#howtoismw"><a href="javascript:void(0)" data-val="clra" class="how-to-apply#"><!--How to apply?--></a></span><span data-toggle="modal" data-target="#applicant_login"><a href="javascript:void(0)" data-val="ismw" class="apply_link apply#"></a></span></div>
 				</div></div>
 				
 				
@@ -511,22 +485,14 @@ function e_service_list(){
 				<div class="eservice-box-logo"><img src="sites/all/themes/lcTheme/images/logo-building.png" alt="Registration of Establishments" title="Registration of Establishments"></div>
 				<h1>Registration<br> of Establishments</h1>
 				<p>under Building and Other Construction Workers (Regulation of Employment and Conditions of Service) Act, 1996.</p>
-				<div class="eservice-box-btm">
-						<span data-toggle="modal" data-target="#howtobocwa"><a href="javascript:void(0)" data-val="clra" class="how-to-apply#"><!--How to apply?--></a></span>
-						<span data-toggle="modal" data-target="#applicant_login"><a href="javascript:void(0)" data-val="bocwa" class="apply_link apply">Apply</a></span>
-						</div>
+				<div class="eservice-box-btm"><span data-toggle="modal" data-target="#howtobocwa"><a href="javascript:void(0)" data-val="clra" class="how-to-apply#"><!--How to apply?--></a></span><span data-toggle="modal" data-target="#applicant_login"><a href="javascript:void(0)" data-val="bocwa" class="apply_link apply">Apply</a></span></div>
 				</div></div>
-				
 				<div class="col-lg-3 col-md-6 col-sm-6">
 				<div class="eservice-box">
 				<div class="eservice-box-logo"><img src="sites/all/themes/lcTheme/images/logo-mtw.png" alt="Registration of Motor Transport Workers" title="Registration of Motor Transport Undertaking"></div>
 				<h1>Registration of<br> Motor Transport undertaking</h1>
 				<p>under Motor Transport Workers Act, 1961</p>
-				
-				<div class="eservice-box-btm">
-					<span data-toggle="modal" data-target="#howtomtw"><a href="javascript:void(0)" data-val="mtw" class="how-to-apply">User Guide</a></span>
-					<a href="https://wblc.gov.in/mtw" class="apply_link apply">Apply</a></span>
-				</div>
+				<div class="eservice-box-btm"><span data-toggle="modal" data-target="#howtomtw"><a href="javascript:void(0)" data-val="clra" class="how-to-apply">User Guide</a></span><span data-toggle="modal" data-target="#applicant_login"><a href="javascript:void(0)" data-val="mtw" class="apply_link apply">Apply</a></span></div>
 				</div></div>
 				
 				<div class="col-lg-3 col-md-6 col-sm-6">
@@ -534,11 +500,7 @@ function e_service_list(){
 				<div class="eservice-box-logo"><img src="sites/all/themes/lcTheme/images/logo-mtw.png" alt="Renewal of Registration Certificate" title="Renewal of Registration Certificate"></div>
 				<h1>Renewal of<br> Registration Certificate</h1>
 				<p>for Motor Transport Undertaking under Motor Transport Workers Act, 1961</p>
-				<div class="eservice-box-btm">
-						<span data-toggle="modal" data-target="#howtomtwren"><a href="javascript:void(0)" data-val="clra" class="how-to-apply">User Guide</a></span>
-						<!--<span data-toggle="modal" data-target="#applicant_login"><a href="javascript:void(0)" data-val="mtw" class="apply_link apply">Apply</a></span>-->
-						<a href="https://wblc.gov.in/mtw" class="apply_link apply">Apply</a></span>
-				</div>
+				<div class="eservice-box-btm"><span data-toggle="modal" data-target="#howtomtwren"><a href="javascript:void(0)" data-val="clra" class="how-to-apply">User Guide</a></span><span data-toggle="modal" data-target="#applicant_login"><a href="javascript:void(0)" data-val="mtw" class="apply_link apply">Apply</a></span></div>
 				</div>
 				</div>
 				
@@ -548,33 +510,22 @@ function e_service_list(){
 				<div class="eservice-box-logo"><img src="sites/all/themes/lcTheme/images/logo-labour-law.png" alt="Registration" title="Registration"></div>
 				<h1>Submission of returns</h1>
 				<p>under Various Labour Laws</p>
-				<div class="eservice-box-btm">
-					<span data-toggle="modal" data-target="#howtoreturns"><a href="javascript:void(0)" class="how-to-apply#"><!--How to apply?--></a></span>
-										
-					<a href="https://wblc.gov.in/user/login" data-val="applicant-login" class="apply_link apply">Apply</a></span>
-					</div>
+				<div class="eservice-box-btm"><span data-toggle="modal" data-target="#howtoreturns"><a href="javascript:void(0)" data-val="clra" class="how-to-apply#"><!--How to apply?--></a></span><span data-toggle="modal" data-target="#applicant_login"><a href="javascript:void(0)" data-val="applicant-login" class="apply_link apply">Apply</a></span></div>
 				</div></div>
-				
 				<div class="col-lg-3 col-md-6 col-sm-6">
 				<div class="eservice-box">
 				<div class="eservice-box-logo"><img src="sites/all/themes/lcTheme/images/logo-contract-labour.png" alt="Registration" title="Registration"></div>
 				<h1>View and download<br> inspection note</h1>
 				<p>under Various Labour Laws</p>
-				<div class="eservice-box-btm">
-					<span data-toggle="modal" data-target="#howtoinsdwld"><a href="javascript:void(0)" data-val="clra" class="how-to-apply#"><!--How to apply?--></a></span>
-					<a href="https://wblc.gov.in/view-inspection-report" data-val="view-inspection-report" class="apply_link apply">Apply</a>
-					</div>
+				<div class="eservice-box-btm"><span data-toggle="modal" data-target="#howtoinsdwld"><a href="javascript:void(0)" data-val="clra" class="how-to-apply#"><!--How to apply?--></a></span><span data-toggle="modal" data-target="#applicant_login"><a href="javascript:void(0)" data-val="view-inspection-report" class="apply_link apply">Apply</a></span></div>
 				</div></div>
-				
 				<div class="col-lg-3 col-md-6 col-sm-6">
 				<div class="eservice-box">
 				<div class="eservice-box-logo"><img src="sites/all/themes/lcTheme/images/logo-trade-union.png" alt="Annual Return" title="Annual Return"></div>
 				<img src="sites/all/themes/lcTheme/images/new-animation.gif" alt="New" title="New" class="new-animation">
 				<h1>Annual Return of<br>Trade Union / Federation</h1>
 				<p>under Trade Union Act, 1926</p>
-				<div class="eservice-box-btm">
-					<span data-toggle="modal" data-target="#user_guide_tu_return"><a href="javascript:void(0)" data-val="clra" class="how-to-apply">User Guide</a></span>
-					<a href="trade-union-registration" data-val="trade-union-registration" class="apply_link apply">Apply</a></div>
+				<div class="eservice-box-btm"><span data-toggle="modal" data-target="#user_guide_tu_return"><a href="javascript:void(0)" data-val="clra" class="how-to-apply">User Guide</a></span><a href="trade-union-registration" data-val="trade-union-registration" class="apply_link apply">Apply</a></div>
 				</div>
 				</div>
 				
@@ -586,18 +537,6 @@ function e_service_list(){
 				<div class="eservice-box-btm"><span data-toggle="modal" data-target="#abcd"><a href="javascript:void(0)" data-val="clra" class="how-to-apply#"><!--How to apply?--></a></span><a href="http://wbshopsonline.gov.in" class="apply_link apply" target="_blank">Apply</a></div>
 				</div>
 				</div>
-
-				<div class="col-lg-3 col-md-6 col-sm-6">
-				<div class="eservice-box">
-				<div class="eservice-box-logo"><img src="sites/all/themes/lcTheme/images/logo-regs.png" alt="FAWLOI Declaration" title="FAWLOI Declaration"></div>
-				<img src="sites/all/themes/lcTheme/images/coming-soon.png" alt="Coming Soon" title="Coming Soon" class="coming-soon-animation">
-				<h1>FAWLOI Declaration</h1>
-				<p>Financial Assistance to the Workers of Locked Out Industries</p>
-				<div class="eservice-box-btm"><span data-toggle="modal" data-target="#user_guide_fawloi"><a href="javascript:void(0)" data-val="clra" class="how-to-apply">User Guide</a></span>
-				<a href="fawloi-service" data-val="fawloi-service" class="apply_link apply">Apply</a></div>
-				</div>
-				</div>
-
 				<!--<div class="col-lg-3 col-md-6 col-sm-6">
 				<div class="eservice-box">
 				<div class="eservice-box-logo"><img src="sites/all/themes/lcTheme/images/logo-building.png" alt="bocwa cess" title="bocwa cess"></div>
@@ -606,68 +545,19 @@ function e_service_list(){
 				<p>Under The Building and Other Construction Workers&prime; Welfare Cess Act, 1996</p>
 				<div class="eservice-box-btm"><span data-toggle="modal" data-target="#howtobocwacess"><a href="javascript:void(0)" data-val="clra" class="how-to-apply">How to apply?</a></span><span data-toggle="modal" data-target="#applicant_login"><a href="https://wblc.gov.in/bocwacess" data-val="bocwacess" class="apply_link apply">Apply</a></span></div>
 				</div>
-				</div>-->
+				</div>-->';
 				
-				
-				<div class="col-lg-3 col-md-6 col-sm-6">
-				<div class="eservice-box">
-				<div class="eservice-box-logo"><img src="sites/all/themes/lcTheme/images/icon-tea-garden.png" alt="tgs entry" title="bocwa cess"></div>
-				<img src="sites/all/themes/lcTheme/images/new-animation.gif" alt="Coming Soon" title="Coming Soon" class="coming-soon-animation">
-				<h1>Survey of Tea Gardens</h1>
-				<p>Conducted by Regional Labour Offices under jurisdiction of Joint Labour Commissioner, North Bengal Zone</p>
-				<div class="eservice-box-btm"><span><a href="https://wblc.gov.in/user/login" data-val="bocwacess" class="how-to-apply" style="float:right;">Data Entry</a></span></div>
-				</div>
-				</div>
-				
-				';
-				 /* Payal 30-12-2022 To be updated below in applicant login Payal -----*/
-			$content .= '<div id="applicant_login" class="modal fade applicant_login" role="dialog">
+	$content .= '<div id="applicant_login" class="modal fade applicant_login" role="dialog">
 					<div class="modal-dialog">
 						<div class="modal-content cus-modal-content">
 						    <div class="modal-header modal-border-top">
 							    <button type="button" class="close" data-dismiss="modal">&times;</button>
 							    <h4 class="modal-title">Applicant Login</h4>
 						    </div>
-					  		<div class="modal-body modal-body-white">
-								<p class="text-primary"><strong>You will be redirected to Shilpa Sathi Portal (https://silpasathi.wb.gov.in) to avail this service. Click on <strong>SINGLE WINDOW</strong> button to proceed.</strong></p>
-								<div class="row">
-									<div class="col-sm-12"><a href="https://silpasathi.wb.gov.in" href=""><img src="sites/all/themes/lcTheme/images/wblc-eodb-modal-bg-big.jpg" alt="" title=""></a></div>
-									<div class="col-md-12" style="margin-top:15px;"><center><a href="https://silpasathi.wb.gov.in" href=""><img src="sites/all/themes/lcTheme/images/modal-btn-swindow.png" alt="" title=""></a></center></div>
-								</div>
-							</div>
-						</div>					
-					</div>
-				</div>';
-/*	$content .= '<div id="applicant_loginss" class="modal fade applicant_login" role="dialog">
-					<div class="modal-dialog">
-						<div class="modal-content cus-modal-content">
-						    <div class="modal-header modal-border-top">
-							    <button type="button" class="close" data-dismiss="modal">&times;</button>
-							    <h4 class="modal-title">Applicant Login</h4>
-						    </div>
-					  		<div class="modal-body modal-body-white">
-							<div class="row">
-							<!--<div class="col-sm-12"><a href="https://silpasathi.wb.gov.in" href=""><img src="sites/all/themes/lcTheme/images/wblc-lc-modal-bg-big.jpg" alt="" title=""></a></div>
-							<div class="col-md-12" style="margin-top:15px;"><center><a id="dir_id" href="clra" class="apply_link apply"><img src="sites/all/themes/lcTheme/images/modal-btn-lc.png" alt="" title=""></a></center></div>-->
-							<div class="col-sm-6"><div class="modal-lc-bg">&nbsp;</div><br><a id="dir_id" href=""><img src="sites/all/themes/lcTheme/images/modal-btn-lc.png" alt="" title=""></a></div>
-							<div class="col-sm-6 left-border"><div class="modal-eodb-login-bg">&nbsp;</div><br><a href="https://silpasathi.wb.gov.in" href=""><img src="sites/all/themes/lcTheme/images/modal-btn-swindow.png" alt="" title=""></a></div>	
-							</div>
-							</div>
-						</div>					
-					</div>
-				</div>';*/	
-	$content .= '<div id="applicant_loginss" class="modal fade applicant_login" role="dialog">
-					<div class="modal-dialog">
-						<div class="modal-content cus-modal-content">
-						    <div class="modal-header modal-border-top">
-							    <button type="button" class="close" data-dismiss="modal">&times;</button>
-							    <h4 class="modal-title">Applicant Login</h4>
-						    </div>
-					  		<div class="modal-body modal-body-white">
-							<p class="text-primary"><strong>Please select any one of the options -</strong></p>
+					  		<div class="modal-body modal-body-white"><p>You can avail our e-services either through <strong class="text-primary">single window services</strong> where you can apply online for various e-services of all directorates of this department and a wizard shall guide you to the applicable services else you may opt out and create credentials within the <strong class="text-primary">directorate</strong> and apply online for the specific services of this directorate only.</p><p class="text-primary"><strong>Please select any one of the options -</strong></p>
 							<div class="row">
 							<div class="col-sm-6"><div class="modal-lc-bg">&nbsp;</div><br><a id="dir_id" href=""><img src="sites/all/themes/lcTheme/images/modal-btn-lc.png" alt="" title=""></a></div>
-							<div class="col-sm-6 left-border"><div class="modal-eodb-login-bg">&nbsp;</div><br><a href="https://silpasathi.wb.gov.in" href=""><img src="sites/all/themes/lcTheme/images/modal-btn-swindow.png" alt="" title=""></a></div>
+							<div class="col-sm-6 left-border"><div class="modal-app-login-bg">&nbsp;</div><br><a href="https://wblabour.gov.in/disclaimer" href=""><img src="sites/all/themes/lcTheme/images/modal-btn-swindow.png" alt="" title=""></a></div>
 							</div>
 							</div>
 						</div>					
@@ -687,179 +577,103 @@ function e_service_list(){
 									<li class="active"><a href="#tab1" data-toggle="tab">How to apply?</a></li>
 									<li><a href="#tab2" data-toggle="tab">Checklist</a></li>
 									<li><a href="#tab3" data-toggle="tab">Timeline</a></li>
-									<li><a href="#tab4" data-toggle="tab">Fees</a></li>
 									<li style="float:right;"><a href="'. $base_url.'/sites/default/files/contentpdf/user-guide-principal-employer-registration-contract-labour.pdf" target="_blank"><i class="fa fa-print"></i></a></li>
 									</ul>
 									<div class="tab-content">
 										<div class="tab-pane active" id="tab1">
-											<div class="sop_cntainer_box">
-											<div class="sop_content">
-												<div class="step_ord">Procedure :</div>
-												<div class="res_activity"><p>Procedure to be followed by the applicant and step by step movement of the application within the Department along with timelines for completion of each step is same irrespective of risk category (Low, Medium, High) size of firm (Micro, Medium & Large), Investor type (Foreign Domestic), Business location (Rural, Urban). </p>
-												<p>Procedure to be followed by applicant: </p>
-
-												</div>
-												<div class="step_ord">Step-1</div>
-												<p><strong>Responsibility: </strong>Principal Employer.</p>
-												
-												<div class="res_activity">If the you are an already registered user, he/she will log in using the credentials. For a new user he/she fills up a Common Application Form(CAF) in the Portal of wblc.gov.in, which includes mainly applicant’s Personal Information including PAN/Voters ID/Aadhar, any other unique number tagged with that establishment, Contact Information, Establishment Information, Number of workers employed, Login Information etc. with Preferred User name & Password and create a User Credential.</div>
-											</div>
-											<div class="sop_content">
-												<div class="step_ord">Step-2</div>
-												<div class="res_activity">Logs into the system with the valid credentials and captcha which lands up in the Dashboard.</div>
-											</div>
-											<div class="sop_content">
-												<div class="step_ord">Step-3</div>
-												<div class="res_activity"><strong><p>If Offine/Manual certificate available</strong> select ALREADY REGISTERED option from menu and apply for online application of Principal Employer under the Contract Labour (Regulation and Abolition) Act , 1970 by filling up necessary information in the Form and uploads self-certified copies of required documents.</p>
-													
-												<p><strong>NEW REGISTRATION:</strong> Select NEW REGISTRATION from menu and applies for online Registration of Principal Employer under the Contract Labour (Regulation and Abolition) Act , 1970 by filling up necessary information in the Form and uploads self-certified copies of required documents.</p>
-												<p><strong>Documents Involved: </strong>I.Valid Trade License, II.Articles of Association and Memorandum of Association/Partnership Deed, III.Factory License if any, IV.Other certificates of registration in case of other than company, proprietorship or partnership firm like cooperative, Trustees etc., V.Any other document in support of correctness of the particulars mentioned in the application if required</div></p>
-											</div>
-											<div class="sop_content">
-												<div class="step_ord">Step-4</div>
-												<div class="res_activity">Add valid contractor information into the system.</div>
-											</div>
-											<div class="sop_content">
-												<div class="step_ord">Step-5</div>
-												<div class="res_activity">Views the Filled in Information in the Application Preview Section before Final Submission or in case of correction rolls back to earlier sections and makes corrections and submit the application. The application is then reverted back to concerned officials according to jurisdiction  for verification.</div>
-											</div>	
-											<div class="sop_content">
-												<div class="step_ord">Step-6</div>
-												<div class="res_activity">Logs into the system with the credentials and views the status of application marked for correction if sent back by the Inspector, makes the corrections and resubmits the application.
-												</div>
-											</div>
-											<div class="sop_content">
-												<div class="step_ord">Step-7</div>
-												<div class="res_activity">Views application status in the Dashboard marked as PAYMENT (PAY NOW) by ALC and makes payment Online through GRIPS. <br>After successfull payment of fees statutory FORM-I is automatically generated. Applicant can digitally/in-hand signs the FORM-I and upload it. After FORM-I is successfully uploaded, an acknowledgement is generated. <br>In case it is returned back by the ALC he views on the Dashboard the status of application marked for correction and makes the necessary corrections and resubmits the application.<br/>
-													<strong>Documents Involved: </strong>FORM-I
-												</div>
-											</div>
-											<div class="sop_content">
-												<div class="step_ord">Step-8</div>
-												<div class="res_activity">If the application is verified registration certificate is shown in the dashboard and FORM-V is generated. You can digitally/in-hand sign the FORM-V and send via e-mail or through SMS. The Serial number in FORM-V is needed to contractors for applying of License.
-												</div>
-											</div>
-											<div class="sop_content">
-												<div class="step_ord">Note:</div>
-												<div class="res_activity">Track Status of Application through SMS Alerts generated through the System starting from Creating Login Credentials, Submission of Application, Correction Required, Payment of Fees , Status of Approval or Rejection , Status on Issue of Registration Certificate can be shown from the dashboard.
-												</div>
-											</div>											
-										</div>
-									</div>					
-									<div class="tab-pane" id="tab2">
-										<div class="sop_cntainer_box">
-											<div class="sop_content">
-												<div class="step_ord">Scanned copies of the following documents whichever is applicable :</div>
-												<ul>
-											</div>	
-												<li>Trade License</li>
-												<li>Article of Association and Memorandum of Association / Partnership Deed</li>
-												<li>Factory License if any</li>
-												<li>Previous Registration Certificate (If Already registered user for Registration)</li>
-												<li>Any other document in support of correctness of the particulars mentioned in the application if required</li>
-												<li>Other certificates of registration in case of other than company, proprietorship or partnership firm like cooperative, Trustees etc</li>				
-												<li>Form I</li>		
-												</ul>
-										</div>
+									<div class="sop_cntainer_box">
+							 		<div class="sop_content">
+										<p><strong>Responsibility: </strong>Principal Employer.</p>
+										<div class="step_ord">Step-1</div>
+										<div class="res_activity">If the you are an already registered user, he/she will log in using the credentials. For a new user he/she fills up a Common Application Form(CAF) in the Portal of wblc.gov.in, which includes mainly applicant’s Personal Information including PAN/Voters ID/Aadhar, any other unique number tagged with that establishment, Contact Information, Establishment Information, Number of workers employed, Login Information etc. with Preferred User name & Password and create a User Credential.</div>
+									</div>
+									<div class="sop_content">
+										<div class="step_ord">Step-2</div>
+										<div class="res_activity">Logs into the system with the valid credentials and captcha which lands up in the Dashboard.</div>
+									</div>
+									<div class="sop_content">
+										<div class="step_ord">Step-3</div>
+										<div class="res_activity"><strong>If Offine/Manual certificate available</strong> select ALREADY REGISTERED option from menu and apply for online application of Principal Employer under the Contract Labour (Regulation and Abolition) Act , 1970 by filling up necessary information in the Form and uploads self-certified copies of required documents.<br>
+											
+										<strong>NEW REGISTRATION:</strong> Select NEW REGISTRATION from menu and applies for online Registration of Principal Employer under the Contract Labour (Regulation and Abolition) Act , 1970 by filling up necessary information in the Form and uploads self-certified copies of required documents.<br>
+										<strong>Documents Involved: </strong>I.Valid Trade License, II.Articles of Association and Memorandum of Association/Partnership Deed, III.Factory License if any, IV.Other certificates of registration in case of other than company, proprietorship or partnership firm like cooperative, Trustees etc., V.Any other document in support of correctness of the particulars mentioned in the application if required</div>
+									</div>
+									<div class="sop_content">
+										<div class="step_ord">Step-4</div>
+										<div class="res_activity">Add valid contractor information into the system.</div>
+									</div>
+									<div class="sop_content">
+										<div class="step_ord">Step-5</div>
+										<div class="res_activity">Views the Filled in Information in the Application Preview Section before Final Submission or in case of correction rolls back to earlier sections and makes corrections and submit the application. The application is then reverted back to concerned officials according to jurisdiction  for verification.</div>
 									</div>	
+									<div class="sop_content">
+										<div class="step_ord">Step-6</div>
+										<div class="res_activity">Logs into the system with the credentials and views the status of application marked for correction if sent back by the Inspector, makes the corrections and resubmits the application.
+										</div>
+									</div>
+									<div class="sop_content">
+										<div class="step_ord">Step-7</div>
+										<div class="res_activity">Views application status in the Dashboard marked as PAYMENT (PAY NOW) by ALC and makes payment Online through GRIPS. <br>After successfull payment of fees statutory FORM-I is automatically generated. Applicant can digitally/in-hand signs the FORM-I and upload it. After FORM-I is successfully uploaded, an acknowledgement is generated. <br>In case it is returned back by the ALC he views on the Dashboard the status of application marked for correction and makes the necessary corrections and resubmits the application.<br/>
+											<strong>Documents Involved: </strong>FORM-I
+										</div>
+									</div>
+									<div class="sop_content">
+										<div class="step_ord">Step-8</div>
+										<div class="res_activity">If the application is verified registration certificate is shown in the dashboard and FORM-V is generated. You can digitally/in-hand sign the FORM-V and send via e-mail or through SMS. The Serial number in FORM-V is needed to contractors for applying of License.
+										</div>
+									</div>
+									<div class="sop_content">
+										<div class="step_ord">Note:</div>
+										<div class="res_activity">Track Status of Application through SMS Alerts generated through the System starting from Creating Login Credentials, Submission of Application, Correction Required, Payment of Fees , Status of Approval or Rejection , Status on Issue of Registration Certificate can be shown from the dashboard.
+										</div>
+									</div>											
+								</div>
+							</div>					
+							<div class="tab-pane" id="tab2">
+								<div class="sop_cntainer_box">
+									<div class="sop_content">
+										<div class="step_ord">Scanned copies of the following documents whichever is applicable :</div>
+										<ul>
+									</div>	
+										<li>Trade License</li>
+										<li>Article of Association and Memorandum of Association / Partnership Deed</li>
+										<li>Factory License if any</li>
+										<li>Previous Registration Certificate (If Already registered user for Registration)</li>
+										<li>Any other document in support of correctness of the particulars mentioned in the application if required</li>
+										<li>Other certificates of registration in case of other than company, proprietorship or partnership firm like cooperative, Trustees etc</li>				
+										<li>Form I</li>		
+										</ul>
+								</div>
+							</div>	
 							<div class="tab-pane" id="tab3">
 								<div class="sop_cntainer_box">
 									<div class="#sop_content">
 										<table border="0" cellpadding="0" cellspacing="" class="view-act-rules-table">
 											<tr>
-												<th width="12%">Sl.No.</th>
-												<th width="50%">Designated officer</th>
-												<th width="38%">Stipulated time limit</th>
+												<th width="5%">Sl.No.</th>
+												<th width="60%">Designated officer</th>
+												<th>Stipulated time limit</th>
 											</tr>
 											<tr>
 												<td>1</td>
 												<td>Assistant Labour Commissioner</td>
 												<td>30 days</td>
 											</tr>
-											
-										</table>
-										<br/>
-										
-										<table border="0" cellpadding="0" cellspacing="" class="view-act-rules-table">
 											<tr>
-												<th width="15%">Step No.</th>
-												<th width="45%">Procedure</th>
-												<th width="20%">Official Involved</th>
-												<th width="10%">Timeline</th>
+												<td>2</td>
+												<td>Deputy Labour Commissioner</td>
+												<td>45 days</td>
 											</tr>
 											<tr>
-												<td>STEP 1</td>
-												<td>Applicant submits the application along with documents</td>
-												<td>Applicant</td>
-												<td>No time limit</td>
+												<td>3</td>
+												<td>Labour Commissioner</td>
+												<td>60 days</td>
 											</tr>
-											<tr>
-												<td>STEP 2</td>
-												<td>Verifies the application and allows for payment</td>
-												<td>ALC</td>
-												<td>No time limit</td>
-											</tr>
-											<tr>
-												<td>STEP 3</td>
-												<td>Submits fee and uploads FORM-I</td>
-												<td>Application</td>
-												<td>No time limit</td>
-											</tr>
-											<tr>
-												<td>STEP 4</td>
-												<td>Verifies and issue certificate/ Back for correction </td>
-												<td>ALC</td>
-												<td>30 days</td>
-											</tr>
-											
 										</table>
 										<p style="float:right;"><i class="fa fa-info-circle"></i> <a href="'.$base_url.'/sites/default/files/important_notification/RIGHT_TO_PUBLIC_SERVICES_NOTIFICATION.pdf" target="_blank">More Info.</a></p>															
 									</div>	
 								</div>
 							</div>	
-							<div class="tab-pane" id="tab4">
-							<div class="sop_cntainer_box">
-									<div class="#sop_content">
-										<table border="0" cellpadding="0" cellspacing="" class="view-act-rules-table">
-										<tr>
-											<th>Sl.No.</th>
-											<th>Number of Workmen</th>
-											<th>Fees</th>
-										</tr>
-										<tr>
-											<td>1</td>
-											<td>Is 10 but does not exceed 20</td>
-											<td>₹200</td>
-										</tr>
-										<tr>
-											<td>2</td>
-											<td>Exceeds 20 but does not exceed 50</td>
-											<td>₹500</td>
-										</tr>
-										<tr>
-											<td>3</td>
-											<td>Exceeds 50 but does not exceed 100</td>
-											<td>₹1000</td>
-										</tr>
-										<tr>
-											<td>4</td>
-											<td>Exceeds 100 but does not exceed 200</td>
-											<td>₹2000</td>
-										</tr>
-										<tr>
-											<td>5</td>
-											<td>Exceeds 200 but does not exceed 400</td>
-											<td>₹4000</td>
-										</tr>
-										<tr>
-											<td>6</td>
-											<td>Exceeds 400</td>
-											<td>₹5000</td>
-										</tr>
-									</table>
-								  </div>
-								</div>							
-							</div>
 						</div>
 					</div>	
 				</div>				
@@ -913,50 +727,30 @@ function e_service_list(){
 												</div>	
 												<div class="sop_content">
 													<div class="step_ord">Step-6:</div>
-													<div class="res_activity"><strong>Activity:</strong>Fill all the relevant & mandatory fields of each section of the Application like Application Details, Asset & Liability Statement, List of Securities, General Fund Account, etc and <strong>Upload the Scanned Signature **</strong>.
+													<div class="res_activity"><strong>Activity:</strong>Fill all the relevant & mandatory fields of each section of the Application like Application Details, Asset & Liability Statement, List of Securities, General Fund Account, etc.
 													</div>
 												</div>	
-												
 												<div class="sop_content">
 													<div class="step_ord">Step-7:</div>
+													<div class="res_activity"><strong>Activity:</strong>: Attach all the mandatory documents either by directly download or download followed by Generate. All the below mentioned documents should be <strong>System Generated and Signed </strong>.
+													<p><strong>Documents Involved:</strong> I. Application Details II. Assets & Liabilities Statement III. List of Securities IV. General Fund Account V. Political Fund Account VI. Auditor’s Declaration VII. List of Officers Relinquishing Office VIII. List of Officers Appointed IX. List of Elected Members X. List of Consent Officers </p>
+													</div>
+												</div>
+												<div class="sop_content">
+													<div class="step_ord">Step-8:</div>
 													<div class="res_activity"><strong>Activity:</strong>Views the Filled in Information before Final Submit in the Preview page. In case of corrections, rolls back to specific sections through corresponding <strong> Rectify </strong> link, makes corrections, and Saves the application.
 													</div>
 												</div>	
 												<div class="sop_content">
-													<div class="step_ord">Step-8:</div>
+													<div class="step_ord">Step-9:</div>
 													<div class="res_activity"><strong>Activity:</strong>Final Submission of the application. No changes can be made after Final Submission, If you have submitted your return under any affiliated body then it will be submitted after approved by your affiliated body.
 													</div>
 												</div>	
 												<div class="sop_content">
-													<div class="step_ord">Step-9:</div>
-													<div class="res_activity"><strong>Activity:</strong>User can only view the Application after Final Submission.
+													<div class="step_ord">Step-10:</div>
+													<div class="res_activity"><strong>Activity:</strong>User can only view the Application after Final Submission. 
 													</div>
-												</div>	
-												<div class="sop_content">
-													<div class="step_ord">** Procedure for Uploading the Signature:</div>
-													<div class="res_activity">
-														<ul style="list-style:disc; margin-left:20px;">
-															<li>	While filling in the Online Application Form the applicant will be provided with a link to upload his signature.</li>
-															<li>	Click on the link “Upload Signature” option.</li>
-															<li>	By clicking "choose file", Browse & Select the location where the Scanned Signature file has been saved. Select the file by clicking on it.</li>
-															<li>	Click the ‘Upload file’ button for uploading signature & view on server.</li>
-															<li>	After verification of signature, click "Save signature image file" to complete the upload process & click "Next" to proceed further stages.</li>
-														</ul>
-													</div>
-												</div>	
-												<div class="sop_content">
-													<div class="step_ord">**	Guidelines for Scanning the Signature:</div>
-												    <div class="res_activity"><strong>Before applying online, applicant will be required to have a scanned (digital) image of his/her signature as per the specifications given bellow:</strong><br>
-														<ul style="list-style:disc; margin-left:20px;">
-															<li>	The applicant has to sign on white paper.</li>
-															<li>	The signature must be signed only by the applicant, not by any other person.</li>
-															<li>	Dimensions - Width 256 pixels’ x Height 64 pixels i.e. Width 1.4" /35cm X Height 0.44"/1.06cm (preferred).</li>
-															<li>	Size of file should be between 10kb – 20kb.</li>
-															<li>	Ensure that the size of the scanned image is not more than 20KB.</li>
-														</ul><br>
-													</div>
-												</div>
-																															
+												</div>																				
 											</div>
 										</div>
 										
@@ -965,9 +759,16 @@ function e_service_list(){
 												<div class="sop_content">
 													<div class="step_ord">Scanned copies of the following documents whichever is applicable :</div>
 														<ul style="list-style:disc; margin-left:20px;">
-															<li>Signature of Consent Officer</li>
-															<li>Signature of Secretary</li>
-															<li>Signature of Treasurer</li>  	
+															<li>Signed Application Details</li>
+															<li>Signed Assets & Liabilities Statement</li>
+															<li>Signed List of Securities</li>
+															<li>Signed General Fund Account</li>
+															<li>Signed Political Fund Account</li>
+															<li>Signed Auditor’s Declaration</li>
+															<li>Signed List of Officers Relinquishing Office </li>
+															<li>Signed List of Officers Appointed</li> 	
+															<li>Signed List of Elected Members </li> 
+															<li>Signed List of Consent Officers </li>  	
 														</ul>
 												</div>	
 											</div>
@@ -994,112 +795,7 @@ function e_service_list(){
 						</div>
 					</div>
 				</div>';
-				$content .= '<div id="user_guide_fawloi" class="modal fade applicant_login" role="dialog">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						  <div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal">&times;</button>
-							<h4 class="modal-title">User Guide</h4>
-						  </div>
-						  <div class="modal-body">
-							<div class="tabbable">
-								<ul class="nav nav-tabs">
-									<li class="active"><a href="#fawloi_tab1" data-toggle="tab">How to apply?</a></li>
-									<li><a href="#fawloi_tab2" data-toggle="tab">Checklist</a></li>
-									<li><a href="#fawloi_tab3" data-toggle="tab">Timeline</a></li>
-									<li style="float:right;"><a href="'.$base_url.'/sites/default/files/contentpdf/user-guide-fawloi_declaration.pdf" target="_blank"><i class="fa fa-print"></i></a></li>
-								</ul>
-								<div class="tab-content">
-									<div class="tab-pane active" id="fawloi_tab1">
-										<div class="sop_cntainer_box">
-										<p><strong>Responsibility: </strong>FAWLOI Declaration Submit</p>							
-											<div class="sop_content">
-												<div class="step_ord">Step-1:</div>
-												<div class="res_activity"><strong>Activity:</strong> The Beneficiary shall open www.wblc.gov.in and will select schemes then click on Fawloi Option  .  All the notice appears in <strong>Notice for Receiving Declaration</strong> then click on Apply Now to date decaration. For a new user he/she fills up a Declaration Form Under Fowloi Scheme, in the portal of wblc.gov.in.
-												</div>
-											</div>
-											<div class="sop_content">
-												<div class="step_ord">Step-2:</div>
-												<div class="res_activity"><strong>Activity:</strong> Click on Apply Now Button in action area.
-												</div>
-											</div>
-											<div class="sop_content">
-												<div class="step_ord">Step-3:</div>
-												<div class="res_activity"><strong>Activity:</strong> Fill up all the details required<br>
-												<strong>Unit Name:</strong> Type some letters of the name, and it suggest you matching Unit Names.
-												<strong>Application No / Bank AC No:</strong> After enter application number or bank account number, the details will auto filled in in corresponding fields if the user exist with that application number or bank account number.<br> 
- 												Then the address details have to enter and submit with SAVE and CONTINUE button. 
-
-												</div>
-											</div>	
-											<div class="sop_content">
-												<div class="step_ord">Step-4:</div>
-												<div class="res_activity"><strong>Activity:</strong>Some document have to upload here like - Bank passbook (Mandatory), Photograph (Mandatory), Fawloi Receipt (Optional).
-												PF Number, ESI Number, Aadhaar  is optional, but if any of these given must have to upload the corresponding document. Then Save and Continue.
-												<p><strong>Documents Involved: All file should be PDF/JPG/JPEG/PNG(150 KB) except Photograph. Photograph should be JPG/JPEG/PNG(50 KB) </strong>
-												
-												</div>
-											</div>	
-											<div class="sop_content">
-												<div class="step_ord">Step-5:</div>
-												<div class="res_activity"><strong>Activity:</strong>Next go through the details properly then click on Checkbox. After the click on Checkbox a security code will send to register mobile number. Then enter code and submit. Download the system generated fawloi declaration.
-												</div>
-											</div>	
-											<div class="sop_content">
-												<div class="step_ord">Step-6:</div>
-												<div class="res_activity"><strong>Activity:</strong>After Submit Beneficiary have to login with registered mobile number. 
-												</div>
-											</div>	
-											<div class="sop_content">
-												<div class="step_ord">Step-7:</div>
-												<div class="res_activity"><strong>Activity:</strong> Upload the signed document. 
-												<p><strong>Documents Involved: The Declaration form with Signature of the Beneficiary and Signature of the  Secretary of Registered Trade Union of the concerned unit along with Registration no. / Local MLA / Local MP with official Seal. </strong>
-												 
-												</div>
-											</div>
-											<br>																	
-										</div>
-									</div>
-									
-									<div class="tab-pane" id="fawloi_tab2">
-										<div class="sop_cntainer_box">
-											<div class="sop_content">
-												<div class="step_ord">Scanned copies of the following documents whichever is applicable :</div>
-													<ul style="list-style:disc; margin-left:20px;">
-														<li>Bank passbook</li>
-														<li>Recent Photograph</li>
-														<li>Fawloi Receipt</li>
-														<li>PF</li>
-														<li>ESI</li>
-														<li>Aadhaar</li>
-														<li>The Declaration form with Signature</li>
-														
-													</ul>
-											</div>	
-										</div>
-									</div>	
-									<div class="tab-pane" id="fawloi_tab3">
-										<div class="sop_cntainer_box">
-											<div class="sop_content">
-												<table border="0" cellpadding="0" cellspacing="" class="view-act-rules-table">
-													<tr>
-														<th width="5%">Sl.No.</th>
-														<th width="50%">Designated officer</th>
-														<th>Stipulated time limit</th>
-													</tr>
-													<tr>
-														<td colspan="3">Not Available</td>
-													</tr>														
-												</table>													
-											</div>	
-										</div>
-									</div>	
-								</div>
-							</div>	
-						</div>				
-					</div>
-				</div>
-			</div>';
+	
 	$content .= '<div id="user_guide_amndclra" class="modal fade applicant_login" role="dialog">
 					<div class="modal-dialog">
 						<div class="modal-content">
@@ -1113,7 +809,6 @@ function e_service_list(){
 									<li class="active"><a href="#amndclra_tab1" data-toggle="tab">How to apply?</a></li>
 									<li><a href="#amndclra_tab2" data-toggle="tab">Checklist</a></li>
 									<li><a href="#amndclra_tab3" data-toggle="tab">Timeline</a></li>
-									<li><a href="#amndclra_tab4" data-toggle="tab">Fees</a></li>
 									<li style="float:right;"><a href="'.$base_url.'/sites/default/files/contentpdf/user-guide-principal-employer-registration-contract-labour.pdf" target="_blank"><i class="fa fa-print"></i></a></li>
 
 									</ul>
@@ -1121,13 +816,8 @@ function e_service_list(){
 										<div class="tab-pane active" id="amndclra_tab1">
 											<div class="sop_cntainer_box">
 												<div class="sop_content">
-													<div class="step_ord">Procedure :</div>
-													<div class="res_activity"><p>Procedure to be followed by the applicant and step by step movement of the application within the Department along with timelines for completion of each step is same irrespective of risk category (Low, Medium, High) size of firm (Micro, Medium & Large), Investor type (Foreign Domestic), Business location (Rural, Urban). </p>
-													<p>Procedure to be followed by applicant: </p>
-													</div>
-													
-													<div class="step_ord">Step-1</div>
 													<p><strong>Responsibility: </strong>Principal Employer.</p>
+													<div class="step_ord">Step-1</div>
 													<div class="res_activity">If the you are an already registered user, he/she will log in using the credentials. For a new user he/she fills up a Common Application Form(CAF) in the Portal of wblc.gov.in, which includes mainly applicant’s Personal Information including PAN/Voters ID/Aadhar, any other unique number tagged with that establishment, Contact Information, Establishment Information, Number of workers employed, Login Information etc. with Preferred User name & Password and create a User Credential.
 													</div>
 												</div>
@@ -1195,97 +885,30 @@ function e_service_list(){
 												<div class="sop_content">
 													<table border="0" cellpadding="0" cellspacing="" class="view-act-rules-table">
 														<tr>
-															<th width="10%">Sl.No.</th>
-															<th width="50%">Designated officer</th>
-															<th width="40%">Stipulated time limit</th>
+															<th width="5%">Sl.No.</th>
+															<th width="60%">Designated officer</th>
+															<th>Stipulated time limit</th>
 														</tr>
 														<tr>
 															<td>1</td>
 															<td>Assistant Labour Commissioner</td>
 															<td>30 days</td>
-														</tr>														
+														</tr>
+														<tr>
+															<td>2</td>
+															<td>Deputy Labour Commissioner</td>
+															<td>45 days</td>
+														</tr>
+														<tr>
+															<td>3</td>
+															<td>Labour Commissioner</td>
+															<td>60 days</td>
+														</tr>
 													</table>
-													<br/>
-													<table border="0" cellpadding="0" cellspacing="" class="view-act-rules-table">
-													<tr>
-														<th width="15%">Step No.</th>
-														<th width="45%">Procedure</th>
-														<th width="20%">Official Involved</th>
-														<th width="10%">Timeline</th>
-													</tr>
-													<tr>
-														<td>STEP 1</td>
-														<td>Applicant submits the application along with documents</td>
-														<td>Applicant</td>
-														<td>No time limit</td>
-													</tr>
-													<tr>
-														<td>STEP 2</td>
-														<td>Verifies the application and allows for payment</td>
-														<td>ALC</td>
-														<td>No time limit</td>
-													</tr>
-													<tr>
-														<td>STEP 3</td>
-														<td>Submits fee and uploads FORM-I</td>
-														<td>Application</td>
-														<td>No time limit</td>
-													</tr>
-													<tr>
-														<td>STEP 4</td>
-														<td>Verifies and issue certificate/ Back for correction </td>
-														<td>ALC</td>
-														<td>30 days</td>
-													</tr>											
-												</table>
 													<p style="float:right;"><i class="fa fa-info-circle"></i> <a href="'.$base_url.'/sites/default/files/important_notification/RIGHT_TO_PUBLIC_SERVICES_NOTIFICATION.pdf" target="_blank">More Info.</a></p>
 												</div>	
 											</div>
-										</div>
-										<div class="tab-pane" id="amndclra_tab4">
-										<div class="sop_cntainer_box">
-											<div class="#sop_content">
-												<table border="0" cellpadding="0" cellspacing="" class="view-act-rules-table">
-												<tr>
-													<th>Sl.No.</th>
-													<th>Number of Workmen</th>
-													<th>Fees</th>
-												</tr>
-												<tr>
-													<td>1</td>
-													<td>Is 10 but does not exceed 20</td>
-													<td>₹200</td>
-												</tr>
-												<tr>
-													<td>2</td>
-													<td>Exceeds 20 but does not exceed 50</td>
-													<td>₹500</td>
-												</tr>
-												<tr>
-													<td>3</td>
-													<td>Exceeds 50 but does not exceed 100</td>
-													<td>₹1000</td>
-												</tr>
-												<tr>
-													<td>4</td>
-													<td>Exceeds 100 but does not exceed 200</td>
-													<td>₹2000</td>
-												</tr>
-												<tr>
-													<td>5</td>
-													<td>Exceeds 200 but does not exceed 400</td>
-													<td>₹4000</td>
-												</tr>
-												<tr>
-													<td>6</td>
-													<td>Exceeds 400</td>
-													<td>₹5000</td>
-												</tr>
-											</table>
-										</div>
-										</div>							
-									</div>	
-										</div>
+										</div>	
 									</div>
 								</div>	
 							</div>				
@@ -1305,17 +928,12 @@ function e_service_list(){
 										<li class="active"><a href="#licenseclra_tab1" data-toggle="tab">How to apply?</a></li>
 										<li><a href="#licenseclra_tab2" data-toggle="tab">Checklist</a></li>
 										<li><a href="#licenseclra_tab3" data-toggle="tab">Timeline</a></li>
-										<li><a href="#licenseclra_tab4" data-toggle="tab">Fees</a></li>
 										<li style="float:right;"><a href="'.$base_url.'/sites/default/files/contentpdf/user-guide-clra-license.pdf" target="_blank"><i class="fa fa-print"></i></a></li>
 									</ul>
 									<div class="tab-content">
 										<div class="tab-pane active" id="licenseclra_tab1">
 											<div class="sop_cntainer_box">
 												<div class="sop_content">
-													<div class="step_ord">Procedure :</div>
-													<div class="res_activity"><p>Procedure to be followed by the applicant and step by step movement of the application within the Department along with timelines for completion of each step is same irrespective of risk category (Low, Medium, High) size of firm (Micro, Medium & Large), Investor type (Foreign Domestic), Business location (Rural, Urban). </p>
-													<p>Procedure to be followed by applicant: </p>
-													</div>
 													<div class="step_ord">Step-1</div>
 													<p><strong>Responsibility: </strong>Contractor</p>
 													<div class="res_activity"><strong>Activity:</strong>The applicant shall open ‘www.wblc.gov.in’ and will select e-services and licensing of contractors thereafter. A guide line will appear agreeing which he/she will land up in the log in page. If the applicant is an already registered user, he/she will log in using the credentials. For a new user he/she fills up a Common Application Form(CAF) in the Portal of wblc.gov.in, which includes mainly applicant’s Name, Address, Contact Details, E Mail, PAN, Voters ID, Aadhaar number, Driving License , Trade License Number, any other unique number tagged with that establishment, establishment name and details including address, etc. with Preferred User name & Password and creates a User Credential.
@@ -1350,7 +968,8 @@ function e_service_list(){
 													<div class="step_ord">Step-6</div>
 													<p><strong>Responsibility: </strong>Contractor</p>
 													<div class="res_activity"> <strong>Activity:</strong>Enters the system generated Unique Form V number issued by Principal Employer, through which maximum no of relevant fields for application for licensing would be populated in the Form.
-													<p><strong>Documents Involved: </strong> I.Valid Form V, II.Valid Work Order, III.Any other documents in support of correctness of particulars furnished in application form, IV.Trade license </p>
+													<p><strong>Documents Involved: </strong> I.Valid Form V, II.Valid Work Order, III.Any other documents in support of correctness of particulars furnished in
+application form, IV.Trade license </p>
 													</div>
 												</div>
 												<div class="sop_content">
@@ -1362,7 +981,8 @@ function e_service_list(){
 												<div class="sop_content">
 													<div class="step_ord">Step-8</div>
 													<p><strong>Responsibility: </strong>Contractor</p>
-													<div class="res_activity"><strong>Activity:</strong>Views the Filled in Information before Final Submit. In case of corrections rolls back to earlier sections and makes corrections and Saves the application.
+													<div class="res_activity"><strong>Activity:</strong>Views the Filled in Information before Final Submit. In case of
+corrections rolls back to earlier sections and makes corrections and Saves the application.
 													</div>
 												</div>
 												<div class="sop_content">
@@ -1411,7 +1031,8 @@ function e_service_list(){
 													<div class="step_ord">Step-16</div>
 													<p><strong>Responsibility: </strong>Contractor</p>
 													<div class="res_activity"><strong>Activity:</strong>Views on the Dashboard the status of application marked for correction if sent back by the Inspector and makes the corrections and resubmits the application.
-													<p><strong>Documents Involved: </strong> I.Valid Work Order, II.Any other documents in support of correctness of particulars furnished in application form,III.Valid Form V, IV.Trade license </p>
+													<p><strong>Documents Involved: </strong> I.Valid Work Order, II.Any other documents in support of correctness of particulars furnished in
+application form,III.Valid Form V, IV.Trade license </p>
 													</div>
 												</div>
 												<div class="sop_content">
@@ -1491,7 +1112,8 @@ function e_service_list(){
 													<div class="step_ord">Step-29</div>
 													<p><strong>Responsibility: </strong>Contractor </p>
 													<div class="res_activity"><strong>Activity:</strong>The contractor, in some cases, may also apply for license without the unique form V number. In that  case the contractor will skip the above stated step and blank Form IV will be required to be filled up by the applicant after entering valid registration no of the Principal Employer. There after process as mentioned in 8 and onwards will follow. 
-													<p><strong>Documents Involved: </strong> I.Valid Work Order, II.Any other documents in support of correctness of particulars furnished in application form,III.Valid Form V, IV.Trade license </p>
+													<p><strong>Documents Involved: </strong> I.Valid Work Order, II.Any other documents in support of correctness of particulars furnished in
+application form,III.Valid Form V, IV.Trade license </p>
 													</div>
 												</div> 
 											</div>
@@ -1516,94 +1138,29 @@ function e_service_list(){
 												<div class="sop_content">
 													<table cellpadding="0" cellspacing="0" border="0" class="view-act-rules-table">
 														<tr>
-															<th width="10%">Sl.No.</th>
-															<th width="50%">Designated officer</th>
-															<th width="40%">Stipulated time limit</th>
+															<th width="5%">Sl.No.</th>
+															<th width="60%">Designated officer</th>
+															<th>Stipulated time limit</th>
 														</tr>
 														<tr>
 															<td>1</td>
 															<td>Assistant Labour Commissioner</td>
 															<td>30 days</td>
 														</tr>
-													</table>
-													<br/>
-													<table border="0" cellpadding="0" cellspacing="" class="view-act-rules-table">
-													<tr>
-														<th width="15%">Step No.</th>
-														<th width="45%">Procedure</th>
-														<th width="20%">Official Involved</th>
-														<th width="10%">Timeline</th>
-													</tr>
-													<tr>
-														<td>STEP 1</td>
-														<td>Applicant submits the application along with documents</td>
-														<td>Applicant</td>
-														<td>No time limit</td>
-													</tr>
-													<tr>
-														<td>STEP 2</td>
-														<td>Verifies the application and allows for payment</td>
-														<td>ALC</td>
-														<td>No time limit</td>
-													</tr>
-													<tr>
-														<td>STEP 3</td>
-														<td>Submits fee and uploads FORM-IV</td>
-														<td>Application</td>
-														<td>No time limit</td>
-													</tr>
-													<tr>
-														<td>STEP 4</td>
-														<td>Verifies and issue certificate/ Back for correction </td>
-														<td>ALC</td>
-														<td>30 days</td>
-													</tr>
+														<tr>
+															<td>2</td>
+															<td>Deputy Labour Commissioner</td>
+															<td>45 days</td>
+														</tr>
+														<tr>
+															<td>3</td>
+															<td>Labour Commissioner</td>
+															<td>60 days</td>
+														</tr>
 													</table>
 													<p style="float:right;"><i class="fa fa-info-circle"></i> <a href="'.$base_url.'/sites/default/files/important_notification/RIGHT_TO_PUBLIC_SERVICES_NOTIFICATION.pdf" target="_blank">More Info.</a></p>
 												</div>	
 											</div>
-										</div>
-										<div class="tab-pane" id="licenseclra_tab4">
-										<div class="sop_cntainer_box">
-											<div class="#sop_content">
-												<table border="0" cellpadding="0" cellspacing="" class="view-act-rules-table">
-												<tr>
-													<th>Sl.No.</th>
-													<th>Number of Workmen</th>
-													<th>Fees</th>
-												</tr>
-												<tr>
-													<td>1</td>
-													<td>Is 10 but does not exceed 20</td>
-													<td>₹50</td>
-												</tr>
-												<tr>
-													<td>2</td>
-													<td>Exceeds 20 but does not exceed 50</td>
-													<td>₹125</td>
-												</tr>
-												<tr>
-													<td>3</td>
-													<td>Exceeds 50 but does not exceed 100</td>
-													<td>₹250</td>
-												</tr>
-												<tr>
-													<td>4</td>
-													<td>Exceeds 100 but does not exceed 200</td>
-													<td>₹500</td>
-												</tr>
-												<tr>
-													<td>5</td>
-													<td>Exceeds 200 but does not exceed 400</td>
-													<td>₹1000</td>
-												</tr>
-												<tr>
-													<td>6</td>
-													<td>Exceeds 400</td>
-													<td>₹1250</td>
-												</tr>
-											</table>
-										</div>
 										</div>
 									</div>
 								</div>	

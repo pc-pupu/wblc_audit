@@ -1,0 +1,10 @@
+;$Id$
+
+name =cmscontent
+description =  content cms.
+package = CMS Module
+core = 7.x
+files[] = cmscontent.module
+
+;dependencies[] = autoload
+;php = 5.1

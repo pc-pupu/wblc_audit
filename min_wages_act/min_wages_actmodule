@@ -1,0 +1,217 @@
+<?php
+
+function min_wages_act_menu() {
+	 $items = array();
+	 
+	 $items['min-wages-act'] = array(
+			'title' => t('Minimum Wages Act'),
+			'page callback' => 'min_wages_act_page',
+			'access arguments' => array('access content'),
+			'type' => MENU_CALLBACK,
+    	);
+	
+	$items['cpi-number-view'] = array(
+			'title' => t('Consumer price index number for industrial workers on base 2001=100'),
+			'page callback' => 'cpi_number_view',
+			'file' => 'include/cpi_number_view.inc',
+			'access arguments' => array('access content')			
+    	);
+		
+	$items['synopsys'] = array(
+    		'title' => t('Synopsis of Minimum Rates of Wages in Scheduled Employments in West Bengal as on 01.07.2015.'),
+    		'page callback' => 'synopsys_page',			
+    		'access arguments' => array('access content'),
+    		'type' => MENU_CALLBACK,
+			'file' => 'include/synopsys_page.inc'
+    );
+	
+	$items['synopsys/%/%']=array(
+			// 'title' 			=> 'Synopsis of Minimum Rates of Wages in Scheduled Employments in West Bengal as on 00000000.',
+			'title callback'    => 'synopsys_title_callback',
+    		'title arguments'   => array(1, 2),
+			'page callback' 	=> 'synopsys_pages',
+			'page arguments' 	=> array(1, 2),
+			'file' 				=> 'include/synopsys_pages.inc',
+			'access arguments' 	=> array('access content'),
+	);
+		
+	$items['casual-labour'] = array(
+			'title' => t('Casual Labour'),
+			'page callback' => 'casual_labour_page',
+			'access arguments' => array('access content'),
+			'type' => MENU_CALLBACK,
+			'file' => 'include/casual_labour_page.inc'
+		);
+		
+	$items['organisational-structure'] = array( 
+			'title' 			=> 'Organisational Structure',
+			'page callback' 	=> 'get_acts_rules_notification',		
+			'file' 				=> 'include/organisational_structure.inc',
+			'access arguments'  => array('access content'),		
+	);
+	$items['cpi-number-for-worker'] = array( 
+			'title' 			=> 'Consumer Price Index Numbers(Monthly)',
+			'page callback' 	=> 'cpi_number_for_worker',		
+			'file' 				=> 'include/cpi_number_for_worker.inc',
+			'access arguments'  => array('minimum_rate_of_wages_administrator_user'),		
+			);
+	$items['cpi-number-for-worker/print'] = array( 
+			'title' 			=> 'Consumer Price Index Numbers(Monthly)',
+			'page callback' 	=> 'cpi_number_for_worker_print',		
+			'file' 				=> 'include/cpi_number_for_worker.inc',
+			'access arguments'  => array('minimum_rate_of_wages_administrator_user'),		
+			);
+	$items['cpi-number-for-worker/%/%'] = array( 
+			'title' 			=> 'Consumer Price Index Numbers(Monthly)',
+			'page callback' 	=> 'cpi_number_for_worker',	
+			'title arguments'   => array(1, 2),	
+			'file' 				=> 'include/cpi_number_for_worker.inc',
+			'access arguments'  => array('minimum_rate_of_wages_administrator_user'),		
+	);
+	$items['cpi-number-for-worker/print-excel'] = array( 
+			'title' 			=> 'Consumer Price Index Numbers(Monthly)',
+			'page callback' 	=> 'cpi_number_for_worker_print_excel',		
+			'file' 				=> 'include/cpi_number_for_worker_excel.inc',
+			'access arguments'  => array('minimum_rate_of_wages_administrator_user'),		
+			);
+	$items['generate-monthly-minimum-wage'] = array( 
+			'title' => 'Generate Monthly Minimum Rate of Wages',
+			'page callback' => 'drupal_get_form',
+			'page arguments' => array('generate_monthly_minimum_wage'),
+			'file' => 'include/generate_monthly_minimum_wage.inc',
+			'access arguments' => array('minimum_rate_of_wages_administrator_user'),		
+	);
+    return $items;	
+}
+function min_wages_act_permission() {
+  return array('minimum_rate_of_wages_administrator_user' => array(
+				   'title' => t('minimum rate of wages administrator user'),
+				   'title' => t('minimum rate of wages administrator user(SA, SS')
+					)		
+				);
+}
+function synopsys_title_callback($month = '', $year = '') {	
+	$title = t('The Minimum Rates of Wages in Scheduled Employments in West Bengal as on '.$month.', '.$year);		 
+ 	return $title;
+}
+
+function min_wages_act_page() {
+	
+	//  $encrypted_valid_period	= encryption_decryption_fun('encrypt', '01-01-2016');	
+	//	$synopsys_link2 = l('Minimum Rates of Wages in Scheduled Employments in West Bengal as on 01.01.2016.', 'synopsys/'.$encrypted_valid_period);
+	//	
+	//	$encrypted_valid_period3 = encryption_decryption_fun('encrypt', '01-07-2016');	
+	//	$synopsys_link3 = l('Minimum Rates of Wages in Scheduled Employments in West Bengal as on 01.07.2016.', 'synopsys/'.$encrypted_valid_period3);
+	//	
+	//	$encrypted_valid_period4 = encryption_decryption_fun('encrypt', '01-01-2017');	
+	//	$synopsys_link4 = l('Minimum Rates of Wages in Scheduled Employments in West Bengal as on 01.01.2017.', 'synopsys/'.$encrypted_valid_period4);
+	//	
+	//	$encrypted_valid_period5 = encryption_decryption_fun('encrypt', '01-07-2017');	
+	//	$synopsys_link5 = l('Minimum Rates of Wages in Scheduled Employments in West Bengal as on 01.07.2017.', 'synopsys/'.$encrypted_valid_period5, array('html' => true));
+	//	
+	//	$encrypted_valid_period6 = encryption_decryption_fun('encrypt', '01-01-2018');	
+	//	$synopsys_link6 = l('Minimum Rates of Wages in Scheduled Employments in West Bengal as on 01.01.2018.', 'synopsys/'.$encrypted_valid_period6, array('html' => true));
+	//	
+	//	$encrypted_valid_period7 = encryption_decryption_fun('encrypt', '01-07-2018');	
+	//	$synopsys_link7 = l('Minimum Rates of Wages in Scheduled Employments in West Bengal as on 01.07.2018.<img src="sites/default/files/new-icon.gif">', 'synopsys/'.$encrypted_valid_period7, array('html' => true));	
+	//	
+	//	$synopsys_link = l('Minimum Rates of Wages in Scheduled Employments in West Bengal as on 01.07.2015.', 'synopsys');
+	//	
+	$casual_labour_link = l('Casual Labour 2016', 'download/casual-group-d-rate.pdf', array('attributes' => array('target' => '_blank')));	
+	$casual_labour_link2 = l('Casual Labour 2017', 'sites/default/files/synopsys/01-01-2017/rates-of-daily-wages-of-daily-rated-workers-under-the-government-whose-wages-are-not-regulated-by-any-of-the-statutory-provisions-like-the-minimum-wages-act-etc-.pdf', array('attributes' => array('target' => '_blank'), 'html' => true));
+	$casual_labour_link12 = l('Casual daily rated Group-C/Group-D/Driver 2018', 'sites/default/files/synopsys/01-01-2018/Rates of daily wages of daily rated workers.pdf', array('attributes' => array('target' => '_blank'), 'html' => true));
+	$casual_labour_link13 = l('Casual daily rated Group-C/Group-D/Driver 2019 <img src="sites/default/files/new-icon.gif">', 'sites/default/files/synopsys/01-01-2019/rates-of-daily-wages-of-daily-rated-workers.pdf', array('attributes' => array('target' => '_blank'), 'html' => true));
+		
+	// $cpi032017 = l('C.P.I March 2017', 'sites/default/files/cpi/casual_labour_rate_march_2017.pdf', array('attributes' => array('target' => '_blank')));
+	// $cpi042017 = l('C.P.I April 2017', 'sites/default/files/cpi/CPI-April2017.pdf', array('attributes' => array('target' => '_blank'), 'html' => true));
+	// $cpi052017 = l('C.P.I May 2017', 'sites/default/files/cpi/CPI-May-2017.pdf', array('attributes' => array('target' => '_blank'), 'html' => true));
+	// $cpi062017 = l('C.P.I June 2017', 'sites/default/files/cpi/casual_labour_rate_june_2017.pdf', array('attributes' => array('target' => '_blank'), 'html' => true));
+	// $cpi072017 = l('C.P.I July 2017', 'sites/default/files/cpi/casual_labour_rate_july_2017.pdf', array('attributes' => array('target' => '_blank'), 'html' => true));
+	// $cpi082017 = l('C.P.I August 2017', 'sites/default/files/cpi/casual_labour_rate_august_2017.pdf', array('attributes' => array('target' => '_blank'), 'html' => true));
+	// $cpi092017 = l('C.P.I September 2017', 'sites/default/files/cpi/casual_labour_rate_september_2017.pdf', array('attributes' => array('target' => '_blank'), 'html' => true));
+	// $cpi102017 = l('C.P.I October 2017', 'sites/default/files/cpi/casual_labour_rate_october_2017.pdf', array('attributes' => array('target' => '_blank'), 'html' => true));
+	// $cpi112017 = l('C.P.I November 2017', 'sites/default/files/cpi/casual_labour_rate_november_2017.pdf', array('attributes' => array('target' => '_blank'), 'html' => true));
+	// $cpi122017 = l('C.P.I December 2017', 'sites/default/files/cpi/casual_labour_rate_december_2017.pdf', array('attributes' => array('target' => '_blank'), 'html' => true));
+	// $cpi012018 = l('C.P.I January 2018', 'sites/default/files/cpi/casual_labour_rate_january_2018.pdf', array('attributes' => array('target' => '_blank'), 'html' => true));
+	// $cpi022018 = l('C.P.I February 2018<img src="sites/default/files/new-icon.gif">', 'sites/default/files/cpi/cpi-feb-2018.pdf', array('attributes' => array('target' => '_blank'), 'html' => true));
+	
+	//  $output = '<div class="field-item"><ul>';
+	//	$output .= '<li>'.$synopsys_link7.'</li>';
+	//	$output .= '<li>'.$synopsys_link6.'</li>';
+	//	$output .= '<li>'.$synopsys_link5.'</li>';
+	//	$output .= '<li>'.$synopsys_link4.'</li>';
+	//	$output .= '<li>'.$synopsys_link3.'</li>';
+	//	$output .= '<li>'.$synopsys_link2.'</li>';
+	//	$output .= '<li>'.$synopsys_link.'</li>';
+		
+	
+	// $output .= '<li>'.$cpi032017.'</li>';	
+	// $output .= '<li>'.$cpi042017.'</li>';
+	// $output .= '<li>'.$cpi052017.'</li>';
+	// $output .= '<li>'.$cpi062017.'</li>';
+	// $output .= '<li>'.$cpi072017.'</li>';
+	// $output .= '<li>'.$cpi082017.'</li>';
+	// $output .= '<li>'.$cpi092017.'</li>';
+	// $output .= '<li>'.$cpi102017.'</li>';
+	// $output .= '<li>'.$cpi112017.'</li>';
+	// $output .= '<li>'.$cpi122017.'</li>';
+	// $output .= '<li>'.$cpi012018.'</li>';
+	// $output .= '<li>'.$cpi022018.'</li>';	
+	// $output .= '</ul></div>';	
+
+	
+	$mw_query = db_select('l_min_wages_documents', 'mw');	
+	$mw_query->fields('mw',array('year', 'month'));	
+	$mw_query->groupBy('mw.month');
+	$mw_query->groupBy('mw.year');
+	$mw_query->condition('mw.is_active', 1, '=');	
+	$mw_query->orderby('mw.year', 'desc');
+	$mw_query->orderby('mw.month', 'desc');	
+	$mw_result = $mw_query->execute();
+	
+	$output = '<div class="field-item"><ul>';
+	
+	if($mw_result->rowCount() > 0){
+		foreach($mw_result as $mw_data){			
+			$minimum_wages = l('Minimum Rates of Wages in Scheduled Employments in West Bengal as on '.$mw_data->month.'-'.$mw_data->year, 'synopsys/'.ucfirst($mw_data->month).'/'.trim($mw_data->year), array('html' => true));
+			$output .= '<li>'.$minimum_wages.'</li>';
+		}
+	}
+	
+	$output .= '<li>'.l('Minimum Rates of Wages in Scheduled Employments in West Bengal as on July, 2015', 'synopsys').'</li>';
+	
+	$output .= '<li>'.$casual_labour_link2.'</li>';
+	$output .= '<li>'.$casual_labour_link.'</li>';
+	$output .= '<li>'.$casual_labour_link12.'</li>';
+	$output .= '<li>'.$casual_labour_link13.'</li>';
+		
+	$output .= '</ul></div><div><ul class="cpi-pdf-list"><div class="cpi-title">C.P.I.</div>';
+	
+	$cpi_circular_query = db_select('l_cpi_details', 't');
+	$cpi_circular_query->fields('t', array('id','year','month', 'uploaded_file', 'is_new'));
+	$cpi_circular_query->condition('t.is_active', 'Y', '=');	
+	$cpi_circular_query->orderBy('year', 'desc');
+	$cpi_circular_query->orderBy('month_code', 'desc');
+	$cpi_circular_query->range(0, 12);
+	$cpi_circular_query_result = $cpi_circular_query->execute();
+	
+	$max_id = db_select('l_cpi_details', 't');
+	$max_id->addExpression('MAX(id)','max_id');
+	$max_id->condition('is_active', 'Y');
+	$result = $max_id->execute();
+	$max_id = $result->fetchField();
+	
+	if($cpi_circular_query_result->rowCount() > 0){
+		foreach($cpi_circular_query_result as $data){
+			$new_icon = '';
+			if($data->is_new == 'Y' && $data->id == $max_id){ $new_icon = '<img src="sites/default/files/new-icon.gif">';}			
+			$output .= '<li class="pdf-bg">'.l("<h1>CPI</h1><p>".$data->month.$new_icon."<br>".$data->year."</p>", $GLOBALS['base_url'].'/sites/default/files/upload/cpi_file/'.$data->uploaded_file, array('html'=>TRUE,'attributes' => array('target'=> '_blank'))).'</li>';			
+		}
+	}
+	
+	$output .= l("View More <i class='fa fa-angle-double-right'></i>", 'cpi-more-information', array('attributes' => array('class' => 'pull-right'), 'html' => TRUE));
+	$output .= '</ul></div>';
+	
+	return $output;
+	
+}

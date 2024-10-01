@@ -1,0 +1,155 @@
+<?php
+function eodb_permission()
+{
+	return array(
+		'eodb_per' => array(
+			'title' => t(' eodb cms content permission'),
+		)
+	);
+}
+
+
+function eodb_menu()
+{
+	$items = array();
+	$items['eodb-notice'] = array(
+		'title' 			=> 'Ease of doing business notice',
+		'page callback' 	=> 'get_eodb',
+		'file' 				=> 'inc/get_eodb.inc',
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('access content'),
+	);
+	$items['statistical-listing'] = array(
+		'title' 			=> 'Statistical Listing',
+		'page callback' 	=> 'get_statistical_listing',
+		'file' 				=> 'inc/statistical_listing.inc',
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('access content'),
+	);
+	$items['fawloi-notice'] = array(
+		'title' 			=> 'FAWLOI Notice',
+		'page callback' 	=> 'get_fawloi_notice',
+		'file' 				=> 'inc/get_fawloi_notice.inc',
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('access content'),
+	);
+	$items['eodb-dashboard'] = array(
+		'title' 			=> 'Online dashboard for EODB e-services w.e.f 1st November,2020',
+		'page callback' 	=> 'eodb_granted_dashboard',
+		'file' 				=> 'inc/eodb-dashboard.inc',
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('access content'),
+	);
+	$items['eodb-fee-breakdown'] = array(
+	    //  'title'				=> 'ABCD',
+		// 'title callback' 	=> 'fee_breakdown_title_callback', 
+		// 'title arguments' 	=> array(1),       
+		'page callback' 	=> 'drupal_get_form',
+		'page arguments' 	=> array('eodb_fee_breakdown'),
+		'file' 				=> 'inc/eodb-fee-breakdown.inc',
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('access content'),
+	);
+
+	/*$items['eodb-dashboard-dev'] = array( 
+		'title' 			=> 'Online dashboard for EODB e-services w.e.f 1st November,2020',
+		'page callback' 	=> 'eodb_granted_dashboard',
+		'file' 				=> 'inc/eodb-dashboard-dev.inc',
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('access content'),
+	);*/
+	$items['eodb_dashboard_service_details/%'] = array(
+		'page callback' 	=> 'fetchOtherServiceDetails',
+		'file' 				=> 'inc/eodb-dashboard.inc',
+		'access callback'	=> 'user_access',
+		'access arguments' 	=> array('access content'),
+		'page arguments' => array(1)
+	);
+	$items['registration-renewal-granted-dashboard'] = array(
+		'title' 			=> 'Online dashboard for EODB e-services w.e.f 1st November,2020',
+		'page callback' 	=> 'eodb_granted_dashboard',
+		'file' 				=> 'inc/eodb_granted_dashboard.inc',
+		'access callback' 	=> 'user_access',
+		'access arguments' 	=> array('access content'),
+	);
+	return $items;
+}
+
+
+
+// ------
+function get_average_amount()
+{
+	// ACT ID 1 ------
+	$query_1 = db_query('select AVG(Cast(lpd.challanamount as float)) as total_1 from l_principle_epayments_receive_data lpd 
+	left join l_principle_epayments_data lped on lped.identification_no = lpd.transaction_id 
+	left join l_clra_registration_master master on lped.application_id = master.id where lped.act_id=1 and master.amendment_parent_id is null');
+
+	$result_1 = $query_1->fetchAssoc();
+
+	// ACT ID 11 ------
+	$query_11 = db_query('select AVG(Cast(lpd.challanamount as float)) as total_11 from l_principle_epayments_receive_data lpd 
+	left join l_principle_epayments_data lped on lped.identification_no = lpd.transaction_id 
+	left join l_clra_registration_master master on lped.application_id = master.id where lped.act_id=1 and master.amendment_parent_id is not null');
+
+	$result_11 = $query_11->fetchAssoc();
+
+	// ACT ID 2 ------
+	$query_2 = db_query('select AVG(Cast(lpd.challanamount as float)) as total_2 from l_principle_epayments_receive_data lpd 
+	left join l_principle_epayments_data lped on lped.identification_no = lpd.transaction_id 
+	left join l_bocwa_registration_master master on lped.application_id = master.id where lped.act_id=2');
+
+	$result_2 = $query_2->fetchAssoc();
+
+	// ACT ID 4 ------
+	$query_4 = db_query('select AVG(Cast(lpd.challanamount as float)) as total_4 from l_principle_epayments_receive_data lpd 
+	left join l_principle_epayments_data lped on lped.identification_no = lpd.transaction_id 
+	left join l_interstate_workman_master master on lped.application_id = master.id where lped.act_id=4');
+
+	$result_4 = $query_4->fetchAssoc();
+
+	// ACT ID 12 ------
+	$query_12 = db_query("select avg(part.amount_of_licence) as total_12 from l_contractor_license_application master left join l_particular_of_contract_labour part on part.serial_no_from_v = master.serial_no_from_v and master.contractor_user_id = part.contractor_user_id where master.status='I'");
+
+	$result_12 = $query_12->fetchAssoc();
+
+	// ACT ID 13 ------
+	$query_13 = db_query('select AVG(Cast(lpd.challanamount as float)) as total_13 from l_principle_epayments_receive_data lpd 
+	left join l_principle_epayments_data lped on lped.identification_no = lpd.transaction_id 
+	left join l_contractor_license_apply_renweal master on lped.application_id = master.id where lped.act_id=13');
+
+	$result_13 = $query_13->fetchAssoc();
+
+	// ACT ID 42 / 43 ------
+	$query_42 = db_query('select AVG(Cast(master.finalfees as float)) as total_42 from l_interstate_license_master master 
+	left join l_principle_epayments_data lped on lped.application_id = master.id 
+	left join l_principle_epayments_receive_data lpd on lped.identification_no = lpd.transaction_id where (lped.act_id=42 or lped.act_id=43)');
+
+	$result_42 = $query_42->fetchAssoc();
+
+	// ACT ID 44 / 45 ------
+	$query_44 = db_query('select AVG(Cast(master.finalfees as float)) as total_44 from l_interstate_license_master master 
+	left join l_principle_epayments_data lped on lped.application_id = master.id 
+	left join l_principle_epayments_receive_data lpd on lped.identification_no = lpd.transaction_id where (lped.act_id=44 or lped.act_id=45)');
+
+	$result_44 = $query_44->fetchAssoc();
+
+	return array(
+		// number_format(floor($result_1['total_1']), 2), // for 1 - 0
+		// number_format(floor($result_11['total_11']), 2), // for 11 - 1
+		// number_format(floor($result_2['total_2']), 2), // for 2 - 2
+		// number_format(floor($result_4['total_4']), 2), // for 4 - 3
+		// number_format(floor($result_12['total_12']), 2), // for 12 - 4
+		// number_format(floor($result_13['total_13']), 2), // for 13 - 5
+		// number_format(floor($result_42['total_42']), 2), // for 42 - 6
+		// number_format(floor($result_44['total_44']), 2) // for 42 - 7
+		floor($result_1['total_1']), // for 1 - 0
+		floor($result_11['total_11']), // for 11 - 1
+		floor($result_2['total_2']), // for 2 - 2
+		floor($result_4['total_4']), // for 4 - 3
+		floor($result_12['total_12']), // for 12 - 4
+		floor($result_13['total_13']), // for 13 - 5
+		floor($result_42['total_42']), // for 42 - 6
+		floor($result_44['total_44']) // for 42 - 7
+	);
+}

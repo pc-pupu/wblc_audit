@@ -1,0 +1,14 @@
+<?php
+
+function budget_menu(){
+	
+	$items = array();
+	$items['budget'] = array(
+								'title' 					=> 	'Budget',
+								'page callback'				=>	'drupal_get_form',
+								'page arguments'			=>	array('get_budget'),
+								'file' 						=> 	'inc/get_budget.inc',
+								'access arguments' 			=>	 array('access content')
+							);
+	return $items;
+}
